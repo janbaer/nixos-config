@@ -73,7 +73,6 @@
     ipcalc  	# it is a calculator for the IPv4/v6 addresses
 
     # misc
-    bat
     file
     which
     tree
@@ -82,7 +81,7 @@
     gawk
     zstd
     gnupg
-    zoxide
+    pwgen 
     
     btop  	# replacement of htop/nmon
     iotop 	# io monitoring
