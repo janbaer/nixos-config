@@ -1,9 +1,9 @@
 {pkgs, ...}: {
   imports = [
-    ./dev/nodejs.nix
-    ./dev/git.nix
-    ./dev/vscode.nix
-    ./dev/golang.nix
+    ./nodejs.nix
+    ./git.nix
+    ./vscode.nix
+    ./golang.nix
   ];
 
   home.packages = with pkgs; [

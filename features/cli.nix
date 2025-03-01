@@ -4,12 +4,19 @@
     ./neovim.nix
   ];
 
+  programs.atuin = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
   };
 
-  programs.bat = {enable = true;};
+  programs.bat = {
+    enable = true;
+  };
 
   programs.direnv = {
     enable = true;
