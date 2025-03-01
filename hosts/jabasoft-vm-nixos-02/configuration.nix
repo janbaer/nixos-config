@@ -60,7 +60,7 @@
   services.printing.enable = false;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -95,8 +95,8 @@
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   programs = {
-    firefox.enable = true;
-    chromium.enable = true;
+    # firefox.enable = true;
+    # chromium.enable = true;
     zsh.enable = true;
   };
 
@@ -117,6 +117,7 @@
     EDITOR = "nvim";
   };
 
+  # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
   environment.pathsToLink = [
     "/share/zsh"
   ];
