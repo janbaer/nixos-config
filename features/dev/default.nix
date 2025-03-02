@@ -7,8 +7,9 @@
   ];
 
   home.packages = with pkgs; [
-    jq 		# A lightweight and flexible command-line JSON processor
-    yq-go 	# yaml processor https://github.com/mikefarah/yq
-    httpie
+    gcc       # GNU Compiler Collection
+    jq 		    # A lightweight and flexible command-line JSON processor
+    yq-go 	  # yaml processor https://github.com/mikefarah/yq
+    httpie    # Command line HTTP client whose goal is to make CLI human-friendly.
   ];
 }

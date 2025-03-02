@@ -10,8 +10,10 @@ in
   options.features.dev.golang.enable = mkEnableOption "Go programming language";
 
   config = mkIf cfg.enable {
-    
+    programs.go = {
+      enable = true;
+    };
+    home.packages = with pkgs; [
+    ];
   };
 }
-
-
