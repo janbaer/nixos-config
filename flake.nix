@@ -4,13 +4,20 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    agenix.url = "github:ryantm/agenix";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , home-manager
+    , agenix
+    , ...
+    }@inputs:
     let
       username = "jan";
     in
@@ -22,9 +29,11 @@
             ./hosts/jabasoft-vm-nixos-02/configuration.nix
             {
               _module.args = {
+                inherit inputs;
                 inherit username;
               };
             }
+            agenix.nixosModules.default
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -33,6 +42,8 @@
                 inherit username;
               };
               home-manager.users.${username} = import ./home/${username}/home.nix;
+              home-manager.sharedModules = [
+              ];
             }
           ];
         };

@@ -2,12 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, username, ... }:
+{ config, pkgs, inputs, username, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
+      ./../common
     ];
 
   # Bootloader.
@@ -24,7 +25,7 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
-  
+
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
 
@@ -83,25 +84,18 @@
     isNormalUser = true;
     description = "Jan Baer";
     extraGroups = [ "networkmanager" "wheel" ];
-    openssh.authorizedKeys.keys  = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de" ];
+    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de" ];
     packages = with pkgs; [
-      btop
-      eza
     ];
     shell = pkgs.zsh;
   };
 
-  # Enable the Flakes feature and the accompanying new nix command-line tool
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
   programs = {
-    # firefox.enable = true;
-    # chromium.enable = true;
     zsh.enable = true;
   };
 
   # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  # nixpkgs.config.allowUnfree = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -110,7 +104,8 @@
     neovim
     ghostty
     tmux
-    nh 		# Yet another clie for NixOS and Home-manager - https://github.com/viperML/nh/blob/master/README.md
+    inputs.agenix.packages."${system}".default
+    nh # Yet another clie for NixOS and Home-manager - https://github.com/viperML/nh/blob/master/README.md
   ];
 
   environment.variables = {
@@ -142,12 +137,24 @@
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
-
-  # Configure automatic cleanup and also garbage-collect of old generations
-  nix.settings.auto-optimise-store = true;
-  nix.gc.automatic = true;
-  nix.gc.dates = "daily";
-  nix.gc.options = "--delete-older-than 7d"; 
+  
+  # Run custom script during system activation
+  system.activationScripts.userScript = {
+    text = ''
+      echo "Running custom activation script" > /var/log/nixos-rebuild-custom.log
+      
+      # Your custom commands go here
+      # For example:
+      # - Back up configuration files
+      # - Sync data
+      # - Notify other systems
+      # - Run performance optimizations
+      
+      # Log when script completes
+      echo "Custom activation script completed at $(date)" >> /var/log/nixos-rebuild-custom.log
+    '';
+    deps = [];
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
