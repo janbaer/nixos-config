@@ -47,6 +47,30 @@
             }
           ];
         };
+        jabasoft-nb-01 = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/jabasoft-nb-01/configuration.nix
+            {
+              _module.args = {
+                inherit inputs;
+                inherit username;
+              };
+            }
+            agenix.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit username;
+              };
+              home-manager.users.${username} = import ./home/${username}/home.nix;
+              home-manager.sharedModules = [
+              ];
+            }
+          ];
+        };
       };
     };
 }

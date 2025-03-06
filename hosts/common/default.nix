@@ -9,6 +9,20 @@
     ./secrets.nix
   ];
 
+  system.activationScripts.userScript = {
+    text = ''
+      echo "Cloning dotfiles" > /var/log/nixos-rebuild-custom.log
+      
+      dotfiles_dir=/home/${username}/Projects/dotfiles
+      if [ ! -d "$dotfiles_dir" ]; then
+	/run/current-system/sw/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
+      fi
+      
+      chown -R ${username}:users $dotfiles_dir
+    '';
+    deps = [];
+  };
+
   nixpkgs = {
     # You can add overlays here
     overlays = [
