@@ -91,6 +91,8 @@
     strace 	# system call monitoring
     ltrace 	# library call monitoring
     lsof 	# list open files
+
+    keychain    # Keychain management tool
   ];
 }
 
