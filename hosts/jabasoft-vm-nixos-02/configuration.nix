@@ -138,23 +138,7 @@
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
   
-  # Run custom script during system activation
-  system.activationScripts.userScript = {
-    text = ''
-      echo "Running custom activation script" > /var/log/nixos-rebuild-custom.log
-      
-      # Your custom commands go here
-      # For example:
-      # - Back up configuration files
-      # - Sync data
-      # - Notify other systems
-      # - Run performance optimizations
-      
-      # Log when script completes
-      echo "Custom activation script completed at $(date)" >> /var/log/nixos-rebuild-custom.log
-    '';
-    deps = [];
-  };
+  services.qemuGuest.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
