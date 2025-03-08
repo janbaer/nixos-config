@@ -4,12 +4,16 @@
     ./git.nix
     ./vscode.nix
     ./golang.nix
+    ./rust.nix
   ];
 
   home.packages = with pkgs; [
     gcc       # GNU Compiler Collection
+    gnumake
+    cmake
     jq 		    # A lightweight and flexible command-line JSON processor
-    yq-go 	  # yaml processor https://github.com/mikefarah/yq
-    httpie    # Command line HTTP client whose goal is to make CLI human-friendly.
+    jless           # less for Json files or streams
+    yq-go 	    # yaml processor https://github.com/mikefarah/yq
+    httpie          # Command line HTTP client whose goal is to make CLI human-friendly.
   ];
 }
