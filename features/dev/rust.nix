@@ -10,7 +10,11 @@ in
   options.features.dev.rust.enable = mkEnableOption "Rust programming language";
 
   config = mkIf cfg.enable {
-    
+    home.packages = with pkgs; [
+      cargo
+      rustc
+      rustfmt
+    ];
   };
 }
 

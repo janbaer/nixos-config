@@ -13,6 +13,7 @@
     dev = {
       nodejs.enable = true;
       golang.enable = true;
+      rust.enable = true;
       vscode.enable = true;
     };
     desktop = {
