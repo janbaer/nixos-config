@@ -37,6 +37,8 @@
       source $ZDOTDIR/.functions
 
       [ -f $ZDOTDIR/.zsh-secrets ] && source $ZDOTDIR/.zsh-secrets
+
+      PATH=$PATH:$HOME/bin
     '';
     plugins = [
       {
@@ -54,12 +56,22 @@
       "..." = "cd ../..";
       "...." = "cd ../../..";
       reload = "source $ZDOTDIR/.zshrc";
-      kc = "source $HOME/bin/init-keychain.sh";
+      kc = "$HOME/bin/init-keychain.sh";
       g = "git";
       gfp = "git fetch --prune && git pull";
     };
     sessionVariables = {
       EDITOR = "nvim";
+      KEYCHAIN_KEYS_LOCAL = "id_ed25519";
+    };
+  };
+
+  home.file = {
+    "tmp/.keep".text = "";
+    ".config/zsh/.zlogout" = {
+      text = ''
+        [ -f $HOME/tmp/keychain_init_done ] && rm -f $HOME/tmp/keychain_init_done
+      '';
     };
   };
 

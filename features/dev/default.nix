@@ -17,3 +17,10 @@
     httpie          # Command line HTTP client whose goal is to make CLI human-friendly.
   ];
 }
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable =
+      true;
+  };
+
+    devenv          # Fast, Declarative, Reproducible, and Composable Developer Environments.
