@@ -77,16 +77,16 @@
     gnupg
     pwgen 
     
-    btop  	# replacement of htop/nmon
-    iotop 	# io monitoring
-    iftop 	# network monitoring
+    btop  	    # replacement of htop/nmon
+    iotop 	    # io monitoring
+    iftop 	    # network monitoring
 
     # system call monitoring
-    strace 	# system call monitoring
-    ltrace 	# library call monitoring
-    lsof 	# list open files
+    strace 	    # system call monitoring
+    ltrace 	    # library call monitoring
+    lsof 	      # list open files
 
-    keychain    # Keychain management tool
+    keychain    # Keychain management tool for SSH keys
   ];
 }
 

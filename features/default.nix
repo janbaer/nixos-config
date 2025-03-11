@@ -1,6 +1,6 @@
 {pkgs, ...}: {
   imports = [
-    ./cli.nix
+    ./shell
     ./dev
     ./desktop
     ./dotfiles.nix
