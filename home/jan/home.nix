@@ -1,10 +1,9 @@
 { config, pkgs, username, ... }:
 
+let 
+  pubSshKey = builtins.readFile ./../../secrets/id_ed25519.pub;
+in
 {
-  # TODO please change the username & home directory to your own
-  home.username = username;
-  home.homeDirectory = "/home/${username}";
-
   imports = [
     ./../../features
   ];
@@ -19,6 +18,13 @@
     desktop = {
       browsers.enable = true;
     };
+  };
+
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
+
+  home.file = {
+    ".ssh/id_ed25519.pub".text = pubSshKey;
   };
 
   # link the configuration file in current directory to the specified location in home directory
@@ -45,10 +51,6 @@
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
   ];
-
-  home.file = {
-    ".ssh/id_ed25519.pub".txt = ( builtins.readFile "./secrects/id_ed25519.pub" );
-  };
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage
