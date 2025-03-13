@@ -38,6 +38,8 @@
 
       [ -f $ZDOTDIR/.zsh-secrets ] && source $ZDOTDIR/.zsh-secrets
 
+      [ -f $PWD/.zshrc.local ] && source $PWD/.zshrc.local
+
       PATH=$PATH:$HOME/bin
     '';
     plugins = [
