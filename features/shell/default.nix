@@ -36,6 +36,11 @@
       theme = "Dracula";
       previewer = "bat";
     };
+    extraConfig = ''
+    '';
+    keybindings = {
+      D = "delete";
+    };
   };
 
   programs.ghostty = {
