@@ -15,6 +15,12 @@
         owner = "${username}";
         mode = "0600";
       };
+      "id_ed25519_forgejo" = {
+        file = ../../secrets/id_ed25519_forgejo.age;
+        path = "/home/${username}/.ssh/id_ed25519_forgejo";
+        owner = "${username}";
+        mode = "0600";
+      };
     };
   };
 }

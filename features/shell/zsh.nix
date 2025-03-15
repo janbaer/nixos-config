@@ -64,7 +64,7 @@
     };
     sessionVariables = {
       EDITOR = "nvim";
-      KEYCHAIN_KEYS_LOCAL = "id_ed25519";
+      KEYCHAIN_KEYS_LOCAL = "id_ed25519 id_ed25519_forgejo";
     };
   };
 

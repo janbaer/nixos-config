@@ -7,4 +7,5 @@ let
 in {
   "zsh-secrets.age".publicKeys = keys;
   "id_ed25519.age".publicKeys = keys;
+  "id_ed25519_forgejo.age".publicKeys = keys;
 }
