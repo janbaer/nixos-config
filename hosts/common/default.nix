@@ -6,6 +6,7 @@
 , ...
 }: {
   imports = [
+    ./network.nix
     ./secrets.nix
   ];
 
