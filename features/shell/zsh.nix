@@ -65,6 +65,7 @@
     sessionVariables = {
       EDITOR = "nvim";
       KEYCHAIN_KEYS_LOCAL = "id_ed25519 id_ed25519_forgejo";
+      DIRENV_LOG_FORMAT= "";
     };
   };
 
@@ -80,4 +81,3 @@
   home.packages = with pkgs; [
   ];
 }
-

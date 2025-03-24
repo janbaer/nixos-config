@@ -1,6 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./zsh.nix
+    ./tmux.nix
     ./neovim.nix
   ];
 
@@ -94,4 +95,3 @@
     keychain    # Keychain management tool for SSH keys
   ];
 }
-

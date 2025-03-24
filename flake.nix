@@ -20,11 +20,12 @@
     }@inputs:
     let
       username = "jan";
+      system = "x86_64-linux";
     in
     {
       nixosConfigurations = {
         jabasoft-vm-nixos-02 = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             ./hosts/jabasoft-vm-nixos-02/configuration.nix
             {
@@ -48,7 +49,7 @@
           ];
         };
         jabasoft-nb-01 = nixpkgs.lib.nixosSystem {
-          system = "x86_64-linux";
+          inherit system;
           modules = [
             ./hosts/jabasoft-nb-01/configuration.nix
             {
