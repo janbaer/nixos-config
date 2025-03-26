@@ -8,6 +8,7 @@
   imports = [
     ./network.nix
     ./secrets.nix
+    ./mailbox-drive.nix
   ];
 
   nixpkgs = {
