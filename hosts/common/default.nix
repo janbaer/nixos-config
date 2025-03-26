@@ -9,6 +9,7 @@
     ./network.nix
     ./secrets.nix
     ./mailbox-drive.nix
+    ./yubikey.nix
   ];
 
   nixpkgs = {

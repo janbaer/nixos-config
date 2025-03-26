@@ -13,6 +13,7 @@
 
   features = {
     mailbox-drive.enable = true;
+    yubikey.enable = true;
   };
 
   # Bootloader.
