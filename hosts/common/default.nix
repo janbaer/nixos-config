@@ -7,6 +7,7 @@
 }: {
   imports = [
     ./network-hosts.nix
+    ./openssh.nix
     ./secrets.nix
     ./mailbox-drive.nix
     ./yubikey.nix

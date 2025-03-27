@@ -15,6 +15,7 @@
     mailbox-drive.enable = true;
     yubikey.enable = true;
     network-hosts.enable = true;
+    openssh.enable = true;
   };
 
   # Bootloader.
@@ -98,7 +99,7 @@
   users.users.jan = {
     isNormalUser = true;
     description = "Jan";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "ssh-users" ];
     openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de" ];
     packages = with pkgs; [];
     shell = pkgs.zsh;
@@ -135,9 +136,6 @@
   # };
 
   # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
