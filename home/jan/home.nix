@@ -15,6 +15,7 @@ in
       golang.enable = true;
       rust.enable = true;
       vscode.enable = true;
+      k8s-cli.enable = true;
     };
     desktop = {
       browsers.enable = true;

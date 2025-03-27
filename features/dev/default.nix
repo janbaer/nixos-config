@@ -5,6 +5,7 @@
     ./vscode.nix
     ./golang.nix
     ./rust.nix
+    ./k8s-cli.nix
   ];
 
   programs.direnv = {
