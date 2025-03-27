@@ -14,6 +14,7 @@
   features = {
     mailbox-drive.enable = true;
     yubikey.enable = true;
+    network-hosts.enable = true;
   };
 
   # Bootloader.
