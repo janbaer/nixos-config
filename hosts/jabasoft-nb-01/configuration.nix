@@ -2,7 +2,7 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, username, ... }:
 
 {
   imports =
@@ -96,9 +96,9 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jan = {
+  users.users.${username} = {
     isNormalUser = true;
-    description = "Jan";
+    description = "Jan Baer";
     extraGroups = [ "networkmanager" "wheel" "ssh-users" ];
     openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de" ];
     packages = with pkgs; [];
@@ -116,10 +116,11 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-   git
-   neovim
-   ghostty
-   nh
+    git
+    neovim
+    ghostty
+    atuin
+    inputs.agenix.packages."${system}".default
   ];
 
   # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion

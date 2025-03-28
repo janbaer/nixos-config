@@ -1,4 +1,3 @@
-
 { config, lib, pkgs, username, ... }:
 with lib; let
   cfg = config.features.openssh;

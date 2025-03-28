@@ -4,19 +4,19 @@ let
 in
 {
   home.activation = {
-    cloning_dotfiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    cloning_dotfiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       dotfiles_dir=/home/${username}/Projects/dotfiles
       if [ ! -d "$dotfiles_dir" ]; then
         /run/current-system/sw/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
       fi
     '';
-    cloning_wallpapers = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    cloning_wallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       wallpapers_dir=/home/${username}/Pictures/wallpapers
       if [ ! -d "$wallpapers_dir" ]; then
         /run/current-system/sw/bin/git clone https://github.com/janbaer/wallpapers.git $wallpapers_dir
       fi
     '';
-  } ;
+  };
 
   home.file = {
     ".config/lazygit".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/lazygit";

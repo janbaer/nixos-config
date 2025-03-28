@@ -44,9 +44,9 @@ in
       };
       u2f = {
         enable = true;
-        interactive = true;
         control = "sufficient";
         settings = {
+          interactive = true;
           pinverification = 1;
         };
       };
