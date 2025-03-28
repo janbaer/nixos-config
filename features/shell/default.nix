@@ -3,12 +3,8 @@
     ./zsh.nix
     ./tmux.nix
     ./neovim.nix
+    ./atuin.nix
   ];
-
-  programs.atuin = {
-    enable = true;
-    enableZshIntegration = true;
-  };
 
   programs.zoxide = {
     enable = true;

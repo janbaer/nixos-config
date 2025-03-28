@@ -1,6 +1,5 @@
-{ username
-, ...
-}: {
+{ username, ... }: 
+{
   age = {
     secrets = {
       "zsh-secrets" = {
@@ -23,6 +22,12 @@
         owner = "${username}";
         mode = "0600";
         symlink = false;
+      };
+      atuin = {
+        file = ../../secrets/atuin.age;
+        path = "../../secrets/atuin.toml";
+        owner = "${username}";
+        mode = "0600";
       };
     };
   };

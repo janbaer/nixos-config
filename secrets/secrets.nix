@@ -10,4 +10,5 @@ in {
   "id_ed25519_forgejo.age".publicKeys = keys;
   "davfs2-secrets.age".publicKeys = keys;
   "yubico-u2f-keys.age".publicKeys = keys;
+  "atuin.age".publicKeys = keys;
 }
