@@ -46,8 +46,9 @@ in
         enable = true;
         control = "sufficient";
         settings = {
-          interactive = true;
+          interactive = false; # Prints a prompt first to insert the Yubikey (which is a bit annoying)
           pinverification = 1;
+          cue = false; # Requires additionally to touch the Yubikey
         };
       };
       yubico = {
