@@ -1,10 +1,10 @@
 { config, pkgs, username, ... }:
 {
   imports = [
-    ./../../features
+    ./../../modules/home
   ];
 
-  features = {
+  modules = {
     dev = {
       nodejs.enable = true;
       golang.enable = true;

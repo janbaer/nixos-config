@@ -4,10 +4,10 @@
 , ...
 }:
 with lib; let
-  cfg = config.features.desktop.browsers;
+  cfg = config.modules.desktop.browsers;
 in
 {
-  options.features.desktop.browsers.enable = mkEnableOption "Install web browsers";
+  options.modules.desktop.browsers.enable = mkEnableOption "Install web browsers";
 
   config = mkIf cfg.enable {
     programs = {

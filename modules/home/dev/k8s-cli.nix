@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib; let
-  cfg = config.features.dev.k8s-cli;
+  cfg = config.modules.dev.k8s-cli;
 in
 {
-  options.features.dev.k8s-cli.enable = mkEnableOption "K8s developer tools";
+  options.modules.dev.k8s-cli.enable = mkEnableOption "K8s developer tools";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [

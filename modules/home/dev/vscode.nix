@@ -4,10 +4,10 @@
 , ...
 }:
 with lib; let
-  cfg = config.features.dev.vscode;
+  cfg = config.modules.dev.vscode;
 in
 {
-  options.features.dev.vscode.enable = mkEnableOption "VSCode with plugins";
+  options.modules.dev.vscode.enable = mkEnableOption "VSCode with plugins";
 
   config = mkIf cfg.enable {
     programs.vscode = {

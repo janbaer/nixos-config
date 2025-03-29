@@ -4,10 +4,10 @@
 , ...
 }:
 with lib; let
-  cfg = config.features.dev.nodejs;
+  cfg = config.modules.dev.nodejs;
 in
 {
-  options.features.dev.nodejs.enable = mkEnableOption "NodeJS with global packages";
+  options.modules.dev.nodejs.enable = mkEnableOption "NodeJS with global packages";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [

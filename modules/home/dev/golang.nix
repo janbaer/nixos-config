@@ -4,10 +4,10 @@
 , ...
 }:
 with lib; let
-  cfg = config.features.dev.golang;
+  cfg = config.modules.dev.golang;
 in
 {
-  options.features.dev.golang.enable = mkEnableOption "Go programming language";
+  options.modules.dev.golang.enable = mkEnableOption "Go programming language";
 
   config = mkIf cfg.enable {
     programs.go = {

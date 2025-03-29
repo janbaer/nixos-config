@@ -4,10 +4,10 @@
 , ...
 }:
 with lib; let
-  cfg = config.features.dev.rust;
+  cfg = config.modules.dev.rust;
 in
 {
-  options.features.dev.rust.enable = mkEnableOption "Rust programming language";
+  options.modules.dev.rust.enable = mkEnableOption "Rust programming language";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
