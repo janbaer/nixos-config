@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib; let
-  cfg = config.features.network-hosts;
+  cfg = config.modules.network-hosts;
 in
 {
-  options.features.network-hosts.enable = mkEnableOption "Configuration of the hosts file";
+  options.modules.network-hosts.enable = mkEnableOption "Configuration of the hosts file";
 
   config = mkIf cfg.enable {
     networking = {

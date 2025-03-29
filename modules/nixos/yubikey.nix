@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib; let
-  cfg = config.features.yubikey;
+  cfg = config.modules.yubikey;
 in
 {
-  options.features.yubikey.enable = mkEnableOption "Yubikey integration";
+  options.modules.yubikey.enable = mkEnableOption "Yubikey integration";
 
   config = mkIf cfg.enable {
     # See also https://nixos.wiki/wiki/Yubikey

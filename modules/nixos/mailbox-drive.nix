@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib; let
-  cfg = config.features.mailbox-drive;
+  cfg = config.modules.mailbox-drive;
 in
 {
-  options.features.mailbox-drive.enable = mkEnableOption "Mailbox.org Drive integration with davfs2";
+  options.modules.mailbox-drive.enable = mkEnableOption "Mailbox.org Drive integration with davfs2";
 
   config = mkIf cfg.enable {
     age = {

@@ -9,9 +9,10 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../common
+      ./../../modules/nixos
     ];
 
-  features = {
+  modules = {
     mailbox-drive.enable = true;
     yubikey.enable = true;
     network-hosts.enable = true;

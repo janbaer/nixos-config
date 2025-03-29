@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib; let
-  cfg = config.features.openssh;
+  cfg = config.modules.openssh;
 in
 {
-  options.features.openssh.enable = mkEnableOption "Configuration for OpenSSH server";
+  options.modules.openssh.enable = mkEnableOption "Configuration for OpenSSH server";
 
   config = mkIf cfg.enable {
     services.openssh = {

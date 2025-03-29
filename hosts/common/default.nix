@@ -6,11 +6,11 @@
 , ...
 }: {
   imports = [
-    ./network-hosts.nix
-    ./openssh.nix
+    # ./network-hosts.nix
+    # ./openssh.nix
     ./secrets.nix
-    ./mailbox-drive.nix
-    ./yubikey.nix
+    # ./mailbox-drive.nix
+    # ./yubikey.nix
   ];
 
   nixpkgs = {
