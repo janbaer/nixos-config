@@ -19,10 +19,7 @@
     , ...
     }@inputs:
     let
-      username = "jan";
-      system = "x86_64-linux";
-
-      mkSystem = pkgs: system: hostname:
+      mkSystem = pkgs: system: hostname: username:
         pkgs.lib.nixosSystem
         {
           system = system;
@@ -43,15 +40,15 @@
                 inherit username;
                 inherit hostname;
               };
-              home-manager.users.${username} = import ./home/${username}/home.nix;
+              home-manager.users.${username} = import ./hosts/${hostname}/home.nix;
             }
           ];
         };
     in
     {
       nixosConfigurations = {
-        jabasoft-vm-nixos-02 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-vm-nixos-02";
-        jabasoft-nb-01 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-nb-01";
+        jabasoft-vm-nixos-02 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-vm-nixos-02" "jan" ;
+        jabasoft-nb-01 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-nb-01" "jan";
       };
     };
 }

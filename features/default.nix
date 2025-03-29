@@ -4,6 +4,7 @@
     ./dev
     ./desktop
     ./dotfiles.nix
+    ./ssh.nix
   ];
 }
 
