@@ -34,13 +34,18 @@
             agenix.nixosModules.default
             home-manager.nixosModules.home-manager
             {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                inherit username;
-                inherit hostname;
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                extraSpecialArgs = {
+                  inherit username;
+                  inherit hostname;
+                };
+                users.${username} = import ./hosts/${hostname}/home.nix;
+                sharedModules = [
+                  agenix.homeManagerModules.age
+                ];
               };
-              home-manager.users.${username} = import ./hosts/${hostname}/home.nix;
             }
           ];
         };
