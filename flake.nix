@@ -21,57 +21,37 @@
     let
       username = "jan";
       system = "x86_64-linux";
+
+      mkSystem = pkgs: system: hostname:
+        pkgs.lib.nixosSystem
+        {
+          system = system;
+          specialArgs = {
+            inherit system;
+            inherit inputs;
+            inherit username;
+            inherit hostname;
+          };
+          modules = [
+            ./hosts/${hostname}/configuration.nix
+            agenix.nixosModules.default
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit username;
+                inherit hostname;
+              };
+              home-manager.users.${username} = import ./home/${username}/home.nix;
+            }
+          ];
+        };
     in
     {
       nixosConfigurations = {
-        jabasoft-vm-nixos-02 = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./hosts/jabasoft-vm-nixos-02/configuration.nix
-            {
-              _module.args = {
-                inherit inputs;
-                inherit username;
-              };
-            }
-            agenix.nixosModules.default
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                inherit username;
-              };
-              home-manager.users.${username} = import ./home/${username}/home.nix;
-              home-manager.sharedModules = [
-              ];
-            }
-          ];
-        };
-        jabasoft-nb-01 = nixpkgs.lib.nixosSystem {
-          inherit system;
-          modules = [
-            ./hosts/jabasoft-nb-01/configuration.nix
-            {
-              _module.args = {
-                inherit inputs;
-                inherit username;
-              };
-            }
-            agenix.nixosModules.default
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.extraSpecialArgs = {
-                inherit username;
-              };
-              home-manager.users.${username} = import ./home/${username}/home.nix;
-              home-manager.sharedModules = [
-              ];
-            }
-          ];
-        };
+        jabasoft-vm-nixos-02 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-vm-nixos-02";
+        jabasoft-nb-01 = mkSystem inputs.nixpkgs "x86_64-linux" "jabasoft-nb-01";
       };
     };
 }
