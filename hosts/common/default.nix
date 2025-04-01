@@ -1,16 +1,7 @@
 # Common configuration for all hosts
-{ lib
-, inputs
-, outputs
-, username
-, ...
-}: {
+{ lib, inputs, outputs, username, ...}: {
   imports = [
-    # ./network-hosts.nix
-    # ./openssh.nix
     ./secrets.nix
-    # ./mailbox-drive.nix
-    # ./yubikey.nix
   ];
 
   nixpkgs = {

@@ -1,13 +1,7 @@
-{ config, pkgs, username, ... }:
-
-let 
-  pubSshKey = builtins.readFile ./../../secrets/id_ed25519.pub;
-  pubForgejoSshKey = builtins.readFile ./../../secrets/id_ed25519_forgejo.pub;
-in
-{
+{ config, pkgs, username, ... }: {
   home.file = {
-    ".ssh/id_ed25519.pub".text = pubSshKey;
-    ".ssh/id_ed25519_forgejo.pub".text = pubForgejoSshKey;
+    ".ssh/id_ed25519.pub".text = builtins.readFile ./../../secrets/id_ed25519.pub;
+    ".ssh/id_ed25519_forgejo.pub".text = builtins.readFile ./../../secrets/id_ed25519_forgejo.pub;
   };
 
   programs.ssh = {
