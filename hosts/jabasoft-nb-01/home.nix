@@ -1,4 +1,10 @@
 { config, pkgs, username, ... }:
+let
+  inherit
+    (import ./variables.nix)
+    useHyprland
+    ;
+in
 {
   imports = [
     ./../../modules/home
@@ -14,6 +20,7 @@
     };
     desktop = {
       browsers.enable = true;
+      hyprland.enable = useHyprland;
     };
   };
 

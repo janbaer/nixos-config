@@ -36,6 +36,8 @@
         "root"
         "jan"
       ]; # Set users that are allowed to use the flake command
+      substituters = [ "https://hyprland.cachix.org" ];
+      trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
     };
     # Configure automatic cleanup and also garbage-collect of old generations
     gc = {

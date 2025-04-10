@@ -1,0 +1,53 @@
+#!/bin/sh
+
+wallpaper=~/.wallpaper.jpg
+
+while read file
+do
+  fullpath="$(pwd)/$file"
+  case "$1" in
+  "w")
+    cp "$file" $wallpaper &&
+    feh --bg-scale "$wallpaper"
+
+    # monitor=$(hyprctl monitors -j | jq -r ".[0].name")
+
+    if [ "$XDG_SESSION_TYPE" == "wayland" ]; then
+      # hyprctl hyprpaper unload $wallpaper
+      # hyprctl hyprpaper preload $wallpaper
+      # hyprctl hyprpaper wallpaper "$monitor,$wallpaper"
+      pkill hyprpaper
+      hyprctl dispatch exec hyprpaper
+    else
+      feh --bg-scale "$HOME/.wallpaper.jpg"
+    fi
+    notify-send -t 2000 -i "$wallpaper" "Wallpaper changed."
+    ;;
+  "c")
+    [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.bmdirs | awk '{print $2}' | dmenu -l 20 -i -p "Copy file(s) to where?" | sed "s|~|$HOME|g")"
+    [ -z "$destdir" ] && exit
+    cp "$file" "$destdir" && notify-send -i "$fullpath" "$file copied to $destdir." &
+    ;;
+  "m")
+    [ -z "$destdir" ] && destdir="$(sed "s/\s.*#.*$//;/^\s*$/d" ~/.bmdirs | awk '{print $2}' | dmenu -l 20 -i -p "Move file(s) to where?" | sed "s|~|$HOME|g")"
+    [ -z "$destdir" ] && exit
+    cp "$file" "$destdir" && notify-send -i "$fullpath" "$file moved to $destdir." &
+    ;;
+  "r")
+    convert -rotate 90 "$file" "$file" ;;
+  "R")
+    convert -rotate -90 "$file" "$file" ;;
+  "f")
+    convert -flop "$file" "$file" ;;
+  "y")
+    echo -n "$file" | xclip -selection clipboard &&
+    notify-send "$file copied to clipboard" & ;;
+  "Y")
+    echo -n "$fullpath" | xclip -selection clipboard &&
+    notify-send "$fullpath copied to clipboard" & ;;
+  "d")
+    rm "$file" && notify-send "$file deleted." ;;
+  "G")
+    gimp "$file" & ;;
+  esac
+done

@@ -69,6 +69,7 @@
     ipcalc  	# it is a calculator for the IPv4/v6 addresses
 
     # misc
+    killall
     file
     which
     tree
