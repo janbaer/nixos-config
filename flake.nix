@@ -2,11 +2,11 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     agenix.url = "github:ryantm/agenix";
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -40,6 +40,8 @@
                 extraSpecialArgs = {
                   inherit username;
                   inherit hostname;
+                  inherit inputs;
+                  inherit system;
                 };
                 users.${username} = import ./hosts/${hostname}/home.nix;
                 sharedModules = [
