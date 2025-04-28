@@ -2,8 +2,8 @@
   description = "A simple NixOS flake";
 
   inputs = {
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     agenix.url = "github:ryantm/agenix";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -15,6 +15,7 @@
   outputs =
     { self
     , nixpkgs
+    , nixpkgs-unstable
     , home-manager
     , agenix
     , ...
@@ -29,6 +30,10 @@
             inherit inputs;
             inherit username;
             inherit hostname;
+            pkgs-unstable = import nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
           };
           modules = [
             ./hosts/${hostname}/configuration.nix
@@ -43,6 +48,10 @@
                   inherit hostname;
                   inherit inputs;
                   inherit system;
+                  pkgs-unstable = import nixpkgs-unstable {
+                    inherit system;
+                    config.allowUnfree = true;
+                  };
                 };
                 users.${username} = import ./hosts/${hostname}/home.nix;
                 sharedModules = [

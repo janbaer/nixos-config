@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, username, ... }:
+{ config, pkgs, pkgs-unstable, inputs, username, ... }:
 let
   inherit
     (import ./variables.nix)
@@ -123,7 +123,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
-    neovim
+    pkgs-unstable.neovim # Stable channel doesn't have v0.11
     ghostty
     atuin
     inputs.agenix.packages."${system}".default
