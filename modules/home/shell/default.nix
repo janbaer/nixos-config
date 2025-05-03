@@ -8,7 +8,7 @@
 
   programs.zoxide = {
     enable = true;
-    enableFishIntegration = true;
+    enableZshIntegration = true;
   };
 
   programs.bat = {
@@ -17,8 +17,7 @@
 
   programs.eza = {
     enable = true;
-    enableFishIntegration = true;
-    enableBashIntegration = true;
+    enableZshIntegration = true;
     extraOptions = ["-l" "--icons" "--git" "-a"];
   };
 
@@ -42,14 +41,25 @@
 
   programs.ghostty = {
     enable = true;
-    enableBashIntegration = true;
     enableZshIntegration = true;
     installVimSyntax = true;
+    settings = {
+      theme = "tokyonight";
+      font-family = "ComicShannsMono Nerd Font Mono";
+      font-size = 16;
+      background-opacity = 0.7;
+      background-blur-radius = 10;
+      quick-terminal-animation-duration = 0;
+      # Linux specific settings
+      gtk-titlebar = false;
+      # MacOS specific settings
+      macos-titlebar-style = "hidden";
+      keybind = "global:cmd+grave_accent=toggle_quick_terminal";
+    };
   };
 
   home.packages = with pkgs; [
     fastfetch
-    # lf # Terminal based filemanager
 
     # archives
     zip
@@ -61,7 +71,7 @@
     ripgrep 	# recursively searches directories for a regex pattern
     eza 	# A modern replacement for ‘ls’
     fzf 	# A command-line fuzzy finder
-    television  # Blazingly fast general purpose fuzzy finder TUI.
+    # television  # Blazingly fast general purpose fuzzy finder TUI.
 
     # networking tools
     dnsutils   	# `dig` + `nslookup`
@@ -80,15 +90,16 @@
     gnupg
     pwgen 
     
-    btop  	    # replacement of htop/nmon
-    iotop 	    # io monitoring
-    iftop 	    # network monitoring
+    btop            # replacement of htop/nmon
+    htop
+    iotop           # io monitoring
+    iftop           # network monitoring
 
     # system call monitoring
-    strace 	    # system call monitoring
-    ltrace 	    # library call monitoring
-    lsof 	      # list open files
+    strace          # system call monitoring
+    ltrace          # library call monitoring
+    lsof            # list open files
 
-    keychain    # Keychain management tool for SSH keys
+    keychain        # Keychain management tool for SSH keys
   ];
 }
