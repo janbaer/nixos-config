@@ -16,6 +16,9 @@ in
         /run/current-system/sw/bin/git clone https://github.com/janbaer/wallpapers.git $wallpapers_dir
       fi
     '';
+    copy_default_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] '' 
+      cp ~/Pictures/wallpapers/6193244.jpg ~/.wallpaper.jpg
+    '';
   };
 
   home.file = {
