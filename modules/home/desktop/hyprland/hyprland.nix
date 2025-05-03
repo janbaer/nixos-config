@@ -16,7 +16,7 @@ in
       };
       xwayland.enable = true;
       settings = {
-        # monitor = ",preferred,auto,auto";
+        monitor = "${extraMonitorSettings}";
 
         "$terminal" = "ghostty";
         "$fileManager" = "nautilus";
@@ -181,10 +181,6 @@ in
 
       };
       extraConfig = ''
-        ${extraMonitorSettings}
-
-        # vim:ft=cfg
-        # See https://wiki.hyprland.org/Configuring/Keywords/ for more
         $mainMod = SUPER
 
         bind = $mainMod, RETURN, exec, $terminal
