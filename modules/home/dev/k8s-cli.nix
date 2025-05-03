@@ -12,6 +12,7 @@ in
       kubectx     # Switching between multips k8s servers (installs also kubens)
       stern       # Multi pod and container log tailing for Kubernetes
       helm        # Creating deployment charts
+      # headlamp    # Nice K8s frontend (not available at the moment)
     ];
   };
 }

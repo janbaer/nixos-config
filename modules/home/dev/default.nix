@@ -19,9 +19,11 @@
     gcc # GNU Compiler Collection
     gnumake
     cmake
-    jq # A lightweight and flexible command-line JSON processor
-    jless # less for Json files or streams
-    yq-go # yaml processor https://github.com/mikefarah/yq
-    httpie # Command line HTTP client whose goal is to make CLI human-friendly.
+    jq          # A lightweight and flexible command-line JSON processor
+    gojq        # Same as jq, but written in Go and without external dependencies
+    jless       # less for Json files or streams
+    yq-go       # yaml processor https://github.com/mikefarah/yq
+    httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
+    meld        # Visual diff and merge tool
   ];
 }
