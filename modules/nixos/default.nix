@@ -4,6 +4,23 @@
     ./yubikey.nix
     ./mailbox-drive.nix
     ./network-hosts.nix
+    ./users.nix
+  ];
+
+  environment.variables = {
+    EDITOR = "nvim";
+  };
+
+  environment.shellAliases = {
+    n = "nvim";
+    vim = "nvim";
+    lsa = "ls -la";
+  };
+
+  programs.zsh.enable = true;
+  # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
+  environment.pathsToLink = [
+    "/share/zsh"
   ];
 
   # Run unpatched dynamic binaries on NixOS 

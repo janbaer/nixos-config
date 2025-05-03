@@ -30,5 +30,11 @@
         mode = "0600";
       };
     };
+
   };
+  system.activationScripts.script.text = ''
+      #!/usr/bin/env bash
+      chown jan: /home/${username}/.config/zsh
+      chmod 0700 /home/${username}/.config/zsh
+  '';
 }

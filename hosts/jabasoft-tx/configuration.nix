@@ -7,7 +7,7 @@ let
 in
 {
   imports =
-    [
+    [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./../common
       ./../../modules/nixos
@@ -24,8 +24,12 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "jabasoft-nb-01"; # Define your hostname.
+  networking.hostName = "jabasoft-tx"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+
+  # Configure network proxy if necessary
+  # networking.proxy.default = "http://user:password@proxy:port/";
+  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -49,7 +53,10 @@ in
   };
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  services.xserver.enable = false;
+  # Enable the GNOME Desktop Environment.
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm = {
@@ -72,9 +79,6 @@ in
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable Bluetooth support
-  hardware.bluetooth.enable = true;
-
   # Enable sound with pipewire.
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -91,19 +95,14 @@ in
     #media-session.enable = true;
   };
 
+  hardware.tuxedo-rs = {
+    enable = true;
+    tailor-gui.enable = true;
+  };
+  hardware.tuxedo-drivers.enable = true;
+
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${username} = {
-    isNormalUser = true;
-    description = "Jan Baer";
-    extraGroups = [ "networkmanager" "wheel" "ssh-users" ];
-    openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de" ];
-    packages = with pkgs; [];
-    shell = pkgs.zsh;
-  };
-
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -112,15 +111,9 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
-    pkgs-unstable.neovim # Stable channel doesn't have v0.11
+    neovim
     ghostty
-    atuin
     inputs.agenix.packages."${system}".default
-  ];
-
-  # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
-  environment.pathsToLink = [
-    "/share/zsh"
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -130,8 +123,6 @@ in
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
-  # List services that you want to enable:
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -146,5 +137,4 @@ in
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.11"; # Did you read the comment?
-
 }
