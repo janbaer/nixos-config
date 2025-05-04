@@ -1,23 +1,18 @@
 { config, pkgs, pkgs-unstable, inputs, username, ... }:
-let
-  inherit
-    (import ./variables.nix)
-    useHyprland
-    ;
-in
-{
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      ./../common
-      ./../../modules/nixos
-    ];
+let inherit (import ./variables.nix) useHyprland;
+in {
+  imports = [ # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    ./../common
+    ./../../modules/nixos
+  ];
 
   modules = {
     mailbox-drive.enable = true;
     yubikey.enable = true;
     network-hosts.enable = true;
     openssh.enable = true;
+    tuxedo.enable = true;
   };
 
   # Bootloader.
@@ -51,12 +46,6 @@ in
     LC_TELEPHONE = "de_DE.UTF-8";
     LC_TIME = "de_DE.UTF-8";
   };
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = false;
-  # Enable the GNOME Desktop Environment.
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm = {
@@ -94,12 +83,6 @@ in
     # no need to redefine it in your config for now)
     #media-session.enable = true;
   };
-
-  hardware.tuxedo-rs = {
-    enable = true;
-    tailor-gui.enable = true;
-  };
-  hardware.tuxedo-drivers.enable = true;
 
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;

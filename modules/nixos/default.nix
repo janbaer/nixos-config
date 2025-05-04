@@ -5,6 +5,7 @@
     ./mailbox-drive.nix
     ./network-hosts.nix
     ./users.nix
+    ./tuxedo.nix
   ];
 
   environment.variables = {
