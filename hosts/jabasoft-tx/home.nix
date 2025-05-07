@@ -22,6 +22,7 @@ in
       browsers.enable = true;
       hyprland.enable = useHyprland;
     };
+    gpg.enable = true;
   };
 
   home.username = username;

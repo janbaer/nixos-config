@@ -5,6 +5,7 @@
     ./desktop
     ./dotfiles.nix
     ./ssh.nix
+    ./gpg.nix
   ];
 }
 

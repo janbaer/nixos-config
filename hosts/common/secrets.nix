@@ -29,9 +29,15 @@
         owner = "${username}";
         mode = "0600";
       };
+      gpg_key = {
+        file = ../../secrets/private-gpg-key.age;
+        path = "/home/${username}/.gnupg/private-key.gpg";
+        owner = "${username}";
+        mode = "0600";
+      };
     };
-
   };
+
   system.activationScripts.script.text = ''
       #!/usr/bin/env bash
       chown jan: /home/${username}/.config/zsh

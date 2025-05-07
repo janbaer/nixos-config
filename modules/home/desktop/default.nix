@@ -14,7 +14,6 @@
     gthumb          # Image browser and viewer for GNOME
     evince          # GNOME's document viewer
     filezilla       # Graphical FTP, FTPS and SFTP client
-    seahorse        # Application for managing encryption keys and passwords in the GnomeKeyring
 
     easytag         # View and edit tags for various audio files
   ];
