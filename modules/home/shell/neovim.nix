@@ -22,5 +22,6 @@
     lua
     luarocks
     fd
+    nixd        # LSP support for the Nix language
   ];
 }
