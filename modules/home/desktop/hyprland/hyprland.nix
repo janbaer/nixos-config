@@ -198,7 +198,7 @@ in
         bind = $mainMod SHIFT, E, exec, wlogout
         bind = $mainMod SHIFT, L, exec, hyprlock
         bind = $mainMod SHIFT, H, exec, ~/.config/waybar/scripts/keyhint.sh
-        bind = $mainMod SHIFT, P, exec, ~/.config/hypr/scripts/cliphist.sh
+        bind = $mainMod SHIFT, P, exec, ~/.config/waybar/scripts/cliphist.sh
         bind = $mainMod SHIFT, S, exec, systemctl suspend
         bind = $mainMod SHIFT, Y, exec, grim -g "$(slurp -d)" - | swappy -f -
 
