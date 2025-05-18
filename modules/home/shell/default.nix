@@ -68,15 +68,16 @@
     p7zip
 
     # utils
-    ripgrep 	# recursively searches directories for a regex pattern
-    eza 	# A modern replacement for ‘ls’
-    fzf 	# A command-line fuzzy finder
+    ripgrep     # recursively searches directories for a regex pattern
+    eza         # A modern replacement for ‘ls’
+    fzf         # A command-line fuzzy finder
+    duf         # Disk Usage/Free Utility
     # television  # Blazingly fast general purpose fuzzy finder TUI.
 
     # networking tools
-    dnsutils   	# `dig` + `nslookup`
-    ldns 	# replacement of `dig`, it provide the command `drill`
-    ipcalc  	# it is a calculator for the IPv4/v6 addresses
+    dnsutils    # `dig` + `nslookup`
+    ldns        # replacement of `dig`, it provide the command `drill`
+    ipcalc      # it is a calculator for the IPv4/v6 addresses
 
     # misc
     killall
@@ -87,8 +88,8 @@
     gnutar
     gawk
     zstd
-    gnupg
     pwgen 
+    wget
     
     btop            # replacement of htop/nmon
     htop
@@ -100,6 +101,7 @@
     ltrace          # library call monitoring
     lsof            # list open files
 
-    keychain        # Keychain management tool for SSH keys
+    # AI helpers
+    tgpt            # ChatGPT in terminal without needing API keys
   ];
 }
