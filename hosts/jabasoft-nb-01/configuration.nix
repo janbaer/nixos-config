@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, inputs, username, ... }:
+{ config, pkgs, inputs, username, ... }:
 let
   inherit
     (import ./variables.nix)
@@ -76,7 +76,7 @@ in
   hardware.bluetooth.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
@@ -112,7 +112,7 @@ in
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
-    pkgs-unstable.neovim # Stable channel doesn't have v0.11
+    neovim
     ghostty
     atuin
     inputs.agenix.packages."${system}".default

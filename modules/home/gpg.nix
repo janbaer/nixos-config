@@ -38,7 +38,7 @@ in {
       defaultCacheTtlSsh = 604800; # 7 days
       maxCacheTtl = 604800; # 7 days
       maxCacheTtlSsh = 604800; # 7 days
-      pinentryPackage = pkgs.pinentry-gnome3;
+      pinentry.package = pkgs.pinentry-gnome3;
       extraConfig = ''
       '';
       sshKeys = gpgSshKeys;

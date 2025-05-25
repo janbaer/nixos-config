@@ -1,4 +1,4 @@
-{ config, pkgs, pkgs-unstable, inputs, username, ... }:
+{ config, pkgs, inputs, username, ... }:
 let inherit (import ./variables.nix) useHyprland;
 in {
   imports = [ # Include the results of the hardware scan.
@@ -78,7 +78,7 @@ in {
   services.udisks2.enable = true;
 
   # Enable sound with pipewire.
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
