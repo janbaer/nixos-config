@@ -22,6 +22,9 @@ in
       browsers.enable = true;
       hyprland.enable = useHyprland;
     };
+    shell = {
+      gopass.enable = true;
+    };
     gpg.enable = true;
   };
 
@@ -48,10 +51,6 @@ in
     "Xcursor.size" = 18;
     "Xft.dpi" = 172;
   };
-
-  # Packages that should be installed to the user profile.
-  home.packages = with pkgs; [
-  ];
 
   # This value determines the home Manager release that your
   # configuration is compatible with. This helps avoid breakage

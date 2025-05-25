@@ -4,6 +4,7 @@
     ./tmux.nix
     ./neovim.nix
     ./atuin.nix
+    ./gopass.nix
   ];
 
   programs.zoxide = {
