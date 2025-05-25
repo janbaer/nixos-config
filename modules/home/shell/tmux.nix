@@ -111,6 +111,10 @@
     '';
   };
 
+  home.shellAliases = {
+    mux = "tmux new -d -s delete-me && tmux run-shell $HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh && tmux kill-session -t delete-me && tmux attach || tmux attach";
+  };
+
   home.sessionVariables = {
   };
 
