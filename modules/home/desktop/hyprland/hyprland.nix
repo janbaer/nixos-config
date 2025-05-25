@@ -256,8 +256,7 @@ in
 
         # Move/resize windows with mainMod + LMB/RM
         bindm = $mainMod, mouse:272, movewindow
-        bindm = $mainMod, mouse:273, resizewindow
-        bindm = ALT, mouse:272, movewindow
+        bindm = $mainMod SHIFT, mouse:272, resizewindow
         #
         # Fn keys
         bind = , XF86MonBrightnessUp, exec, brightnessctl -q s +10%
