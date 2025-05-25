@@ -112,11 +112,6 @@ in {
   # started in user sessions.
   # programs.mtr.enable = true;
   services.pcscd.enable = true;
-  programs.gnupg.agent = {
-    enable = true;
-    pinentryPackage = pkgs.pinentry-curses;
-    enableSSHSupport = true;
-  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

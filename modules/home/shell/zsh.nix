@@ -59,12 +59,10 @@
       "...." = "cd ../../..";
       reload = "source $ZDOTDIR/.zshrc";
       kc = "$HOME/bin/init-keychain.sh";
-      g = "git";
-      gfp = "git fetch --prune && git pull";
     };
     sessionVariables = {
       EDITOR = "nvim";
-      KEYCHAIN_KEYS_LOCAL = "id_ed25519 id_ed25519_forgejo";
+      KEYCHAIN_KEYS_LOCAL = "";
       DIRENV_LOG_FORMAT= "";
     };
   };
