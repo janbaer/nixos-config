@@ -25,5 +25,6 @@
     yq-go       # yaml processor https://github.com/mikefarah/yq
     httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
     meld        # Visual diff and merge tool
+    zed-editor  # High-performance, multiplayer code editor from the creators of Atom and Tree-sitter
   ];
 }
