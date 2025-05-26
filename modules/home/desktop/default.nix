@@ -2,6 +2,7 @@
   imports = [
     ./browsers.nix
     ./hyprland
+    ./veracrypt
   ];
 
   home.packages = with pkgs; [

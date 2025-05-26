@@ -19,8 +19,9 @@ in
       k8s-cli.enable = true;
     };
     desktop = {
-      browsers.enable = true;
       hyprland.enable = useHyprland;
+      browsers.enable = true;
+      veracrypt.enable = true;
     };
     shell = {
       gopass.enable = true;
