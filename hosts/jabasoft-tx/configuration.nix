@@ -13,6 +13,7 @@ in {
     network-hosts.enable = true;
     openssh.enable = true;
     tuxedo.enable = true;
+    nas-mounts.enable = true;
   };
 
   # Bootloader.

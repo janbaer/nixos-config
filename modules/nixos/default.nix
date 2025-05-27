@@ -6,6 +6,7 @@
     ./network-hosts.nix
     ./users.nix
     ./tuxedo.nix
+    ./nas-mounts.nix
   ];
 
   environment.variables = {
@@ -26,7 +27,7 @@
 
   # Run unpatched dynamic binaries on NixOS 
   # https://github.com/nix-community/nix-ld
-  # Helps to run Codeiumm: https://www.reddit.com/r/Codeium/comments/1cpnzra/for_anyone_on_nixos_if_codeium_doesnt_work/
+  # Helps to run Codeium: https://www.reddit.com/r/Codeium/comments/1cpnzra/for_anyone_on_nixos_if_codeium_doesnt_work/
   programs.nix-ld = {
     enable = true;
     libraries = [];

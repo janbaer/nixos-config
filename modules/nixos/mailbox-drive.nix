@@ -13,8 +13,17 @@ in
           path = "/etc/davfs2/secrets";
           mode = "0600";
         };
+        # "smb-secrets" = {
+        #   file = ../../secrets/smb-secrets.age;
+        #   path = "/home/${username}/.config/.smb-secrets";
+        #   owner = "${username}";
+        #   mode = "0600";
+        #   symlink = false;
+        # };
       };
     };
+
+    # environment.systemPackages = [pkgs.cifs-utils];
 
     services.davfs2 = {
       enable = true;
@@ -33,14 +42,14 @@ in
     users.users.${username} = {
       extraGroups = [ "davfs2" ];
     };
-
+    
     services.autofs = {
       enable = true;
       timeout = 600;
       autoMaster =
         let
           mapConf = pkgs.writeText "auto" ''
-            mailbox-drive -fstype=davfs,conf=/etc/davfs2.conf,uid=1000 :https://dav.mailbox.org/servlet/webdav.infostore/Userstore
+            mailbox-drive -fstype=davfs,uid=1000 :https://dav.mailbox.org/servlet/webdav.infostore/Userstore
           '';
         in
         ''
