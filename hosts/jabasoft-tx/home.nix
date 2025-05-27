@@ -25,6 +25,7 @@ in
     };
     shell = {
       gopass.enable = true;
+      moc.enable = true;
     };
     gpg.enable = true;
   };

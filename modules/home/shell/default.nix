@@ -5,6 +5,7 @@
     ./neovim.nix
     ./atuin.nix
     ./gopass.nix
+    ./moc.nix
   ];
 
   programs.zoxide = {
