@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{pkgs, username, ...}: {
   imports = [
     ./zsh.nix
     ./tmux.nix
@@ -6,6 +6,7 @@
     ./atuin.nix
     ./gopass.nix
     ./moc.nix
+    ./lf.nix
   ];
 
   programs.zoxide = {
@@ -21,24 +22,6 @@
     enable = true;
     enableZshIntegration = true;
     extraOptions = ["-l" "--icons" "--git" "-a"];
-  };
-
-  # Terminal based filemanager
-  programs.lf = {
-    enable = true;
-    settings = {
-      preview = true;
-      drawbox = true;
-      hidden = true;
-      icons = true;
-      theme = "Dracula";
-      previewer = "bat";
-    };
-    extraConfig = ''
-    '';
-    keybindings = {
-      D = "delete";
-    };
   };
 
   programs.ghostty = {
@@ -78,6 +61,7 @@
 
     # networking tools
     dnsutils    # `dig` + `nslookup`
+    dog
     ldns        # replacement of `dig`, it provide the command `drill`
     ipcalc      # it is a calculator for the IPv4/v6 addresses
 
@@ -105,5 +89,7 @@
 
     # AI helpers
     tgpt            # ChatGPT in terminal without needing API keys
+
+    mplayer         # CLI music player
   ];
 }
