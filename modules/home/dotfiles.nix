@@ -17,7 +17,7 @@ in
       fi
     '';
     copy_default_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] '' 
-      cp ~/Pictures/wallpapers/6193244.jpg ~/.wallpaper.jpg
+      cp ~/Pictures/wallpapers/wallhaven-wqery6.jpg ~/.wallpaper.jpg
     '';
   };
 
