@@ -15,6 +15,7 @@ in {
     tuxedo.enable = true;
     nas-mounts.enable = true;
     wireguard.enable = true;
+    docker.enable = true;
   };
 
   # Bootloader.

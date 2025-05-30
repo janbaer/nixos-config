@@ -8,6 +8,7 @@
     ./tuxedo.nix
     ./nas-mounts.nix
     ./wireguard.nix
+    ./docker.nix
   ];
 
   environment.variables = {
