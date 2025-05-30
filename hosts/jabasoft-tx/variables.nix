@@ -9,4 +9,9 @@
     "185800AE5C69C4D90EBAD7A16E2848BE8865994B" # Gitlab (CHECK24)
     "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
+
+  wgEndpoint = "janbaer.home64.de:1194";
+  wgPublicKey = "xcQlGyurzhQ3NZnL1QWrVivP6yQioSCMnlNYwCoa9k4=";
+  wgIPAddress = "192.168.2.6/32";
+  wgAllowedIPs = ["0.0.0.0/0"];
 }

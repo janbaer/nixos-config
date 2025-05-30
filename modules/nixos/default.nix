@@ -7,6 +7,7 @@
     ./users.nix
     ./tuxedo.nix
     ./nas-mounts.nix
+    ./wireguard.nix
   ];
 
   environment.variables = {

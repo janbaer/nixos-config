@@ -18,4 +18,5 @@ in {
   "atuin.age".publicKeys = keys;
   "private-gpg-key.age".publicKeys = keys;
   "smb-secrets.age".publicKeys = keys;
+  "wg0-conf-jabasoft-tx.age".publicKeys = keys;
 }
