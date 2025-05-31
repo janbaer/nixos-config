@@ -22,13 +22,13 @@ in
   };
 
   home.file = {
-    ".config/lazygit".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/lazygit";
+    # ".config/lazygit".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/lazygit";
     ".config/nvim".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/nvim";
     ".p10k.zsh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.p10k.zsh";
     ".config/zsh/.functions".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/zsh/.functions";
     ".fzf-init.zsh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.fzf-init.zsh";
     "bin/init-keychain.sh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/bin/init-keychain.sh";
-    ".gitconfig".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig";
+    # ".gitconfig".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig";
     ".gitconfig_check24".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig_check24";
   };
 }
