@@ -51,9 +51,7 @@
     ];
     shellAliases = {
       l = "lf";
-      lg = "lazygit";
       lsa = "eza --long --header --git --all";
-      n = "nvim";
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
