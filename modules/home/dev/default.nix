@@ -6,6 +6,7 @@
     ./golang.nix
     ./rust.nix
     ./k8s-cli.nix
+    ./claude.nix
   ];
 
   programs.direnv = {

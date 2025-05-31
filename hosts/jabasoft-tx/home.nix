@@ -17,6 +17,7 @@ in
       rust.enable = true;
       vscode.enable = true;
       k8s-cli.enable = true;
+      claude.enable = true;
     };
     desktop = {
       hyprland.enable = useHyprland;
