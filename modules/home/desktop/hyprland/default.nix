@@ -54,6 +54,7 @@ in
       ".config/rofi".source = ./rofi;
       ".config/hypr/hyprpaper.conf".source = ./hyprpaper/hyprpaper.conf;
       ".config/nsxiv/exec/key-handler".source = ./nsxiv/exec/key-handler;
+      ".config/dunst/dunstrc".source = ./dunst/dunstrc;
     };
   };
 }
