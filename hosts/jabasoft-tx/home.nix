@@ -18,6 +18,7 @@ in
       vscode.enable = true;
       k8s-cli.enable = true;
       claude.enable = true;
+      zed-editor.enable = true;
     };
     desktop = {
       hyprland.enable = useHyprland;
