@@ -8,6 +8,7 @@
     ./k8s-cli.nix
     ./claude.nix
     ./zed-editor.nix
+    ./goose-cli.nix
   ];
 
   programs.direnv = {

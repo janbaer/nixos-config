@@ -19,6 +19,7 @@ in
       k8s-cli.enable = true;
       claude.enable = true;
       zed-editor.enable = true;
+      goose-cli.enable = true;
     };
     desktop = {
       hyprland.enable = useHyprland;
