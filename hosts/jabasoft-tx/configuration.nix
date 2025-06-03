@@ -16,6 +16,7 @@ in {
     nas-mounts.enable = true;
     wireguard.enable = true;
     docker.enable = true;
+    printing.enable = true;
   };
 
   # Bootloader.

@@ -9,6 +9,7 @@
     ./nas-mounts.nix
     ./wireguard.nix
     ./docker.nix
+    ./printing.nix
   ];
 
   programs.zsh.enable = true;
