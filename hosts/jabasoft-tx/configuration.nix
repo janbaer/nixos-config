@@ -17,6 +17,7 @@ in {
     wireguard.enable = true;
     docker.enable = true;
     printing.enable = true;
+    scanners.enable = true;
   };
 
   # Bootloader.

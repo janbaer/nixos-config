@@ -10,6 +10,7 @@
     ./wireguard.nix
     ./docker.nix
     ./printing.nix
+    ./scanners.nix
   ];
 
   programs.zsh.enable = true;
