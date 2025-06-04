@@ -19,3 +19,7 @@ To encrypt a file you can use either **agenix** with calling `agenix -e secret.a
 Before installing agenix, you can run agenix in a nix-shell with the command `nix shell github:ryantm/agenix`
 
 [See also](https://jonascarpay.com/posts/2021-07-27-agenix.html)
+
+## Known issues
+
+- In case that the command `nix flake update` fails with a strange error like `failed to insert entry: invalid object specified - package.nix` it helped, to delete the `~/.cache/nix/` directory.
