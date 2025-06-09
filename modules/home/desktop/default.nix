@@ -1,6 +1,7 @@
 { pkgs, ...}: {
   imports = [
     ./browsers.nix
+    ./thunderbird.nix
     ./hyprland
     ./veracrypt
   ];

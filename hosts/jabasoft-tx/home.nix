@@ -24,6 +24,7 @@ in
     desktop = {
       hyprland.enable = useHyprland;
       browsers.enable = true;
+      thunderbird.enable = true;
       veracrypt.enable = true;
     };
     shell = {
