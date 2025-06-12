@@ -30,7 +30,8 @@ ExecCommand6    = "rm %f"
 
 Fastdir1 = /mnt/pve/music
 Fastdir2 = /mnt/music
-Fastdir3 = /home/jan/Music/GoodSongs
+Fastdir3 = /home/jan/Music
+Fastdir4 = /home/jan/Music/GoodSongs
 
 Theme = /home/jan/.moc/transparent-background
 XtermTheme = /home/jan/.moc/transparent-background
