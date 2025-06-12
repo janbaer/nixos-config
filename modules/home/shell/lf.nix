@@ -1,16 +1,20 @@
 { config, pkgs, lib, username, ... }: {
+
+  home.packages = with pkgs; [
+    chafa # Image preview for the Terminal
+  ];
+
   # Terminal based filemanager
   programs.lf = {
     enable = true;
     settings = {
-      preview = true;
       drawbox = true;
       hidden = true;
       icons = true;
+      preview = true;
+      previewer = "~/.config/lf/lf_preview.sh";
+      shell = "zsh";
       theme = "Dracula";
-      previewer = "~/.config/lf/lf_kitty_preview";
-      cleaner = "~/.config/lf/lf_kitty_cleaner";
-      shell = "bash";
     };
     extraConfig = ''
       source "/home/${username}/.config/lf/lf_commands"
@@ -53,9 +57,7 @@
   home.file = {
     ".config/lf/icons".source = ./files/lf/icons;
     ".config/lf/lfcd.sh".source = ./files/lf/lfcd.sh;
-    ".config/lf/lf_kitty_clean.sh".source = ./files/lf/lf_kitty_clean;
-    ".config/lf/lf_kitty_preview.sh".source = ./files/lf/lf_kitty_preview;
+    ".config/lf/lf_preview.sh".source = ./files/lf/lf_preview.sh;
     ".config/lf/lf_commands".source = ./files/lf/lf_commands;
   };
 }
-
