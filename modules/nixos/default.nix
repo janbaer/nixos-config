@@ -11,6 +11,7 @@
     ./printing.nix
     ./scanners.nix
     ./backup.nix
+    ./openvpn3.nix
   ] ++ (if (hostname == "jabasoft-tx") then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;

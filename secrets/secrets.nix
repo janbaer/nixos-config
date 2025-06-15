@@ -23,4 +23,7 @@ in {
   "smb-jabasoft-zb-secrets.age".publicKeys = keys;
   "wg0-conf-jabasoft-tx.age".publicKeys = keys;
   "id_ed25519_jabasoft-ug.age".publicKeys = keys;
+  "check24-janbaer.ovpn.age".publicKeys = keys;
+  "check24-bu-vpn.ovpn.age".publicKeys = keys;
+  "check24-janbaer-sshkey.age".publicKeys = keys;
 }

@@ -18,6 +18,7 @@ in {
     printing.enable = true;
     scanners.enable = true;
     backup.enable = true;
+    check24.enable = false;
   };
 
   # Bootloader.
