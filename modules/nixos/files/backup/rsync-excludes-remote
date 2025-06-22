@@ -1,0 +1,46 @@
++ /home/jan/
+
+- .1password/
+- .3T/third-party/
+- .ansible
+- .cache/
+- .cargo/
+- .config/1Password/
+- .config/chromium/
+- .config/BraveSoftware/
+- .config/Code - OSS/
+- .config/Kvantum/
+- .config/obsidian/
+- .config/TabNine/monitoring/
+- .config/TabNine/activities.db
+- .config/TabNine/data.tabnine
+- .config/TabNine/defaults/trigger_tracker_key_default.prefs.json
+- .davfs2/cache
+- .fzf/
+- .java/
+- .kube/cache/
+- .local/
+- .nvm
+- .npm/
+- .mongodb/
+- .mozilla/
+- .oh-my-zsh
+- .putty
+- .rustup/
+- .swt/
+- .tmux
+- .vim/
+- .vagrant.d/
+- .vscode-oss/
+- .vscode/
+- .w3m
+- .yarm
+- .ykman
+- .zsh
+- go/
+- VMs/
+
+- node_modules
+- fact_cache
+- _temp
+- logs

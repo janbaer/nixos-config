@@ -19,4 +19,5 @@ in {
   "private-gpg-key.age".publicKeys = keys;
   "smb-secrets.age".publicKeys = keys;
   "wg0-conf-jabasoft-tx.age".publicKeys = keys;
+  "id_ed25519_jabasoft-ug.age".publicKeys = keys;
 }

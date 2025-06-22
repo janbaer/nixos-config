@@ -16,6 +16,13 @@
         mode = "0600";
         symlink = false;
       };
+      "id_ed25519_jabasoft-ug" = {
+        file = ../../secrets/id_ed25519_jabasoft-ug.age;
+        path = "/home/${username}/.ssh/id_ed25519_jabasoft-ug";
+        owner = "${username}";
+        mode = "0600";
+        symlink = false;
+      };
       atuin = {
         file = ../../secrets/atuin.age;
         path = "../../secrets/atuin.toml";

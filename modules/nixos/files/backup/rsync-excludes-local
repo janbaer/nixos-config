@@ -1,0 +1,30 @@
++ /home/jan/
++ /usr/local/bin/
++ /etc/hosts
++ /etc/fstab
++ /etc/bu/
+#
+- .1password/
+- .ansible
+- .cache/
+- .cargo/
+- .config/chromium
+- .config/BraveSoftware
+- .davfs2/cache
+- .java/
+- .kube/cache/
+- .local/
+- .nvm
+- .npm/
+- .mozilla/
+- .putty
+- .rustup/
+- .swt/
+- .vscode-oss/
+- .vscode/
+- go/
+- etc/
+#
+- node_modules
+- fact_cache
+- _temp

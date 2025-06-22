@@ -11,6 +11,7 @@
     ./docker.nix
     ./printing.nix
     ./scanners.nix
+    ./backup.nix
   ];
 
   programs.zsh.enable = true;

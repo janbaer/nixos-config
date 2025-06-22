@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, username, ... }:
+{ config, pkgs, inputs, hostname, ... }:
 let inherit (import ./variables.nix) useHyprland;
 in {
   imports = [ # Include the results of the hardware scan.
@@ -18,13 +18,14 @@ in {
     docker.enable = true;
     printing.enable = true;
     scanners.enable = true;
+    backup.enable = true;
   };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "jabasoft-tx"; # Define your hostname.
+  networking.hostName = hostname; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
