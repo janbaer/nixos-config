@@ -43,6 +43,10 @@ in
       wdisplays                       # Configuring display in Wayland
     ];
 
+    home.shellAliases = {
+      copy = "wl-copy";
+    };
+
     services.network-manager-applet.enable = true;
 
     systemd.user.targets.hyprland-session.Unit.Wants = [
