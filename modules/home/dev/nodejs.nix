@@ -1,9 +1,15 @@
 { config
 , lib
 , pkgs
+, hostname
 , ...
 }:
-with lib; let
+with lib;
+let
+  inherit
+    (import ./../../../hosts/${hostname}/variables.nix)
+    globalNpmPackages
+    ;
   cfg = config.modules.dev.nodejs;
   nodeInstall = pkgs.writeShellScriptBin "nodeInstall" ''
     #!/usr/bin/env bash
@@ -42,7 +48,8 @@ in
 
     home.sessionVariables = {
       VOLTA_HOME = "$HOME/.volta";
-      GLOBAL_NPM_PACKAGES = "typescript@5.8.3 prettier@3.5.3 eslint@9.28.0 yarn@1.22.22";
+      # GLOBAL_NPM_PACKAGES = "typescript@5.8.3 prettier@3.5.3 eslint@9.28.0 yarn@1.22.22";
+      GLOBAL_NPM_PACKAGES = globalNpmPackages;
     };
 
     home.sessionPath = [

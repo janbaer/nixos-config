@@ -17,7 +17,7 @@ in
       rust.enable = true;
       vscode.enable = true;
       k8s-cli.enable = true;
-      claude.enable = true;
+      claude.enable = false;
       zed-editor.enable = true;
       goose-cli.enable = true;
     };

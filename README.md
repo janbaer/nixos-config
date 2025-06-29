@@ -25,3 +25,7 @@ Before installing agenix, you can run agenix in a nix-shell with the command `ni
 ## Known issues
 
 - In case that the command `nix flake update` fails with a strange error like `failed to insert entry: invalid object specified - package.nix` it helped, to delete the `~/.cache/nix/` directory.
+
+## Hints
+
+- In case you need to know the SHA256 of the NixOS configuration, you can use `nix-prefetch-url` command, which returns the SHA256 hash of the file.

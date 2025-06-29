@@ -8,8 +8,8 @@ with lib; let
   claude-code = pkgs.claude-code.overrideAttrs {
     version = "1.0.6";
     src = pkgs.fetchzip {
-      url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-1.0.6.tgz";
-      hash = "sha256-yMvx543OOClV/BSkM4/bzrbytL+98HAfp14Qk1m2le0=";
+      url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-1.0.24.tgz";
+      hash = "sha256-1ci3l4l3xjr9xalmldi42d6zkwjc5p1nw04ccxlvnczj1syfnwsm";
     };
   };
 in
