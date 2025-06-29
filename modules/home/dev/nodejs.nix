@@ -48,8 +48,7 @@ in
 
     home.sessionVariables = {
       VOLTA_HOME = "$HOME/.volta";
-      # GLOBAL_NPM_PACKAGES = "typescript@5.8.3 prettier@3.5.3 eslint@9.28.0 yarn@1.22.22";
-      GLOBAL_NPM_PACKAGES = globalNpmPackages;
+      GLOBAL_NPM_PACKAGES = lib.concatStringsSep " " globalNpmPackages;
     };
 
     home.sessionPath = [

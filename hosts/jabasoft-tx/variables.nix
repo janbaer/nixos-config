@@ -15,5 +15,12 @@
   wgIPAddress = "192.168.2.6/32";
   wgAllowedIPs = ["0.0.0.0/0"];
 
-  globalNpmPackages = "typescript@5.8.3 prettier@3.5.3 eslint@9.28.0 yarn@1.22.22 @google/gemini-cli@latest anthropic-ai/claude-code@latest"; 
+  globalNpmPackages = [
+    "typescript@5.8.3"
+    "prettier@3.5.3"
+    "eslint@9.28.0"
+    "yarn@1.22.22"
+    "@google/gemini-cli@latest"
+    "anthropic-ai/claude-code@latest"
+  ]; 
 }
