@@ -19,6 +19,9 @@ in
     copy_default_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] '' 
       cp ~/Pictures/wallpapers/wallhaven-wqery6.jpg ~/.wallpaper.jpg
     '';
+    create_required_directories = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p ~/.claude/commands
+    '';
   };
 
   home.file = {
@@ -30,5 +33,6 @@ in
     "bin/init-keychain.sh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/bin/init-keychain.sh";
     # ".gitconfig".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig";
     ".gitconfig_check24".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig_check24";
+    ".claude/commands/commit.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands/commit.md";
   };
 }
