@@ -34,5 +34,9 @@ in
     # ".gitconfig".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig";
     ".gitconfig_check24".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig_check24";
     ".claude/commands/commit.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands/commit.md";
+    ".claude/commands/reload.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands/reload.md";
+    ".claude/settings.json".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/settings.json";
+    ".claude/RULES.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/RULES.md";
+    ".claude/MEMORY-MCP.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/MEMORY-MCP.md";
   };
 }
