@@ -4,27 +4,36 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. It's using the Nix flakes and I recently upgraded NixOS to the 25.05 release. Beside to the NixOS module, I'm using also the home-manager for managing the home-directory of the user. The configuration supports three systems: `jabasoft-vm-nixos-02`, `jabasoft-nb-01`, and `jabasoft-tx`, all running for user `jan`.
+This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. The configuration uses NixOS 25.05 and supports three systems: `jabasoft-vm-nixos-02`, `jabasoft-nb-01`, and `jabasoft-tx`, all running for user `jan`.
 
 ## Architecture
 
 ### Flake Structure
 - `flake.nix`: Defines inputs (nixpkgs 25.05, home-manager, agenix, hyprland) and outputs with `mkSystem` helper function
-- Each system configuration follows the pattern: `./hosts/${hostname}/configuration.nix` and `./hosts/${hostname}/home.nix` and also {hostname}/variables.nix for host-specific variables for usage in sub-modules.
+- Each system configuration follows the pattern: `./hosts/${hostname}/configuration.nix`, `./hosts/${hostname}/home.nix`, and `./hosts/${hostname}/variables.nix` for host-specific variables
 
 ### Module Organization
 - `hosts/`: Per-system configurations with `configuration.nix`, `hardware-configuration.nix`, `home.nix`, and `variables.nix`
-- `hosts/common/`: Shared configurations across all hosts
-- `modules/nixos/`: System-level NixOS modules (openssh, yubikey, mailbox-drive, etc.)
+- `hosts/common/`: Shared configurations across all hosts (`default.nix`, `secrets.nix`)
+- `modules/nixos/`: System-level NixOS modules (openssh, yubikey, mailbox-drive, docker, printing, etc.)
 - `modules/home/`: Home Manager modules organized by category:
-  - `shell/`: Terminal tools (zsh, tmux, neovim, lf, atuin, etc.)
-  - `dev/`: Development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude)
-  - `desktop/`: Desktop environment (hyprland, browsers, veracrypt)
+  - `shell/`: Terminal tools (zsh, tmux, neovim, lf, atuin, moc, gopass)
+  - `dev/`: Development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude, zed-editor)
+  - `desktop/`: Desktop environment (hyprland, browsers, thunderbird, veracrypt)
+
+### Host Variables Pattern
+Each host defines variables in `variables.nix` including:
+- `useHyprland`: Boolean for desktop environment
+- `extraMonitorSettings`: Display configuration
+- `gpgKey` and `gpgSshKeys`: GPG configuration
+- `globalNpmPackages`: Host-specific npm packages
+- Wireguard settings (`wgEndpoint`, `wgPublicKey`, etc.)
 
 ### Secrets Management
 - Uses agenix for encrypting secrets with SSH keys
 - `secrets/secrets.nix` defines which secrets are encrypted for which SSH keys
 - All systems share the same encrypted secrets using their respective SSH public keys
+- **Important**: Agenix only works at the NixOS level, not in home-manager modules
 
 ## Common Commands
 
