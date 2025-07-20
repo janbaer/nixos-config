@@ -19,7 +19,7 @@ in
       cloning_superclaude = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         superclaude_dir=/home/${username}/Projects/SuperClaude
         if [ ! -d "$superclaude_dir" ]; then
-          ${pkgs.git}/bin/git clone https://github.com/NomenAK/SuperClaude.git $superclaude_dir
+          ${pkgs.git}/bin/git clone https://github.com/SuperClaude-Org/SuperClaude_Framework.git $superclaude_dir
         else
           ${pkgs.git}/bin/git -C $superclaude_dir pull
         fi
