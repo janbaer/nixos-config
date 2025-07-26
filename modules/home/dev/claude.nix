@@ -24,6 +24,11 @@ in
           ${pkgs.git}/bin/git -C $superclaude_dir pull
         fi
       '';
+      install_claude_usage_monitor = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if ! ${pkgs.uv}/bin/uv tool list | grep -q claude-usage-monitor; then
+          ${pkgs.uv}/bin/uv tool install claude-usage-monitor
+        fi
+      '';
     };
   };
 }
