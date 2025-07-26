@@ -4,6 +4,7 @@
     ./git.nix
     ./vscode.nix
     ./golang.nix
+    ./python.nix
     ./rust.nix
     ./k8s-cli.nix
     ./claude.nix

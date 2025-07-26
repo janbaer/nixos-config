@@ -16,6 +16,7 @@ in
       golang.enable = true;
       rust.enable = true;
       vscode.enable = true;
+      python.enable = true;
       k8s-cli.enable = true;
       claude.enable = true;
       zed-editor.enable = true;
