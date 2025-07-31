@@ -66,6 +66,7 @@
     ipcalc      # it is a calculator for the IPv4/v6 addresses
 
     # misc
+    libnotify   # Library that sends desktop notifications to a notification daemon
     killall
     file
     which
