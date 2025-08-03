@@ -42,6 +42,10 @@ Each host defines variables in `variables.nix` including:
 # Build and switch NixOS configuration
 ./nixos-switch.sh  # or: nixos-rebuild switch --use-remote-sudo --flake .
 
+# Alternative with nh (nix-helper) - enter shell.nix first
+nix-shell
+nhs  # alias for: nh os switch .
+
 # Show changes from last rebuild
 ./nixos-show-lastchanges.sh  # or: nix store diff-closures /run/*-system
 
@@ -53,6 +57,9 @@ Each host defines variables in `variables.nix` including:
 
 # Get system info
 ./nix-info.sh
+
+# Format Nix files
+nixfmt **/*.nix
 ```
 
 ### Secrets Management
@@ -87,6 +94,31 @@ The configuration uses Hyprland as the window manager with:
 When working with Hyprland configurations, note that dotfiles are managed through Home Manager and placed in appropriate XDG config directories.
 
 
-### Additional info
+## Development Shell
 
-Agenix can only be used, because it was not working for me in the home-manager modules.
+The repository includes a `shell.nix` that provides:
+- `nh` (nix-helper) for better NixOS rebuilds with diffs
+- `nixfmt` for formatting Nix code
+- Alias `nhs` for quick system switching
+
+```bash
+# Enter development shell
+nix-shell
+
+# Use the alias for quick rebuilds
+nhs
+```
+
+## Key SSH Public Keys
+
+All systems use these SSH public keys for agenix encryption (defined in `secrets/secrets.nix`):
+- `jan@janbaer.de`: Personal key
+- `jabasoft-vm-nixos-01`, `jabasoft-nb-01`, `jabasoft-tx`: System keys
+
+When adding a new system, update `secrets/secrets.nix` with the new SSH public key and run `agenix --rekey`.
+
+## Important Notes
+
+- **Agenix limitation**: Can only be used at NixOS level, not in home-manager modules
+- **Host variables**: Each host in `hosts/*/variables.nix` defines `useHyprland`, monitor settings, GPG keys, npm packages, and Wireguard config
+- **Module pattern**: Development tools follow enable/disable pattern with `dev.toolname.enable = true` in host `home.nix`
