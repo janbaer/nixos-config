@@ -92,6 +92,13 @@ in {
         fsType = "nfs";
         options = nfs_mount_opts;
       };
+      pve3-data= {
+        enable = true;
+        mountPoint = "/mnt/pve3-data";
+        device = "jabasoft-nixos-lxc-01.home.janbaer.de:/data";
+        fsType = "nfs";
+        options = nfs_mount_opts;
+      };
     };
   };
 }

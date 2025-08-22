@@ -9,7 +9,7 @@ in
     networking = {
       hosts = {
         "192.168.20.3" = [ "jabasoft-pve" ];
-        "192.168.20.7" = [ "forgejo" ];
+        "192.168.20.12" = [ "forgejo" ];
       };
     };
   };
