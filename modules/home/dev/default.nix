@@ -30,4 +30,8 @@
     httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
     meld        # Visual diff and merge tool
   ];
+  home.shellAliases = {
+    gemini-update = "volta install @google/gemini-cli@latest";
+  };
+
 }
