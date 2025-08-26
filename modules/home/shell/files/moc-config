@@ -28,7 +28,7 @@
 ExecCommand5    = "mv %f ${GOOD_SONGS_DIR}"
 ExecCommand6    = "rm %f"
 
-Fastdir1 = /mnt/pve/music
+Fastdir1 = /mnt/zb-data/metube/mp3
 Fastdir2 = /mnt/music
 Fastdir3 = /home/jan/Music
 Fastdir4 = /home/jan/Music/GoodSongs

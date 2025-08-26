@@ -2,21 +2,46 @@
 with lib;
 let
   cfg = config.modules.nas-mounts;
-  smb_mount_opts = [
+
+  # Data definitions
+  smbServers = {
+    jabasoft-ug = {
+      host = "jabasoft-ug";
+      shares = ["music" "video" "photo" "daten" "setup" "xxx"];
+      credentialsFile = "smb-jabasoft-ug-secrets";
+    };
+    jabasoft-zb = {
+      host = "jabasoft-zb.home.janbaer.de";
+      shares = [{ name = "data"; mountPoint = "/mnt/zb-data"; }];
+      credentialsFile = "smb-jabasoft-zb-secrets";
+    };
+  };
+
+  nfsMounts = [
+    {
+      name = "pve3-data";
+      mountPoint = "/mnt/pve3-data";
+      device = "jabasoft-nixos-lxc-01.home.janbaer.de:/data";
+    }
+  ];
+
+  # Helper functions
+  mkSmbMountOpts = credentialsFile: [
     "x-systemd.automount"
     "noauto"
     "x-systemd.idle-timeout=60"
     "x-systemd.device-timeout=5s"
     "x-systemd.mount-timeout=5s"
-    "rw" # Enable read-write mode
-    "uid=1000" # Set ownership to your user ID
-    "gid=100" # Set group ownership (usually 'users' group)
-    "file_mode=0644" # File permissions
-    "dir_mode=0755" # Directory permissions
+    "rw"
+    "uid=1000"
+    "gid=100"
+    "file_mode=0644"
+    "dir_mode=0755"
     "vers=3.0"
-    "credentials=/home/${username}/.config/.smb-secrets"
+    "credentials=/home/${username}/.config/.${credentialsFile}"
   ];
-  nfs_mount_opts = [
+
+  mkNfsMountOpts = [
     "x-systemd.automount"
     "noauto"
     "x-systemd.idle-timeout=60"
@@ -24,81 +49,59 @@ let
     "x-systemd.mount-timeout=5s"
     "nfsvers=4"
   ];
+
+  mkSmbMount = serverName: server: share:
+    let
+      shareName = if builtins.isString share then share else share.name;
+      mountPoint = if builtins.isString share then "/mnt/${share}" else share.mountPoint;
+    in
+    nameValuePair shareName {
+      enable = true;
+      mountPoint = mountPoint;
+      device = "//${server.host}/${shareName}";
+      fsType = "cifs";
+      options = mkSmbMountOpts server.credentialsFile;
+    };
+
+  mkNfsMount = mount:
+    nameValuePair mount.name {
+      enable = true;
+      mountPoint = mount.mountPoint;
+      device = mount.device;
+      fsType = "nfs";
+      options = mkNfsMountOpts;
+    };
+
+  # Generate all SMB mounts
+  smbMounts = listToAttrs (flatten (
+    mapAttrsToList (serverName: server:
+      map (mkSmbMount serverName server) server.shares
+    ) smbServers
+  ));
+
+  # Generate all NFS mounts
+  nfsFileSystems = listToAttrs (map mkNfsMount nfsMounts);
+
+  # Generate secrets for all SMB servers
+  smbSecrets = listToAttrs (
+    mapAttrsToList (serverName: server:
+      nameValuePair server.credentialsFile {
+        file = ../../secrets/${server.credentialsFile}.age;
+        path = "/home/${username}/.config/.${server.credentialsFile}";
+        owner = "${username}";
+        mode = "0600";
+        symlink = false;
+      }
+    ) smbServers
+  );
 in {
   options.modules.nas-mounts.enable = mkEnableOption "Mounting NAS shares";
 
   config = mkIf cfg.enable {
-    age = {
-      secrets = {
-        "smb-secrets" = {
-          file = ../../secrets/smb-secrets.age;
-          path = "/home/${username}/.config/.smb-secrets";
-          owner = "${username}";
-          mode = "0600";
-          symlink = false;
-        };
-      };
-    };
+    age.secrets = smbSecrets;
 
     environment.systemPackages = [ pkgs.cifs-utils ];
 
-    fileSystems = {
-      music = {
-        enable = true;
-        mountPoint = "/mnt/music";
-        device = "//jabasoft-ug/music";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      videos = {
-        enable = true;
-        mountPoint = "/mnt/videos";
-        device = "//jabasoft-ug/video";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      photos = {
-        enable = true;
-        mountPoint = "/mnt/photos";
-        device = "//jabasoft-ug/photo";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      daten = {
-        enable = true;
-        mountPoint = "/mnt/daten";
-        device = "//jabasoft-ug/daten";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      setup = {
-        enable = true;
-        mountPoint = "/mnt/setup";
-        device = "//jabasoft-ug/setup";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      xxx = {
-        enable = true;
-        mountPoint = "/mnt/xxx";
-        device = "//jabasoft-ug/xxx";
-        fsType = "cifs";
-        options = smb_mount_opts;
-      };
-      pve-music = {
-        enable = true;
-        mountPoint = "/mnt/pve/music";
-        device = "jabasoft-pve:/data/metube/mp3";
-        fsType = "nfs";
-        options = nfs_mount_opts;
-      };
-      pve3-data= {
-        enable = true;
-        mountPoint = "/mnt/pve3-data";
-        device = "jabasoft-nixos-lxc-01.home.janbaer.de:/data";
-        fsType = "nfs";
-        options = nfs_mount_opts;
-      };
-    };
+    fileSystems = smbMounts // nfsFileSystems;
   };
 }
