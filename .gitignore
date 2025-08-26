@@ -12,3 +12,7 @@ devenv.local.nix
 .zshrc.local
 
 .claude/
+
+# Nix build results
+result
+result-*
