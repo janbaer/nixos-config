@@ -62,6 +62,7 @@
         jabasoft-vm-nixos-02 = mkSystem nixpkgs "x86_64-linux" "jabasoft-vm-nixos-02" "jan" ;
         jabasoft-nb-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nb-01" "jan";
         jabasoft-tx = mkSystem nixpkgs "x86_64-linux" "jabasoft-tx" "jan";
+        jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan";
       };
     };
 }

@@ -1,7 +1,8 @@
 {
   useHyprland = true;
   extraMonitorSettings = ''
-    monitor = eDP-1,preferred,auto,1.5
+    monitor = DP-1, 3840x2160@60, 0x0, auto
+    monitor = HDMI-A-1, 1980x1080@60, 3840x240, 1, transform, 3
   '';
   gpgKey = "EB90F9C1";
   gpgSshKeys = [
@@ -12,9 +13,10 @@
     "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
 
+  # Wireguard is not necessary for this host-system
   wgEndpoint = "janbaer.home64.de:1194";
-  wgPublicKey = "xcQlGyurzhQ3NZnL1QWrVivP6yQioSCMnlNYwCoa9k4=";
-  wgIPAddress = "192.168.2.6/32";
+  wgPublicKey = "";
+  wgIPAddress = "";
   wgAllowedIPs = ["0.0.0.0/0"];
 
   globalNpmPackages = [
@@ -23,6 +25,6 @@
     "eslint@9.28.0"
     "yarn@1.22.22"
     "@google/gemini-cli@latest"
-    "anthropic-ai/claude-code@latest"
+    "@anthropic-ai/claude-code@latest"
   ]; 
 }

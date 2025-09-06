@@ -13,8 +13,6 @@ in {
     };
     xwayland.enable = true;
     settings = {
-      monitor = "${extraMonitorSettings}";
-
       "$terminal" = "ghostty";
       "$fileManager" = "nautilus";
       "$browser" = "firefox";
@@ -178,6 +176,8 @@ in {
 
     };
     extraConfig = ''
+      ${extraMonitorSettings}
+
       $mainMod = SUPER
 
       bind = $mainMod, RETURN, exec, $terminal
