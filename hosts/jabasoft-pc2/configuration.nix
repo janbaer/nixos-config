@@ -12,7 +12,6 @@ in {
     yubikey.enable = true;
     network-hosts.enable = true;
     openssh.enable = true;
-    #tuxedo.enable = true;
     nas-mounts.enable = true;
     docker.enable = true;
     printing.enable = true;

@@ -1,18 +1,17 @@
-{ pkgs, ... }: {
+{ config, pkgs, hostname, ... }: {
   imports = [
     ./openssh.nix
     ./yubikey.nix
     ./mailbox-drive.nix
     ./network-hosts.nix
     ./users.nix
-    ./tuxedo.nix
     ./nas-mounts.nix
     ./wireguard.nix
     ./docker.nix
     ./printing.nix
     ./scanners.nix
     ./backup.nix
-  ];
+  ] ++ (if (hostname == "jabasoft-tx") then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;
   # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
