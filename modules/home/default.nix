@@ -6,6 +6,7 @@
     ./dotfiles.nix
     ./ssh.nix
     ./gpg.nix
+    ./onepassword.nix
   ];
 }
 

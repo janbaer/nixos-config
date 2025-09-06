@@ -33,6 +33,7 @@ in
       moc.enable = true;
     };
     gpg.enable = true;
+    onepassword.enable = true;
   };
 
   home.username = username;
