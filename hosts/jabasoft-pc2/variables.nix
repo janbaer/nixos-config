@@ -1,5 +1,6 @@
 {
   useHyprland = true;
+  useTuxedo = false;
   extraMonitorSettings = ''
     monitor = DP-1, 3840x2160@60, 0x0, auto
     monitor = HDMI-A-1, 1980x1080@60, 3840x240, 1, transform, 3

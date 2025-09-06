@@ -1,3 +1,4 @@
 {
   useHyprland = false;
+  useTuxedo = false;
 }

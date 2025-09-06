@@ -1,18 +1,23 @@
-{ pkgs, ... }: {
+{ config, pkgs, hostname, ... }: 
+let
+  # Import the host-specific variables with defaults
+  hostVariables = import (../../hosts/${hostname}/variables.nix);
+  # Default to false if useTuxedo is not defined in variables.nix
+  useTuxedo = hostVariables.useTuxedo or false;
+in {
   imports = [
     ./openssh.nix
     ./yubikey.nix
     ./mailbox-drive.nix
     ./network-hosts.nix
     ./users.nix
-    ./tuxedo.nix
     ./nas-mounts.nix
     ./wireguard.nix
     ./docker.nix
     ./printing.nix
     ./scanners.nix
     ./backup.nix
-  ];
+  ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;
   # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
