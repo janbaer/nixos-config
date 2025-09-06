@@ -41,6 +41,8 @@ in
       volumeicon
       brightnessctl                   # Control monitor brightness with fn-keys
       wdisplays                       # Configuring display in Wayland
+      dconf
+      gsettings-desktop-schemas
     ];
 
     home.shellAliases = {

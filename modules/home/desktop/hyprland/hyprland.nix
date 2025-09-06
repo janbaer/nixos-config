@@ -299,20 +299,29 @@ in {
 
   gtk = {
     enable = true;
-
     theme = {
-      package = pkgs.flat-remix-gtk;
-      name = "Flat-Remix-GTK-Grey-Darkest";
+      package = pkgs.gnome-themes-extra;
+      name = "Adwaita-dark";
     };
-
     iconTheme = {
       package = pkgs.adwaita-icon-theme;
       name = "Adwaita";
     };
-
     font = {
       name = "Sans";
       size = 11;
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+  };
+
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      gtk-theme = "Adwaita-dark";
+      color-scheme = "prefer-dark";
     };
   };
 }
