@@ -33,4 +33,8 @@ in {
     enable = true;
     libraries = [];
   };
+
+  services.gnome = {
+    sushi.enable = true;
+  };
 }
