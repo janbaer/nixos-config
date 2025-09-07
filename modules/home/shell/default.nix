@@ -44,7 +44,9 @@
   };
 
   home.packages = with pkgs; [
-    fastfetch
+    age         # Modern encryption tool with small explicit keys
+
+    fastfetch   # Actively maintained, feature-rich and performance oriented, neofetch like system information tool
 
     # archives
     zip
