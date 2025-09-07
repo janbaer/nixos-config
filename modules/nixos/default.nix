@@ -17,6 +17,7 @@ in {
     ./printing.nix
     ./scanners.nix
     ./backup.nix
+    ./openvpn.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;

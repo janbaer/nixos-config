@@ -16,6 +16,7 @@ in {
     docker.enable = true;
     printing.enable = true;
     scanners.enable = true;
+    openvpn.enable = true;
     #backup.enable = true;
   };
 
