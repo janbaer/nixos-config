@@ -27,5 +27,25 @@
     "yarn@1.22.22"
     "@google/gemini-cli@latest"
     "@anthropic-ai/claude-code@latest"
-  ]; 
+  ];
+
+  # Optional SSH matchBlocks for host-specific configuration
+  sshMatchBlocks = {
+    "gitlab.com" = {
+      user = "jan.baer-check24";
+    };
+    "check24-internal" = {
+      host = "*.intern.bu.check24.de";
+      port = 44022;
+      identityFile = "~/.ssh/id_ed25519-sk";
+      identitiesOnly = true;
+      user = "jan.baer";
+      extraOptions = {
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/control-%h_%p_%r";
+        ControlPersist = "30m";
+      };
+    };
+  };
+
 }
