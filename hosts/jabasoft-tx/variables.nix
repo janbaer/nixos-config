@@ -24,7 +24,7 @@
     "eslint@9.28.0"
     "yarn@1.22.22"
     "@google/gemini-cli@latest"
-    "anthropic-ai/claude-code@latest"
+    "@anthropic-ai/claude-code@latest"
   ];
 
   # Optional SSH matchBlocks for host-specific configuration
