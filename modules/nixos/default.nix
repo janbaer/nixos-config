@@ -16,7 +16,8 @@ in {
     ./docker.nix
     ./printing.nix
     ./scanners.nix
-    ./backup.nix
+    ./backup-to-nas.nix
+    ./backup-to-local.nix
     ./openvpn.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 

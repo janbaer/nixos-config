@@ -1,6 +1,5 @@
 { config, pkgs, inputs, hostname, ... }:
-let inherit (import ./variables.nix) useHyprland;
-in {
+{
   imports = [
     ./hardware-configuration.nix
     ./../common
@@ -17,7 +16,8 @@ in {
     printing.enable = true;
     scanners.enable = true;
     openvpn.enable = true;
-    #backup.enable = true;
+    backup-to-nas.enable = true;
+    backup-to-local.enable = true;
   };
 
   # Bootloader.

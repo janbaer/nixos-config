@@ -1,8 +1,4 @@
 + /home/jan/
-+ /usr/local/bin/
-+ /etc/hosts
-+ /etc/fstab
-+ /etc/bu/
 #
 - .1password/
 - .ansible
@@ -23,8 +19,11 @@
 - .vscode-oss/
 - .vscode/
 - go/
-- etc/
+- mnt/
+- tmp/
 #
 - node_modules
 - fact_cache
 - _temp
+- .DS_Store
+- ._.DS_Store

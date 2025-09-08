@@ -39,6 +39,8 @@
 - .zsh
 - go/
 - VMs/
+- mnt/
+- tmp/
 
 - node_modules
 - fact_cache

@@ -5,35 +5,34 @@ function rsync_remote() {
   local source_dir="$4"
   local exclude_from_file=$5
 
-  # echo "*******************************"
-  # echo "server_address: $server_address"
-  # echo "target_dir: $target_dir"
-  # echo "user: $user"
-  # echo "source_dir: $source_dir"
-  # echo "exclude_from_file: $exclude_from_file"
-  # echo "*******************************"
+  echo "*******************************"
+  echo "server_address: $server_address"
+  echo "target_dir: $target_dir"
+  echo "user: $user"
+  echo "source_dir: $source_dir"
+  echo "exclude_from_file: $exclude_from_file"
+  echo "*******************************"
 
   echo "backup directory $source_dir to $target_dir"
   echo "------------------------------------------"
 
   rsync -avu --progress --delete                                  \
-        --exclude-from=$exclude_from_file                         \
+        --dry-run                                                 \
+        --exclude-from="$exclude_from_file"                       \
         -e "ssh -i /home/$(whoami)/.ssh/id_ed25519_jabasoft-ug"   \
         "${source_dir}" "${target_dir}"
 }
 
 function rsync_local() {
   local target_dir="/run/media/jan/BACKUP-HD/${1}/"
-  local user=$2
-  local source_dir="$3"
-  local exclude_from_file=$4
+  local source_dir="$2"
+  local exclude_from_file=$3
 
-  # echo "*******************************"
-  # echo "target_dir: $target_dir"
-  # echo "user: $user"
-  # echo "source_dir: $source_dir"
-  # echo "exclude_from_file: $exclude_from_file"
-  # echo "*******************************"
+  echo "*******************************"
+  echo "target_dir: $target_dir"
+  echo "source_dir: $source_dir"
+  echo "exclude_from_file: $exclude_from_file"
+  echo "*******************************"
 
   mkdir -p $target_dir
 
@@ -41,7 +40,7 @@ function rsync_local() {
   echo "------------------------------------------"
 
   rsync -avu --progress --delete            \
-        --exclude-from=$exclude_from_file   \
+        --exclude-from="$exclude_from_file" \
         "${source_dir}" "${target_dir}"
 }
 
@@ -58,7 +57,7 @@ function backup {
   local target_dir="$hostname_upper/$user"
 
   if [ "${server_address}" == "USB" ]; then
-    rsync_local "$target_dir" "$user" "$source_dir" "$exclude_from_file"
+    rsync_local "$target_dir" "$source_dir" "$exclude_from_file"
   else
     rsync_remote "$server_address" "$target_dir" "$user" "$source_dir" "$exclude_from_file"
   fi

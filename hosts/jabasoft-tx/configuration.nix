@@ -17,7 +17,7 @@ in {
     docker.enable = true;
     printing.enable = true;
     scanners.enable = true;
-    backup.enable = true;
+    backup-to-nas.enable = true;
   };
 
   # Bootloader.
