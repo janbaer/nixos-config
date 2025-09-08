@@ -9,6 +9,7 @@
     ./k8s-cli.nix
     ./claude.nix
     ./zed-editor.nix
+    ./devops-tools.nix
     ./goose-cli.nix
   ];
 

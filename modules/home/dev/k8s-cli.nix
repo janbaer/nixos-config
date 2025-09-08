@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, pkgs, ... }:
 with lib; let
   cfg = config.modules.dev.k8s-cli;
 in
