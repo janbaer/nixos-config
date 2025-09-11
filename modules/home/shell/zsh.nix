@@ -9,6 +9,8 @@
     enableCompletion = true; # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
     dotDir = ".config/zsh";
     initContent = ''
+      setopt CORRECT
+
       # Source local zshrc with local only settings
       [[ -f $ZDOTDIR/.zshrc.local ]] && source $ZDOTDIR/.zshrc.local
 
