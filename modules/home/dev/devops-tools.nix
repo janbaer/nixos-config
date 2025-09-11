@@ -10,6 +10,7 @@ in
       ansible
       terraform
     ];
+
     home.shellAliases = {
       tf = "terraform";
     };

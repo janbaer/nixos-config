@@ -60,6 +60,17 @@ in
         mkdir -p $HOME/.volta/bin
       '';
     };
+
+    home.shellAliases = {
+      y = "yarn";
+      yi = "yarn install --pure-lockfile";
+      yl = "yarn lint";
+      ys = "yarn start";
+      yt = "yarn test";
+      ytw = "yarn test:watch";
+      yui = "yarn upgrade-interactive --latest";
+      yd = "yarn debug";
+    };
   };
 }
 
