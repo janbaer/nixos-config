@@ -15,7 +15,14 @@
       undoall = "reset --hard";
     };
     extraConfig = {
+      pull.rebase = true;
     };
+    includes = [
+      {
+        condition = "gitdir:~/Projects/check24/";
+        path = "~/.gitconfig_check24";
+      }
+    ];
     userEmail = "jan@janbaer.de";
     userName = "Jan Baer";
   };
