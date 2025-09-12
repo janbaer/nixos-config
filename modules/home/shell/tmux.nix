@@ -75,8 +75,8 @@
       bind -T copy-mode-vi y send -X copy-selection_and_cancel
       bind -T copy-mode-vi Escape send -X cancel
 
-      bind-key -T copy-mode-vi Enter send -X copy-pipe-and-cancel "xclip -sel clip -i"
-      bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "xclip -sel clip -i"
+      bind-key -T copy-mode-vi Enter send -X copy-pipe-and-cancel "wl-copy"
+      bind-key -T copy-mode-vi y send -X copy-pipe-and-cancel "wl-copy"
 
       # Increase the time for displaying the pane numbers
       set -g display-panes-time 2000 #2s
@@ -112,7 +112,7 @@
   };
 
   home.shellAliases = {
-    mux = "tmux new -d -s delete-me && tmux run-shell $HOME/.tmux/plugins/tmux-resurrect/scripts/restore.sh && tmux kill-session -t delete-me && tmux attach || tmux attach";
+    mux = "tmux new -d -s delete-me && tmux run-shell ${pkgs.tmuxPlugins.resurrect}/share/tmux-plugins/resurrect/scripts/restore.sh && tmux kill-session -t delete-me && tmux attach || tmux attach";
   };
 
   home.sessionVariables = {
