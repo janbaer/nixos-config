@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. The configuration uses NixOS 25.05 and supports three systems: `jabasoft-vm-nixos-02`, `jabasoft-nb-01`, and `jabasoft-tx`, all running for user `jan`.
+This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. The configuration uses NixOS 25.05 and supports four systems: `jabasoft-vm-nixos-02`, `jabasoft-nb-01`, `jabasoft-tx`, and `jabasoft-pc2`, all running for user `jan`.
 
 ## Architecture
 
@@ -24,10 +24,10 @@ This is a NixOS configuration repository that manages multiple systems using Nix
 ### Host Variables Pattern
 Each host defines variables in `variables.nix` including:
 - `useHyprland`: Boolean for desktop environment
+- `useTuxedo`: Boolean for Tuxedo hardware support
 - `extraMonitorSettings`: Display configuration
-- `gpgKey` and `gpgSshKeys`: GPG configuration
-- `globalNpmPackages`: Host-specific npm packages
-- Wireguard settings (`wgEndpoint`, `wgPublicKey`, etc.)
+- `sshMatchBlocks`: Host-specific SSH configuration
+- Additional host-specific settings as needed
 
 ### Secrets Management
 - Uses agenix for encrypting secrets with SSH keys
@@ -60,6 +60,12 @@ nhs  # alias for: nh os switch .
 
 # Format Nix files
 nixfmt **/*.nix
+
+# Check if reboot is required after updates
+./nixos-reboot-required.sh
+
+# Get SHA256 hash of files (useful for Nix)
+nix-prefetch-url <url>
 ```
 
 ### Secrets Management
@@ -113,12 +119,18 @@ nhs
 
 All systems use these SSH public keys for agenix encryption (defined in `secrets/secrets.nix`):
 - `jan@janbaer.de`: Personal key
-- `jabasoft-vm-nixos-01`, `jabasoft-nb-01`, `jabasoft-tx`: System keys
+- `jabasoft-vm-nixos-02`, `jabasoft-nb-01`, `jabasoft-tx`, `jabasoft-pc2`: System keys
 
 When adding a new system, update `secrets/secrets.nix` with the new SSH public key and run `agenix --rekey`.
 
+## Troubleshooting
+
+- **Nix flake update failures**: If `nix flake update` fails with errors like "failed to insert entry: invalid object specified", delete the `~/.cache/nix/` directory
+- **Missing dependencies**: Always check if libraries/packages are already available in the codebase before adding new ones
+- **Agenix secrets**: Remember that agenix only works at the NixOS level, not in home-manager modules
+
 ## Important Notes
 
-- **Agenix limitation**: Can only be used at NixOS level, not in home-manager modules
-- **Host variables**: Each host in `hosts/*/variables.nix` defines `useHyprland`, monitor settings, GPG keys, npm packages, and Wireguard config
 - **Module pattern**: Development tools follow enable/disable pattern with `dev.toolname.enable = true` in host `home.nix`
+- **Host configuration**: Each host has its own `configuration.nix`, `hardware-configuration.nix`, `home.nix`, and `variables.nix`
+- **Shared configurations**: Common settings are stored in `hosts/common/`
