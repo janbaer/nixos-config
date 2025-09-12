@@ -8,13 +8,23 @@ in {
   config = mkIf cfg.enable {
     # Enable common container config files in /etc/containers
     virtualisation.containers.enable = true;
+    virtualisation.containers.containersConf.settings = {
+      network = {
+        # Disable IPv6 for all container networks
+        enable_ipv6 = false;
+      };
+    };
     virtualisation = {
       podman = {
         enable = true;
         # Create a `docker` alias for podman, to use it as a drop-in replacement
         dockerCompat = true;
         # Required for containers under podman-compose to be able to talk to each other.
-        defaultNetwork.settings.dns_enabled = true;
+        defaultNetwork.settings = {
+          dns_enabled = true;
+          # Disable IPv6 for the default network
+          ipv6_enabled = false;
+        };
       };
     };
 
