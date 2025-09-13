@@ -127,46 +127,52 @@ in {
         "XDG_SESSION_DESKTOP, Hyprland"
       ];
 
-      windowrulev2 = [
+      windowrule = [
         "opacity 1.0 0.95,class:.*" # Shows all inactive windows with opacity 0.9
-        "float,class:^(pavucontrol)$"
-        "float,class:^(blueman-manager)$"
+
+        "float,title:^(Bluetooth Devices)$"
         "float,class:^(nm-applet)$"
         "float,class:^(nm-connection-editor)$"
         "float,class:^(polkit-gnome-authentication-agent-1)$"
         "float,title:^(1Password)$"
+
         "float,class:^(org.keepassxc.KeePassXC)$"
         "size 900 700,class:^(org.keepassxc.KeePassXC)$"
-        "float,class:^(org.manjaro.pamac.manager)$"
-        "size 900 700,class:^(org.manjaro.pamac.manager)$"
-        "center,class:^(org.manjaro.pamac.manager)$"
+
         "float,class:^(SshAskpass)$"
+
         "float,class:^(Nsxiv)$"
         "center,class:^(Nsxiv)$"
         "size 900 700,class:^(Nsxiv)$"
-        "float,title:^(Save File|Open File|Save As)"
-        "size 900 700,title:^(Save File|Open File|Save As)"
+
         "float,title:^(Administrator privileges required)$"
+
         "float,class:^(gedit)$"
         "center,class:^(gedit)$"
+
         "size 900 700,class:^(gedit)$"
         "float,class:^(MPlayer)$"
         "center,class:^(MPlayer)$"
         "size 900 700,class:^(MPlayer)$"
+
         "float,title:^(Administrator privileges required)$"
-        "float,class:^(org.gnome.NautilusPreviewer)$"
-        "center,class:^(org.gnome.NautilusPreviewer)$"
-        "size 900 700,class:^(org.gnome.NautilusPreviewer)"
+        "float , class:^(org.gnome.NautilusPreviewer)$"
+        "center , class:^(org.gnome.NautilusPreviewer)$"
+        "size 900 700, class:^(org.gnome.NautilusPreviewer)"
+
         "float,class:^(virt-manager)$"
+
         "float,class:^(Rofi)$"
         "center,class:^(Rofi)$"
         "stayfocused,class:^(Rofi)$"
+
         # Rules for the Gnome notes app
-        "float,title:^(New and Recent)$"
-        "size 900 700,title:^(New and Recent)"
-        # Rules for for the modal GTK file picker dialogs""
-        "center,title:^(All Files)$"
-        "size 800 600,title:^(All Files)"
+        "float , title:^(New and Recent)$"
+        "size 900 700 , title:^(New and Recent)"
+        # Rules for for the modal GTK dialogs""
+        "float , class:^(xdg-desktop-portal-gtk)$"
+        "center , class:^(xdg-desktop-portal-gtk)$"
+        "size 900 700, class:^(xdg-desktop-portal-gtk)"
         # Firefox rules
         "float,class:(firefox),title:(Library)"
         "size 1200 800,class:(firefox),title:(Library)"
