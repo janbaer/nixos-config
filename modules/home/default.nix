@@ -7,6 +7,7 @@
     ./ssh.nix
     ./gpg.nix
     ./onepassword.nix
+    ./usb-automount.nix
   ];
 }
 
