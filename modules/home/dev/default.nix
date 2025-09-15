@@ -21,7 +21,7 @@
   };
 
   home.packages = with pkgs; [
-    gcc # GNU Compiler Collection
+    gcc         # GNU Compiler Collection
     gnumake
     cmake
     jq          # A lightweight and flexible command-line JSON processor
@@ -30,9 +30,11 @@
     yq-go       # yaml processor https://github.com/mikefarah/yq
     httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
     meld        # Visual diff and merge tool
+    lazydocker  # Simple terminal UI for both docker and docker-compose
   ];
+
   home.shellAliases = {
     gemini-update = "volta install @google/gemini-cli@latest";
+    ld = "DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker";
   };
-
 }
