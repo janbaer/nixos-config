@@ -15,7 +15,7 @@
       claude.enable = true;
       zed-editor.enable = true;
       devops-tools.enable = true;
-      goose-cli.enable = true;
+      goose-cli.enable = false;
       mongodb.enable = true;
     };
     desktop = {
