@@ -26,7 +26,6 @@ in {
     systemd.services."rsync-to-local" = {
       script = ''
         ${rsyncMyData}/bin/rsync-mydata "USB" "${hostname}" "${username}" "/home/${username}/" "${rsyncExcludesLocalFile}"
-        ${rsyncMyData}/bin/rsync-mydata "USB" "mailbox-drive" "${username}" "/home/${username}/mnt/mailbox-drive/Jan Baer/" "${rsyncExcludesMailboxDriveFile}"
       '';
       path = with pkgs; [ rsync openssh ];
       serviceConfig = {
