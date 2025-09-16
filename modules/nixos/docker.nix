@@ -1,9 +1,8 @@
-{ config, lib, pkgs, username, ... }:
+{ config, lib, username, ... }:
 with lib;
 let cfg = config.modules.docker;
 in {
-  options.modules.docker.enable =
-    mkEnableOption "Configuration of Docker/Podman";
+  options.modules.docker.enable = mkEnableOption "Configuration of Docker/Podman";
 
   config = mkIf cfg.enable {
     # Enable common container config files in /etc/containers

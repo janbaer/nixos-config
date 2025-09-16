@@ -1,12 +1,51 @@
-{ pkgs, ... }: {
+{ pkgs, lib, ... }:
+with lib;
+let
+  zshCompletionsInit = pkgs.writeScriptBin "zshCompletionsInit" ''
+    #!${pkgs.zsh}/bin/zsh
+    rm -f $ZDOTDIR/.zcompdump
+    mkdir -p $ZDOTDIR/completions
+    rm $ZDOTDIR/completions/*
 
+    echo "Fetching ZSH completions from GitHub..."
+    ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_httpie https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_httpie
+    ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_age https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_age
+    ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_golang https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_golang
+    ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_terraform https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/refs/heads/master/plugins/terraform/_terraform
+
+    
+
+    echo "Generating more ZSH completions..."
+    ${pkgs.volta}/bin/volta completions zsh > $ZDOTDIR/completions/_volta
+    ${pkgs.podman}/bin/podman completion zsh > $ZDOTDIR/completions/_podman
+    ${pkgs.uv}/bin/uv generate-shell-completion zsh > "$ZDOTDIR/completions/_uv"
+    ${pkgs.uv}/bin/uvx --generate-shell-completion zsh > "$ZDOTDIR/completions/_uvx"
+
+    # cp ./files/_terraform $ZDOTDIR/completions/_terraform
+
+    fpath=($ZDOTDIR/completions $fpath)
+    autoload -Uz compinit
+    compinit
+  '';
+  
+in 
+{
   programs.zsh = {
     enable = true;
     autosuggestion = {
       enable = true;
       highlight = "fg=#ff00ff,bold,underline";
     };
-    enableCompletion = true; # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
+    enableCompletion = true;
+    completionInit = ''
+      fpath=($ZDOTDIR/completions $fpath)
+      autoload -Uz compinit
+      if [[ ! -f $ZDOTDIR/.zcompdump ]]; then
+        compinit
+      else
+        compinit -C
+      fi
+    '';
     dotDir = ".config/zsh";
     initContent = ''
       setopt CORRECT
@@ -29,13 +68,6 @@
       # Source local zshrc with local bu specific settings, if file exists
       [ -f $ZDOTDIR/.zshrc.bu ] && source $ZDOTDIR/.zshrc.bu
 
-      export KEYCHAIN_KEYS="$KEYCHAIN_KEYS_LOCAL $KEYCHAIN_KEYS_BU"
-      [ -f $HOME/tmp/keychain_init_done ] && source $HOME/bin/init-keychain.sh
-
-      if type zoxide &>/dev/null; then
-        eval "$(zoxide init zsh --cmd cd)"
-      fi
-
       source $ZDOTDIR/.functions
 
       [ -f $ZDOTDIR/.zsh-secrets ] && source $ZDOTDIR/.zsh-secrets
@@ -47,6 +79,11 @@
         name = "zsh-powerlevel10k";
         src = "${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/";
         file = "powerlevel10k.zsh-theme";
+      }
+      {
+        name = "fzf-tab";
+        src = pkgs.zsh-fzf-tab;
+        file = "share/fzf-tab/fzf-tab.plugin.zsh";
       }
     ];
     shellAliases = {
@@ -64,7 +101,6 @@
     };
     sessionVariables = {
       EDITOR = "nvim";
-      KEYCHAIN_KEYS_LOCAL = "";
       DIRENV_LOG_FORMAT= "";
     };
   };
@@ -73,10 +109,13 @@
     "tmp/.keep".text = "";
     ".config/zsh/.zlogout" = {
       text = ''
-        [ -f $HOME/tmp/keychain_init_done ] && rm -f $HOME/tmp/keychain_init_done
       '';
     };
   };
+
+  home.packages = [
+    zshCompletionsInit
+  ];
 
   home.sessionPath = [
     "$HOME/bin"

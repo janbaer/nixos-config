@@ -11,13 +11,14 @@ let
     globalNpmPackages
     ;
   cfg = config.modules.dev.nodejs;
+
   nodeInstall = pkgs.writeShellScriptBin "nodeInstall" ''
     #!/usr/bin/env bash
     
     echo "Checking and installing Node.js packages with volta..."
 
     if [ ! volta which node &>/dev/null ]; then
-      echo "Node.js is not installed. Please install Node.js first."
+      echo "Node.js is not installed. Let us install Node.js first."
       volta install node
     fi
 
@@ -54,12 +55,6 @@ in
     home.sessionPath = [
       "$HOME/.volta/bin"
     ];
-
-    home.activation = {
-      configure_volta = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p $HOME/.volta/bin
-      '';
-    };
 
     home.shellAliases = {
       y = "yarn";
