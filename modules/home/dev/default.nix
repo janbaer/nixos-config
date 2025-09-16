@@ -11,6 +11,7 @@
     ./zed-editor.nix
     ./devops-tools.nix
     ./goose-cli.nix
+    ./mongodb.nix
   ];
 
   programs.direnv = {
