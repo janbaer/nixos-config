@@ -1,9 +1,9 @@
 { config, lib, pkgs, username, ... }:
 with lib;
-let
-  cfg = config.modules.docker;
+let cfg = config.modules.docker;
 in {
-  options.modules.docker.enable = mkEnableOption "Configuration of Docker/Podman";
+  options.modules.docker.enable =
+    mkEnableOption "Configuration of Docker/Podman";
 
   config = mkIf cfg.enable {
     # Enable common container config files in /etc/containers
@@ -12,6 +12,7 @@ in {
       network = {
         # Disable IPv6 for all container networks
         enable_ipv6 = false;
+        pasta_options = ["--ipv4-only" "--no-ndp" "--no-dhcpv6" "--no-dhcp"];
       };
     };
     virtualisation = {
