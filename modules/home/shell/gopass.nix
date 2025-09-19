@@ -24,7 +24,7 @@ in {
     # home.activation = {
     #   cloning_password_store = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     #     if [ ! -d "${passwordStoreDir}" ]; then
-    #       /run/current-system/sw/bin/git clone git@forgejo:jan/password-store.git ${passwordStoreDir}
+    #       ${pkgs.git}/bin/git clone git@forgejo:jan/password-store.git ${passwordStoreDir}
     #     fi
     #   '';
     # };

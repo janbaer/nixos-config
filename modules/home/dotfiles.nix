@@ -7,13 +7,13 @@ in
     cloning_dotfiles = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       dotfiles_dir=/home/${username}/Projects/dotfiles
       if [ ! -d "$dotfiles_dir" ]; then
-        /run/current-system/sw/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
+        ${pkgs.git}/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
       fi
     '';
     cloning_wallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
       wallpapers_dir=/home/${username}/Pictures/wallpapers
       if [ ! -d "$wallpapers_dir" ]; then
-        /run/current-system/sw/bin/git clone https://github.com/janbaer/wallpapers.git $wallpapers_dir
+        ${pkgs.git}/bin/git clone https://github.com/janbaer/wallpapers.git $wallpapers_dir
       fi
     '';
     copy_default_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] '' 
