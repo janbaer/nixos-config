@@ -276,7 +276,7 @@ in {
       bind = , XF86Lock, exec, swaylock
 
       # to switch between windows in a floating workspace
-      bind = SUPER,Tab,cyclenext,          # change focus to another window
+      # bind = SUPER,Tab,cyclenext,          # change focus to another window
       bind = SUPER,Tab,bringactivetotop,   # bring it to the top
 
       # will switch to a submap called resize

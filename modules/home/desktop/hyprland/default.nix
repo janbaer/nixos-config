@@ -5,6 +5,7 @@ in
 {
   imports = [
     ./hyprland.nix
+    ./hypr-window-switcher.nix
     ./hyprlock.nix
     ./waybar.nix
     ./waylogout.nix
