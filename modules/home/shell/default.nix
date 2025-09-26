@@ -70,6 +70,8 @@
     iotop           # io monitoring
     iftop           # network monitoring
 
+    ncdu            # Disk usage analyzer with an ncurses interface
+
     # system call monitoring
     strace          # system call monitoring
     ltrace          # library call monitoring

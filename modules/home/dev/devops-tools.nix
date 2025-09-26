@@ -7,8 +7,10 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      ansible
-      terraform
+      ansible       # Radically simple IT automation
+      ansible-lint  # Best practices checker for Ansible
+      terraform     # Tool for building, changing, and versioning infrastructure
+      yamllint      # Linter for YAML files
     ];
 
     home.shellAliases = {

@@ -19,5 +19,6 @@
     papers          # Gnome document viewer (fork from evince)
     filezilla       # Graphical FTP, FTPS and SFTP client
     easytag         # View and edit tags for various audio files
+    pdfarranger     # PDF document editor
   ];
 }
