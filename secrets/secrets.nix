@@ -1,16 +1,14 @@
 let
   jan = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINZlTGJF57sVlu7Prmm41Y8GmaqpespwCMFB7fLROBSm jan@janbaer.de";
-  jabasoft-vm-nixos-01 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHxJGNgX9h+fQK20Tmzqsj/l18sIA55NDoIZJEs57o5G";
-  jabasoft-nb-01 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINsLh7qXA/Hvo/ZEqa4F454Awr7ufHF2AXcUiFez30gz";
   jabasoft-tx = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILg/cjVSovX0G9wtF9Ee4+Mb/G/Q53w+2sleHFmz6t99";
   jabasoft-pc2 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBcDZI4YwQDYUINNCdySvhXQRwbPNt6h01oFICcfoqAh";
+  jabasoft-nixos-vm-01 = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGGJGCQJHN5V7fr0vM5N+9zGlAu5m7r404OWssz04zX6";
   
   keys = [
     jan 
-    jabasoft-vm-nixos-01 
-    jabasoft-nb-01 
     jabasoft-tx
     jabasoft-pc2
+    jabasoft-nixos-vm-01
   ];
 in {
   "zsh-secrets.age".publicKeys = keys;
