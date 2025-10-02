@@ -1,0 +1,50 @@
+{ username, ... }:
+{
+  imports = [
+    ./../../modules/home
+  ];
+
+  modules = {
+    dev = {
+      nodejs.enable = true;
+      golang.enable = true;
+      rust.enable = false;
+      vscode.enable = true;
+      python.enable = true;
+      k8s-cli.enable = false;
+      claude.enable = true;
+      zed-editor.enable = false;
+      devops-tools.enable = false;
+      goose-cli.enable = false;
+      mongodb.enable = false;
+    };
+    desktop = {
+      hyprland.enable = true;
+      browsers.enable = true;
+      thunderbird.enable = true;
+      veracrypt.enable = true;
+    };
+    shell = {
+      gopass.enable = true;
+      moc.enable = false;
+    };
+    gpg.enable = true;
+    onepassword.enable = false;
+  };
+
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
+
+  # This value determines the home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update home Manager without changing this value. See
+  # the home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = "25.05";
+
+  # Let home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}

@@ -2,20 +2,35 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, hostname, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./../common
+      ./../../modules/nixos
     ];
+
+  modules = {
+    mailbox-drive.enable = false;
+    yubikey.enable = false;
+    network-hosts.enable = false;
+    openssh.enable = false;
+    nas-mounts.enable = false;
+    docker.enable = false;
+    printing.enable = false;
+    scanners.enable = false;
+    openvpn.enable = false;
+    backup-to-nas.enable = false;
+    backup-to-local.enable = false;
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "jabasoft-nixos-vm-01"; # Define your hostname.
-
+  networking.hostName = hostname;
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -63,6 +78,8 @@
   environment.systemPackages = with pkgs; [
     git
     neovim
+    ghostty
+    inputs.agenix.packages."${system}".default
   ];
 
   services.qemuGuest.enable = true;
@@ -74,7 +91,7 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
-
+  networking.firewall.enable = true;
 
   services.openssh.enable = true;
 
