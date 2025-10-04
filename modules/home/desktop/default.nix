@@ -15,8 +15,7 @@
     localsend       # Open source cross-platform alternative to AirDrop
     gedit           # Former GNOME text editor
     gthumb          # Image browser and viewer for GNOME
-    evince          # GNOME's document viewer
-    papers          # Gnome document viewer (fork from evince)
+    papers          # Gnome document viewer (This is the fork and successor of Evince)
     filezilla       # Graphical FTP, FTPS and SFTP client
     easytag         # View and edit tags for various audio files
     pdfarranger     # PDF document editor
