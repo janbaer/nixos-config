@@ -15,8 +15,8 @@
   modules = {
     mailbox-drive.enable = false;
     yubikey.enable = false;
-    network-hosts.enable = false;
-    openssh.enable = false;
+    network-hosts.enable = true;
+    openssh.enable = true;
     nas-mounts.enable = false;
     docker.enable = false;
     printing.enable = false;
@@ -30,10 +30,10 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = hostname;
-
-  # Enable networking
-  networking.networkmanager.enable = true;
+  networking = {
+    hostName = hostname;
+    networkmanager.enable = true;
+  };
 
   # Set your time zone.
   time.timeZone = "Europe/Berlin";
@@ -59,15 +59,22 @@
     variant = "";
   };
 
+  services.xserver.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+  };  
+
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true;
+    xwayland.enable = true;
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jan = {
     isNormalUser = true;
     description = "Jan";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEhmAUerrshNotNG3UfeHU6T15/YhaHdZH9KGD79rrN openpgp:0xE72E7965"
-    ];
   };
 
   # Allow unfree packages
@@ -84,16 +91,7 @@
 
   services.qemuGuest.enable = true;
 
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
   networking.firewall.enable = true;
-
-  services.openssh.enable = true;
 
   system.stateVersion = "25.05"; # Did you read the comment?
 
