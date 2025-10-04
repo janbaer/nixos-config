@@ -4,9 +4,9 @@ let
   pkgs = import <nixpkgs> { inherit config; };
 in pkgs.mkShell {
   buildInputs = with pkgs; [
-    nh # We need the nix-helper
-    nvd # Nix/NixOS package version diff tool``
-    nixfmt
+    nh              # We need the nix-helper
+    nvd             # Nix/NixOS package version diff tool``
+    nixfmt-classic  # Nix code formatter
   ];
 
   # Automatically run jupyter when entering the shell.
