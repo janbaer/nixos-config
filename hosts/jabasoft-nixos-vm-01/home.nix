@@ -8,14 +8,13 @@
     dev = {
       nodejs.enable = true;
       golang.enable = true;
-      rust.enable = false;
+      rust.enable = true;
       vscode.enable = true;
       python.enable = true;
       k8s-cli.enable = false;
       claude.enable = true;
       zed-editor.enable = false;
       devops-tools.enable = false;
-      goose-cli.enable = false;
       mongodb.enable = false;
     };
     desktop = {
