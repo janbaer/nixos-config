@@ -10,17 +10,11 @@ in
         ${pkgs.git}/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
       fi
     '';
-    cloning_wallpapers = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      wallpapers_dir=/home/${username}/Pictures/wallpapers
-      if [ ! -d "$wallpapers_dir" ]; then
-        ${pkgs.git}/bin/git clone https://github.com/janbaer/wallpapers.git $wallpapers_dir
+    download_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      wallpaper_path=/home/${username}/.wallpaper.jpg
+      if [ ! -f "$wallpaper_path" ]; then
+        ${pkgs.curl}/bin/curl -o $wallpaper_path https://raw.githubusercontent.com/janbaer/wallpapers/refs/heads/main/wallhaven-wqery6.jpg
       fi
-    '';
-    copy_default_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] '' 
-      cp ~/Pictures/wallpapers/wallhaven-wqery6.jpg ~/.wallpaper.jpg
-    '';
-    create_required_directories = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      mkdir -p ~/.claude/commands
     '';
   };
 
