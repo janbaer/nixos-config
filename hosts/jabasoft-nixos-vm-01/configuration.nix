@@ -70,13 +70,6 @@
     xwayland.enable = true;
   };
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jan = {
-    isNormalUser = true;
-    description = "Jan";
-    extraGroups = [ "networkmanager" "wheel" ];
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
