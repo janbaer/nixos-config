@@ -39,8 +39,12 @@
   };
 
   system.activationScripts.script.text = ''
-      #!/usr/bin/env bash
-      chown jan: /home/${username}/.config/zsh
-      chmod 0700 /home/${username}/.config/zsh
+    #!/usr/bin/env bash
+    chown -R jan: /home/${username}/.config
+    chmod 0700 /home/${username}/.config
+    chown jan: /home/${username}/.config/zsh
+    chmod 0700 /home/${username}/.config/zsh
+    chown jan: /home/${username}/.gnupg
+    chmod 0700 /home/${username}/.gnupg
   '';
 }
