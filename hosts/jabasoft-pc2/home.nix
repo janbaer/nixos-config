@@ -30,6 +30,7 @@
     };
     gpg.enable = true;
     onepassword.enable = true;
+    usb-automount.enable = true;
   };
 
   home.username = username;

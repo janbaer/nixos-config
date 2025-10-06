@@ -27,6 +27,7 @@
       moc.enable = true;
     };
     gpg.enable = true;
+    usb-automount.enable = true;
   };
 
   home.username = username;
