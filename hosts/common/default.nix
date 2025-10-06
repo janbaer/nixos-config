@@ -29,8 +29,6 @@
     };
   };
 
-  home-manager.backupFileExtension = "hm-bak";
-
   nix = {
     settings = {
       experimental-features = "nix-command flakes";
