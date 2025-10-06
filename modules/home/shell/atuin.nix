@@ -13,8 +13,12 @@
 
   home.activation = {
     atuin_login = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      if ${pkgs.atuin}/bin/atuin account verify &>/dev/null; then
+        echo "Atuin account already verified, skipping login."
+        exit 0
+      fi
       source /run/agenix/atuin
-      /etc/profiles/per-user/${username}/bin/atuin login -u $ATUIN_USER -p $ATUIN_PASSWORD -k "$ATUIN_KEY"
+      ${pkgs.atuin}/bin/atuin account login -u $ATUIN_USER -p $ATUIN_PASSWORD -k "$ATUIN_KEY"
     '';
   };
 
