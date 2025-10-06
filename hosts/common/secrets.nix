@@ -40,11 +40,9 @@
 
   system.activationScripts.script.text = ''
     #!/usr/bin/env bash
-    chown -R jan: /home/${username}/.config
-    chmod 0700 /home/${username}/.config
-    chown jan: /home/${username}/.config/zsh
-    chmod 0700 /home/${username}/.config/zsh
-    chown jan: /home/${username}/.gnupg
-    chmod 0700 /home/${username}/.gnupg
+    for dir in .config .config/zsh .gnupg; do
+      chown -R ${username}: /home/${username}/$dir
+      chmod 0700 /home/${username}/$dir
+    done
   '';
 }
