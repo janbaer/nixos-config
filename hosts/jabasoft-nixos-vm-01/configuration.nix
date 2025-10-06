@@ -62,7 +62,7 @@
 
   services.qemuGuest.enable = true;
 
-  networking.firewall.enable = true;
+  networking.firewall.enable = false;
 
   system.stateVersion = "25.05";
 
