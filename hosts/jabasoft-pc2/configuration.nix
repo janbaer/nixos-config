@@ -1,4 +1,5 @@
 { config, pkgs, inputs, hostname, ... }:
+
 {
   imports = [
     ./hardware-configuration.nix
@@ -18,6 +19,7 @@
     openvpn.enable = true;
     backup-to-nas.enable = true;
     backup-to-local.enable = true;
+    virtualization.enable = true;
   };
 
   # Bootloader.
