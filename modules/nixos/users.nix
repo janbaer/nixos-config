@@ -8,6 +8,9 @@ in {
       jan = {
         gid = 1000;
       };
+      ssh-users = {
+        gid = 1001;
+      };
     };
     users = {
       jan = {
@@ -15,7 +18,7 @@ in {
         description = "Jan Baer";
         extraGroups = [ "jan" "networkmanager" "wheel" "ssh-users" ];
         openssh.authorizedKeys.keys = [ pubSSHKey ];
-        shell = pkgs.zsh; # Make Zsh as default shell
+        shell = pkgs.zsh;
       };
     };
   };
