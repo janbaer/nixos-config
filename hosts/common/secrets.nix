@@ -30,8 +30,8 @@
         mode = "0600";
       };
       gpg_key = {
-        file = ../../secrets/private-gpg-key.age;
-        path = "/home/${username}/.gnupg/private-key.gpg";
+        file = ../../secrets/gpg-key-private.age;
+        path = "/home/${username}/.gnupg/gpg-key-private.asc";
         owner = "${username}";
         mode = "0600";
       };

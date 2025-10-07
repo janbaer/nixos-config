@@ -16,7 +16,7 @@ in {
   "davfs2-secrets.age".publicKeys = keys;
   "yubico-u2f-keys.age".publicKeys = keys;
   "atuin.age".publicKeys = keys;
-  "private-gpg-key.age".publicKeys = keys;
+  "gpg-key-private.age".publicKeys = keys;
   "smb-jabasoft-ug-secrets.age".publicKeys = keys;
   "smb-jabasoft-zb-secrets.age".publicKeys = keys;
   "wg0-conf-jabasoft-tx.age".publicKeys = keys;
