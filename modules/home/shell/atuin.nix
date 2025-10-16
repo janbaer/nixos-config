@@ -1,7 +1,4 @@
-{ config, pkgs, lib, username, ... }:
-# let
-#   atuinSecrets = builtins.fromTOML (builtins.readFile ./../../secrets/atuin.toml);
-# in
+{ config, pkgs, lib, ... }:
 {
   programs.atuin = {
     enable = true;

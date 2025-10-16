@@ -25,7 +25,6 @@
       };
       atuin = {
         file = ../../secrets/atuin.age;
-        path = "../../secrets/atuin.toml";
         owner = "${username}";
         mode = "0600";
       };

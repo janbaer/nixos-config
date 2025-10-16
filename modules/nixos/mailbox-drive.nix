@@ -11,19 +11,11 @@ in
         "davfs2-secrets" = {
           file = ../../secrets/davfs2-secrets.age;
           path = "/etc/davfs2/secrets";
+          owner = "${username}";
           mode = "0600";
         };
-        # "smb-secrets" = {
-        #   file = ../../secrets/smb-secrets.age;
-        #   path = "/home/${username}/.config/.smb-secrets";
-        #   owner = "${username}";
-        #   mode = "0600";
-        #   symlink = false;
-        # };
       };
     };
-
-    # environment.systemPackages = [pkgs.cifs-utils];
 
     services.davfs2 = {
       enable = true;
