@@ -12,6 +12,11 @@
     "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
 
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIpVyTOS7SzGDYJNt5MnQA2/x3Wbzo2lrcHalwx6WqyT openpgp:0xED492215"
+    "${builtins.readFile ./../../secrets/id_ed25519.pub}"
+  ];
+
   # Wireguard is not necessary for this host-system
   wgEndpoint = "janbaer.home64.de:1194";
   wgPublicKey = "";
@@ -27,14 +32,6 @@
     "@anthropic-ai/claude-code@latest"
   ];
 
-  # Optional SSH matchBlocks for host-specific configuration
-  sshMatchBlocks = {
-    "gitlab.com" = {
-      user = "jan.baer-check24";
-    };
-    "forgejo" = {
-      port = 2222;
-    };
-  };
-
+  sshPort = 23;
+  sshMatchBlocks = {};
 }

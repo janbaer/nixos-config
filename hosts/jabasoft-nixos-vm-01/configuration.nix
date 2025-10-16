@@ -1,5 +1,7 @@
 { config, pkgs, inputs, hostname, ... }:
-
+let
+  inherit (import ./variables.nix) sshPort;
+in
 {
   imports =
     [
@@ -62,8 +64,10 @@
 
   services.qemuGuest.enable = true;
 
-  networking.firewall.enable = false;
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ sshPort ];
+  };
 
   system.stateVersion = "25.05";
-
 }

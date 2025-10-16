@@ -14,6 +14,8 @@
     "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
 
+  authorizedKeys = [];
+
   # Wireguard is not necessary for this host-system
   wgEndpoint = "janbaer.home64.de:1194";
   wgPublicKey = "";
@@ -29,6 +31,7 @@
     "@anthropic-ai/claude-code@latest"
   ];
 
+  sshPort = 23;
   # Optional SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {
     "gitlab.com" = {

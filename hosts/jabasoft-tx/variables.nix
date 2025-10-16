@@ -13,6 +13,8 @@
     "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
 
+  authorizedKeys = [];
+
   wgEndpoint = "janbaer.home64.de:1194";
   wgPublicKey = "xcQlGyurzhQ3NZnL1QWrVivP6yQioSCMnlNYwCoa9k4=";
   wgIPAddress = "192.168.2.6/32";
@@ -27,6 +29,7 @@
     "@anthropic-ai/claude-code@latest"
   ];
 
+  sshPort = 23;
   # Optional SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {};
 }
