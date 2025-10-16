@@ -49,10 +49,9 @@ in {
     };
 
     system.activationScripts.script.text = ''
-      #!/usr/bin/env bash
-      if ! ${pkgs.wireguard-tools}/bin/nmcli connection show | grep -q "wg0"; then
+      if ! /run/current-system/sw/bin/nmcli connection show | grep -q "wg0"; then
         echo "WireGuard VPN connection not found. Importing configuration..."
-        ${pkgs.wireguard-tools}/bin/nmcli connection import type wireguard file /home/${username}/.config/wireguard/wg0.conf
+        /run/current-system/sw/bin/nmcli connection import type wireguard file /home/${username}/.config/wireguard/wg0.conf
       else
         echo "WireGuard VPN connection already exists."
       fi
