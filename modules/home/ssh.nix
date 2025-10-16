@@ -33,7 +33,7 @@ in {
       "forgejo" = {
         port = 2222;
       };
-      jabasoft = {
+      "jabasoft" = {
         host = "jabasoft-*";
         port = sshPort;
       };
