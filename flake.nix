@@ -1,5 +1,5 @@
 {
-  description = "A simple NixOS flake";
+  description = "Jans NixOS configurations";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
@@ -40,6 +40,7 @@
             home-manager.nixosModules.home-manager
             {
               home-manager = {
+                backupFileExtension = "hm-bak";
                 useGlobalPkgs = true;
                 useUserPackages = true;
                 extraSpecialArgs = {
@@ -59,10 +60,9 @@
     in
     {
       nixosConfigurations = {
-        jabasoft-vm-nixos-02 = mkSystem nixpkgs "x86_64-linux" "jabasoft-vm-nixos-02" "jan" ;
-        jabasoft-nb-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nb-01" "jan";
         jabasoft-tx = mkSystem nixpkgs "x86_64-linux" "jabasoft-tx" "jan";
         jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan";
+        jabasoft-nixos-vm-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nixos-vm-01" "jan" ;
       };
     };
 }

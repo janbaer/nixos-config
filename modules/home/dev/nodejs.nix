@@ -15,12 +15,8 @@ let
   nodeInstall = pkgs.writeShellScriptBin "nodeInstall" ''
     #!/usr/bin/env bash
     
-    echo "Checking and installing Node.js packages with volta..."
-
-    if [ ! volta which node &>/dev/null ]; then
-      echo "Node.js is not installed. Let us install Node.js first."
-      volta install node
-    fi
+    echo "Installing Node.js and global packages with volta..."
+    ${pkgs.volta}/bin/volta install node
 
     if [ -z "$GLOBAL_NPM_PACKAGES" ]; then
       echo "No global packages specified. Please specify the global packages to install."
@@ -29,7 +25,7 @@ let
     
     for package in $GLOBAL_NPM_PACKAGES; do
       echo "Installing $package..."
-      volta install $package
+      ${pkgs.volta}/bin/volta install $package
       if [ $? -eq 0 ]; then
         echo "✓ Successfully installed $package"
       else
@@ -65,6 +61,17 @@ in
       ytw = "yarn test:watch";
       yui = "yarn upgrade-interactive --latest";
       yd = "yarn debug";
+    };
+
+    home.activation = {
+      installing_nodejs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if [ -f "$HOME/.volta/bin/node" ]; then
+          echo "Node.js and global packages already installed."
+          exit 0;
+        fi
+        export GLOBAL_NPM_PACKAGES='${lib.concatStringsSep " " globalNpmPackages}'
+        ${nodeInstall}/bin/nodeInstall
+      '';
     };
   };
 }

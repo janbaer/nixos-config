@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, hostname, ... }:
 let
-  pubSSHKey = builtins.readFile ../../secrets/id_ed25519.pub;
+  inherit
+    (import ./../../hosts/${hostname}/variables.nix)
+  authorizedKeys;
 in {
 
   users = {
@@ -8,14 +10,17 @@ in {
       jan = {
         gid = 1000;
       };
+      ssh-users = {
+        gid = 1001;
+      };
     };
     users = {
       jan = {
         isNormalUser = true;
         description = "Jan Baer";
         extraGroups = [ "jan" "networkmanager" "wheel" "ssh-users" ];
-        openssh.authorizedKeys.keys = [ pubSSHKey ];
-        shell = pkgs.zsh; # Make Zsh as default shell
+        openssh.authorizedKeys.keys = authorizedKeys;
+        shell = pkgs.zsh;
       };
     };
   };

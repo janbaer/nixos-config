@@ -30,8 +30,14 @@
         mode = "0600";
       };
       gpg_key = {
-        file = ../../secrets/private-gpg-key.age;
-        path = "/home/${username}/.gnupg/private-key.gpg";
+        file = ../../secrets/gpg-key-private.age;
+        path = "/home/${username}/.gnupg/gpg-key-private.asc";
+        owner = "${username}";
+        mode = "0600";
+      };
+      gpg_passphrase = {
+        file = ../../secrets/gpg-passphrase.age;
+        path = "/home/${username}/.gnupg/.gpg-passphrase";
         owner = "${username}";
         mode = "0600";
       };
@@ -39,8 +45,10 @@
   };
 
   system.activationScripts.script.text = ''
-      #!/usr/bin/env bash
-      chown jan: /home/${username}/.config/zsh
-      chmod 0700 /home/${username}/.config/zsh
+    #!/usr/bin/env bash
+    for dir in .config .config/zsh .gnupg; do
+      chown -R ${username}: /home/${username}/$dir
+      chmod 0700 /home/${username}/$dir
+    done
   '';
 }

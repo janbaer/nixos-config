@@ -4,6 +4,7 @@ let
   inherit
     (import ./../../hosts/${hostname}/variables.nix)
     sshMatchBlocks
+    sshPort
     ;
 in {
   home.file = {
@@ -31,6 +32,10 @@ in {
       };
       "forgejo" = {
         port = 2222;
+      };
+      "jabasoft" = {
+        host = "jabasoft-*";
+        port = sshPort;
       };
     } // sshMatchBlocks;
   };

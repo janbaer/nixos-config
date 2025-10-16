@@ -1,4 +1,4 @@
-{ config, lib, pkgs, hostname, ... }:
+{ config, lib, pkgs, hostname, username, ... }:
 with lib;
 let
   inherit
@@ -44,12 +44,24 @@ in {
       sshKeys = gpgSshKeys;
     };
 
-    # home.activation = {
-    #   import_gpg_keys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    #     /etc/profiles/per-user/${username}/bin/gpg --batch --import ~/.gnupg/private-key.gpg
-    #     /etc/profiles/per-user/${username}/bin/gpg --batch --import ~/.gnupg/public-key.gpg
-    #     rm ~/.gnupg/*.gpg
-    #   '';
-    # };
+    home.file = {
+      ".gnupg/gpg-key-public.asc".text = builtins.readFile ./../../secrets/gpg-key-public.asc;
+    };
+
+    home.activation = {
+      import_gpg_keys = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        if ${pkgs.gnupg}/bin/gpg --list-keys --keyid-format short | grep -q "${gpgKey}"; then
+          echo "GPG key ${gpgKey} already imported, skipping."
+          exit 0
+        fi
+
+        gpgPassphrase=$(cat /home/${username}/.gnupg/.gpg-passphrase)
+
+        ${pkgs.gnupg}/bin/gpg --batch --passphrase "$gpgPassphrase" --import /home/${username}/.gnupg/gpg-key-private.asc
+        ${pkgs.gnupg}/bin/gpg --batch --import /home/${username}/.gnupg/gpg-key-public.asc
+        rm /home/${username}/.gnupg/*.asc
+        rm /home/${username}/.gnupg/.gpg-passphrase
+      '';
+    };
   };
 }

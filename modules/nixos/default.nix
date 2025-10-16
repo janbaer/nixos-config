@@ -19,6 +19,8 @@ in {
     ./backup-to-nas.nix
     ./backup-to-local.nix
     ./openvpn.nix
+    ./virtualization.nix
+    ./localization.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;

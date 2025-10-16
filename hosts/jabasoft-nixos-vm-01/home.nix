@@ -11,12 +11,11 @@
       rust.enable = true;
       vscode.enable = true;
       python.enable = true;
-      k8s-cli.enable = true;
+      k8s-cli.enable = false;
       claude.enable = true;
-      zed-editor.enable = true;
-      devops-tools.enable = true;
-      goose-cli.enable = false;
-      mongodb.enable = true;
+      zed-editor.enable = false;
+      devops-tools.enable = false;
+      mongodb.enable = false;
     };
     desktop = {
       hyprland.enable = true;
@@ -26,11 +25,10 @@
     };
     shell = {
       gopass.enable = true;
-      moc.enable = true;
+      moc.enable = false;
     };
     gpg.enable = true;
-    onepassword.enable = true;
-    usb-automount.enable = true;
+    onepassword.enable = false;
   };
 
   home.username = username;
