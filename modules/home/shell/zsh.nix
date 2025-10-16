@@ -1,5 +1,4 @@
-{ pkgs, lib, ... }:
-with lib;
+{ pkgs, ... }:
 let
   zshCompletionsInit = pkgs.writeScriptBin "zshCompletionsInit" ''
     #!${pkgs.zsh}/bin/zsh
@@ -13,15 +12,11 @@ let
     ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_golang https://raw.githubusercontent.com/zsh-users/zsh-completions/master/src/_golang
     ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_terraform https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/refs/heads/master/plugins/terraform/_terraform
 
-    
-
     echo "Generating more ZSH completions..."
     ${pkgs.volta}/bin/volta completions zsh > $ZDOTDIR/completions/_volta
     ${pkgs.podman}/bin/podman completion zsh > $ZDOTDIR/completions/_podman
     ${pkgs.uv}/bin/uv generate-shell-completion zsh > "$ZDOTDIR/completions/_uv"
     ${pkgs.uv}/bin/uvx --generate-shell-completion zsh > "$ZDOTDIR/completions/_uvx"
-
-    # cp ./files/_terraform $ZDOTDIR/completions/_terraform
 
     fpath=($ZDOTDIR/completions $fpath)
     autoload -Uz compinit
