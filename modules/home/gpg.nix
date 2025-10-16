@@ -55,9 +55,12 @@ in {
           exit 0
         fi
 
-        ${pkgs.gnupg}/bin/gpg --import /home/${username}/.gnupg/gpg-key-private.asc
-        ${pkgs.gnupg}/bin/gpg --import /home/${username}/.gnupg/gpg-key-public.asc
+        gpgPassphrase=$(cat /home/${username}/.gnupg/.gpg-passphrase)
+
+        ${pkgs.gnupg}/bin/gpg --batch --passphrase "$gpgPassphrase" --import /home/${username}/.gnupg/gpg-key-private.asc
+        ${pkgs.gnupg}/bin/gpg --batch --import /home/${username}/.gnupg/gpg-key-public.asc
         rm /home/${username}/.gnupg/*.asc
+        rm /home/${username}/.gnupg/.gpg-passphrase
       '';
     };
   };

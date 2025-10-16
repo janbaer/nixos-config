@@ -35,6 +35,12 @@
         owner = "${username}";
         mode = "0600";
       };
+      gpg_passphrase = {
+        file = ../../secrets/gpg-passphrase.age;
+        path = "/home/${username}/.gnupg/.gpg-passphrase";
+        owner = "${username}";
+        mode = "0600";
+      };
     };
   };
 
