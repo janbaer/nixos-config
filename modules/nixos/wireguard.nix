@@ -23,32 +23,13 @@ in {
 
     environment.systemPackages = with pkgs; [ wireguard-tools ];
 
-    # https://wiki.nixos.org/wiki/WireGuard
-    # The following configuration was not usable from the Networkmanager
-    # It was causing problems while accessing the privateKey because of permisson denied errors
-    # networking.wireguard = {
-    #   enable = true;
-    #   interfaces = {
-    #     wg0 = {
-    #       ips = [ wgIPAddress ];
-    #       peers = [{
-    #         publicKey = wgPublicKey;
-    #         endpoint = wgEndpoint;
-    #         persistentKeepalive = 25;
-    #         allowedIPs = wgAllowedIPs;
-    #       }];
-    #       privateKeyFile = config.age.secrets."wg-private-key-${hostname}".path;
-    #     };
-    #   };
-    # };
-
     networking.firewall = {
       allowedUDPPorts = [ wgUdpPort ];
       trustedInterfaces = [ "wg+" ];  # Trust all wireguard interfaces
       checkReversePath = false;
     };
 
-    system.activationScripts.script.text = ''
+    system.activationScripts.wireguardConfiguration.text = ''
       if ! /run/current-system/sw/bin/nmcli connection show | grep -q "wg0"; then
         echo "WireGuard VPN connection not found. Importing configuration..."
         /run/current-system/sw/bin/nmcli connection import type wireguard file /home/${username}/.config/wireguard/wg0.conf

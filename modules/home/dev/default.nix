@@ -36,6 +36,6 @@
 
   home.shellAliases = {
     gemini-update = "volta install @google/gemini-cli@latest";
-    ld = "DOCKER_HOST=unix:///run/user/1000/podman/podman.sock lazydocker";
+    ld = "DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock lazydocker";
   };
 }

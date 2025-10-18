@@ -43,7 +43,7 @@
     };
   };
 
-  system.activationScripts.script.text = ''
+  system.activationScripts.setupSecretDirectories.text = ''
     #!/usr/bin/env bash
     for dir in .config .config/zsh .gnupg; do
       chown -R ${username}: /home/${username}/$dir
