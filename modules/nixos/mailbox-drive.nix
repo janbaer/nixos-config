@@ -11,7 +11,6 @@ in
         "davfs2-secrets" = {
           file = ../../secrets/davfs2-secrets.age;
           path = "/etc/davfs2/secrets";
-          owner = "${username}";
           mode = "0600";
         };
       };
