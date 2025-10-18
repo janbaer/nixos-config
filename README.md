@@ -25,6 +25,12 @@ Before installing agenix, you can run agenix in a nix-shell with the command `ni
 [NixOS Wiki Agenix](https://nixos.wiki/wiki/Agenix)
 [See also](https://jonascarpay.com/posts/2021-07-27-agenix.html)
 
+## Steps after applying the nix-config for the first time.
+
+### GPG Key Import
+
+After the initial system setup on a new machine, you need to manually import your GPG private key. This is a one-time operation per machine.To do it, just run `gpg-import-my-keys` in your terminal.
+
 ## Known issues
 
 - In case that the command `nix flake update` fails with a strange error like `failed to insert entry: invalid object specified - package.nix` it helped, to delete the `~/.cache/nix/` directory.

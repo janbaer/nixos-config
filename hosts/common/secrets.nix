@@ -28,15 +28,8 @@
         owner = "${username}";
         mode = "0600";
       };
-      gpg_key = {
+      "gpg-key-private.asc" = {
         file = ../../secrets/gpg-key-private.age;
-        path = "/home/${username}/.gnupg/gpg-key-private.asc";
-        owner = "${username}";
-        mode = "0600";
-      };
-      gpg_passphrase = {
-        file = ../../secrets/gpg-passphrase.age;
-        path = "/home/${username}/.gnupg/.gpg-passphrase";
         owner = "${username}";
         mode = "0600";
       };
