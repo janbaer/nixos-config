@@ -1,6 +1,6 @@
 # Jans NixOS config
 
-This repo contains the configuration for NixOS, NixDarwin and the Nix HomeManager for all of my systems.
+This repo contains the configuration for NixOS, NixDarwin and the Nix HomeManager for all of my systems. This repo is indexed by [Deepwiki](https://deepwiki.com/janbaer/nixos-config)
 
 ## Initial steps
 
