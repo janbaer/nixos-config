@@ -32,6 +32,7 @@
     "yarn@1.22.22"
     "@google/gemini-cli@latest"
     "@anthropic-ai/claude-code@latest"
+    "vscode-langservers-extracted@latest"
   ];
 
   # Common SSH configuration
