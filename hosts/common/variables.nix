@@ -36,7 +36,7 @@
   ];
 
   # Common SSH configuration
-  sshPort = 23;
+  sshPort = 22022;
 
   # SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {};
