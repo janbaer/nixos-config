@@ -23,6 +23,13 @@
         mode = "0600";
         symlink = false;
       };
+      "id_ed25519-hetzner-sb" = {
+        file = ../../secrets/id_ed25519-hetzner-sb.age;
+        path = "/home/${username}/.ssh/id_ed25519-hetzner-sb";
+        owner = "${username}";
+        mode = "0600";
+        symlink = false;
+      };
       atuin = {
         file = ../../secrets/atuin.age;
         owner = "${username}";

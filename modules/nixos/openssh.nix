@@ -1,5 +1,9 @@
-{ config, lib, pkgs, username, ... }:
-with lib; let
+{ config, lib, hostname, ... }:
+with lib;
+let
+  inherit
+    (import ./../../hosts/${hostname}/variables.nix)
+    sshPort;
   cfg = config.modules.openssh;
 in
 {
@@ -15,7 +19,8 @@ in
         PermitRootLogin = "no";
         PrintMotd = true;
       };
-      ports = [ 23 ];
+      ports = [ sshPort ];
+      openFirewall = true;
       extraConfig = ''
       '';
     };

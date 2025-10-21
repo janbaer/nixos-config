@@ -21,4 +21,5 @@ in {
   "smb-jabasoft-zb-secrets.age".publicKeys = keys;
   "wg0-conf-jabasoft-tx.age".publicKeys = keys;
   "id_ed25519_jabasoft-ug.age".publicKeys = keys;
+  "id_ed25519-hetzner-sb.age".publicKeys = keys;
 }
