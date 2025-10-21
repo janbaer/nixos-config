@@ -156,8 +156,8 @@ in {
         "size 900 700,class:^(MPlayer)$"
 
         "float,title:^(Administrator privileges required)$"
-        "float , class:^(org.gnome.NautilusPreviewer)$"
-        "center , class:^(org.gnome.NautilusPreviewer)$"
+        "float, class:^(org.gnome.NautilusPreviewer)$"
+        "center, class:^(org.gnome.NautilusPreviewer)$"
         "size 900 700, class:^(org.gnome.NautilusPreviewer)"
 
         "float,class:^(virt-manager)$"
@@ -178,6 +178,10 @@ in {
         "size 1200 800,class:(firefox),title:(Library)"
         # Warp
         "tile,class:(dev.warp.Warp)"
+
+        # Thunderbird
+        "float,title:^(Edit Item)$"
+        "center,title:^(Edit Item)$"
       ];
 
     };
