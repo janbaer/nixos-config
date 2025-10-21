@@ -10,6 +10,7 @@ in {
   home.file = {
     ".ssh/id_ed25519.pub".text = builtins.readFile ./../../secrets/id_ed25519.pub;
     ".ssh/id_ed25519_jabasoft-ug.pub".text = builtins.readFile ./../../secrets/id_ed25519_jabasoft-ug.pub;
+    ".ssh/id_ed25519-hetzner-sb.pub".text = builtins.readFile ./../../secrets/id_ed25519-hetzner-sb.pub;
   };
 
   home.packages = with pkgs; [
