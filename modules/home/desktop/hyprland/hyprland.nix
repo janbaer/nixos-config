@@ -271,10 +271,10 @@ in {
       bind = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
       bind = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
       bind = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-      bind = , XF86AudioPlay, exec, notify-send "Play"
-      bind = , XF86AudioPause, exec, mocp --pause
-      bind = , XF86AudioNext, exec, mocp --next
-      bind = , XF86AudioPrev, exec, mocp --previous
+      bind = , XF86AudioPlay, exec, playerctl play-pause
+      bind = , XF86AudioPause, exec, playerctl play-pause
+      bind = , XF86AudioNext, exec, playerctl next
+      bind = , XF86AudioPrev, exec, playerctl previous
       bind = , XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
       bind = , XF86Calculator, exec, qalculate-gtk
       bind = , XF86Lock, exec, swaylock

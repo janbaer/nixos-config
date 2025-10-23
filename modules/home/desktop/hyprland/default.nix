@@ -39,6 +39,7 @@ in
       nsxiv                           # New Suckless X Image Viewer
       # network-manager-applet
       pasystray
+      playerctl                       # Command-line utility and library for controlling media players that implement MPRIS
       volumeicon
       brightnessctl                   # Control monitor brightness with fn-keys
       wdisplays                       # Configuring display in Wayland
@@ -50,7 +51,10 @@ in
       copy = "wl-copy";
     };
 
-    services.network-manager-applet.enable = true;
+    services = {
+      network-manager-applet.enable = true;
+      mpris-proxy.enable = true;             # enable a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players
+    };
 
     systemd.user.targets.hyprland-session.Unit.Wants = [
       "xdg-desktop-autostart.target"
