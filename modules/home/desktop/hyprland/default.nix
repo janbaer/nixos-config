@@ -36,6 +36,7 @@ in
       swappy                          # Required for making screenshots
       yad                             # Show a GTK popup from the commandline
       blueman                         # Toolbar applet for Bluetooth
+      imagemagick                     # Software suite to create, edit, compose, or convert bitmap images
       nsxiv                           # New Suckless X Image Viewer
       # network-manager-applet
       pasystray
