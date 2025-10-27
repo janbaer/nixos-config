@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "forgejo-mcp": {
+      "command": "/home/jan/bin/forgejo-mcp",
+      "args": [
+        "--url",
+        "https://forgejo.home.janbaer.de"
+      ],
+      "env": {
+        "FORGEJO_ACCESS_TOKEN": "${FORGEJO_ACCESS_TOKEN}"
+      }
+    }
+  }
+}
