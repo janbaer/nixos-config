@@ -22,6 +22,7 @@ in
     openvpn.enable = false;
     backup-to-nas.enable = false;
     backup-to-local.enable = false;
+    secrets.enable = true;
   };
 
   # Bootloader.

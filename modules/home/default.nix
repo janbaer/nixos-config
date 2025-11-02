@@ -8,6 +8,7 @@
     ./gpg.nix
     ./onepassword.nix
     ./usb-automount.nix
+    ./secrets.nix
   ];
 }
 

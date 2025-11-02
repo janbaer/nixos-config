@@ -1,9 +1,5 @@
 # Common configuration for all hosts
 { ... }: {
-  imports = [
-    ./secrets.nix
-  ];
-
   nixpkgs = {
     # You can add overlays here
     overlays = [
@@ -48,4 +44,3 @@
     optimise.automatic = true;
   };
 }
-

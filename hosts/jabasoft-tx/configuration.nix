@@ -18,6 +18,7 @@ in {
     printing.enable = true;
     scanners.enable = true;
     backup-to-nas.enable = true;
+    secrets.enable = true;
   };
 
   # Bootloader.

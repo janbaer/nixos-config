@@ -43,6 +43,7 @@
                 backupFileExtension = "hm-bak";
                 useGlobalPkgs = true;
                 useUserPackages = true;
+                # verbose = true;  # Enable verbose home-manager activation
                 extraSpecialArgs = {
                   inherit username;
                   inherit hostname;

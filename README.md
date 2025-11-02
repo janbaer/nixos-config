@@ -29,7 +29,11 @@ Before installing agenix, you can run agenix in a nix-shell with the command `ni
 
 ### GPG Key Import
 
-After the initial system setup on a new machine, you need to manually import your GPG private key. This is a one-time operation per machine.To do it, just run `gpg-import-my-keys` in your terminal.
+After the initial system setup on a new machine, you need to manually import your GPG private key. This is a one-time operation per machine.To do it, just run `gpgImportKeys` in your terminal.
+
+### ATUIN login
+
+To be able to share my shell history between multiple machines, it's required to be logged in. So you need to run `atuinLogin` once.
 
 ## Known issues
 
@@ -38,3 +42,4 @@ After the initial system setup on a new machine, you need to manually import you
 ## Hints
 
 - In case you need to know the SHA256 of the NixOS configuration, you can use `nix-prefetch-url` command, which returns the SHA256 hash of the file.
+

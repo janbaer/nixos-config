@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
   zshCompletionsInit = pkgs.writeScriptBin "zshCompletionsInit" ''
     #!${pkgs.zsh}/bin/zsh
@@ -22,9 +22,10 @@ let
     autoload -Uz compinit
     compinit
   '';
-  
 in 
 {
+  age.secrets."zsh-secrets".file = ./../../../secrets/zsh-secrets.age;
+
   programs.zsh = {
     enable = true;
     autosuggestion = {
@@ -65,7 +66,7 @@ in
 
       source $ZDOTDIR/.functions
 
-      [ -f $ZDOTDIR/.zsh-secrets ] && source $ZDOTDIR/.zsh-secrets
+      source ${config.age.secrets.zsh-secrets.path}
 
       [ -f $PWD/.zshrc.local ] && source $PWD/.zshrc.local
     '';

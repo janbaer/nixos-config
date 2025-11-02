@@ -1,4 +1,4 @@
-{ config, lib, pkgs, hostname, ... }:
+{ config, lib, pkgs, username, hostname, ... }:
 with lib;
 let
   inherit
@@ -7,10 +7,29 @@ let
     sshPort
     ;
 in {
+
+  age.secrets = {
+    "id_ed25519" = {
+      file = ./../../secrets/id_ed25519.age;
+      path = "/home/${username}/.ssh/id_ed25519";
+      symlink = false;
+    };
+    "id_ed25519-hetzner-sb" = {
+      file = ./../../secrets/id_ed25519-hetzner-sb.age;
+      path = "/home/${username}/.ssh/id_ed25519-hetzner-sb";
+      symlink = false;
+    };
+    "id_ed25519-jabasoft-ug" = {
+      file = ./../../secrets/id_ed25519-jabasoft-ug.age;
+      path = "/home/${username}/.ssh/id_ed25519-jabasoft-ug";
+      symlink = false;
+    };
+  };
+
   home.file = {
     ".ssh/id_ed25519.pub".text = builtins.readFile ./../../secrets/id_ed25519.pub;
-    ".ssh/id_ed25519_jabasoft-ug.pub".text = builtins.readFile ./../../secrets/id_ed25519_jabasoft-ug.pub;
     ".ssh/id_ed25519-hetzner-sb.pub".text = builtins.readFile ./../../secrets/id_ed25519-hetzner-sb.pub;
+    ".ssh/id_ed25519-jabasoft-ug.pub".text = builtins.readFile ./../../secrets/id_ed25519-jabasoft-ug.pub;
   };
 
   home.packages = with pkgs; [
