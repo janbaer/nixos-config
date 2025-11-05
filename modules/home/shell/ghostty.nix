@@ -14,9 +14,12 @@
       gtk-titlebar = false;
       # MacOS specific settings
       macos-titlebar-style = "hidden";
-      keybind = "global:cmd+grave_accent=toggle_quick_terminal";
-      # Special configuration to handle Shift+Enter in claude-code for entering new lines
-      keybind = "shift+enter=text:\x1b\r"
+      keybind = [
+        "global:cmd+grave_accent=toggle_quick_terminal"
+        # Special keybinding for Claude-code
+        # to handle shift+enter for new-line
+        "shift+enter=text:\x1b\r"
+      ];
     };
   };
 }
