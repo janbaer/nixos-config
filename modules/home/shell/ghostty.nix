@@ -18,7 +18,7 @@
         "global:cmd+grave_accent=toggle_quick_terminal"
         # Special keybinding for Claude-code
         # to handle shift+enter for new-line
-        "shift+enter=text:\x1b\r"
+        "shift+enter=text:\\x1b\\r"
       ];
     };
   };
