@@ -1,22 +1,39 @@
 { config
 , lib
+, pkgs
 , ...
 }:
 with lib; let
-  cfg = config.modules.dev.claude;
   inherit (config.lib.file) mkOutOfStoreSymlink;
+  cfg = config.modules.dev.claude;
+
+  claudeInstall = pkgs.writeShellScriptBin "claudeInstall" ''
+    #!/usr/bin/env bash
+
+    if [ -f "$HOME/.local/bin/claude" ]; then
+      echo "Claude-code is already installed, just updating it..."
+      $HOME/.local/bin/claude install
+      exit 0;
+    fi
+    echo "Installing claude-code..."
+    ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
+  '';
 in
 {
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
 
   config = mkIf cfg.enable {
+    home.packages = [
+      claudeInstall
+    ];
+
     home.file = {
       ".claude/.keep".text = "";
     };
 
     home.shellAliases = {
       c = "claude --dangerously-skip-permissions";
-      claude-update = "volta install @anthropic-ai/claude-code";
+      claude-update = "claude install";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
     };
 
@@ -29,5 +46,9 @@ in
       ".claude/memory-mcp.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/memory-mcp.md";
       ".claude/skills".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
     };
+
+    home.sessionPath = [
+      "$HOME/.local/bin"
+    ];
   };
 }
