@@ -11,8 +11,7 @@ with lib; let
     #!/usr/bin/env bash
 
     if [ -f "$HOME/.local/bin/claude" ]; then
-      echo "Claude-code is already installed, just updating it..."
-      $HOME/.local/bin/claude install
+      echo "Claude-code is already installed"
       exit 0;
     fi
     echo "Installing claude-code..."
@@ -33,7 +32,7 @@ in
 
     home.shellAliases = {
       c = "claude --dangerously-skip-permissions";
-      claude-update = "claude install";
+      claude-update = "claude update";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
     };
 
