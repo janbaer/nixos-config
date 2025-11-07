@@ -28,7 +28,6 @@
     };
     gpg.enable = true;
     usb-automount.enable = true;
-    secrets.enable = true;
   };
 
   home.username = username;
