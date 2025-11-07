@@ -43,7 +43,6 @@
                 backupFileExtension = "hm-bak";
                 useGlobalPkgs = true;
                 useUserPackages = true;
-                # verbose = true;  # Enable verbose home-manager activation
                 extraSpecialArgs = {
                   inherit username;
                   inherit hostname;
@@ -54,6 +53,7 @@
                 sharedModules = [
                   agenix.homeManagerModules.age
                 ];
+                verbose = false;  # Enable verbose home-manager activation
               };
             }
           ];

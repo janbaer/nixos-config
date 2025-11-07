@@ -1,5 +1,8 @@
 # Common configuration for all hosts
 { ... }: {
+
+  boot.initrd.verbose = false; # Activate for verbose logging output (check with journalctl -b)
+
   nixpkgs = {
     # You can add overlays here
     overlays = [
