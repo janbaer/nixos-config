@@ -82,14 +82,4 @@
 
     mplayer         # CLI music player
   ];
-
-  # home.activation = {
-  #   fixing_user_dir_permissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  #     #!/usr/bin/env bash
-  #     for dir in .config .config/zsh .gnupg; do
-  #       chown -R ${username}: /home/${username}/$dir
-  #       chmod 0700 /home/${username}/$dir
-  #     done
-  #   '';
-  # };
 }
