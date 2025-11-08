@@ -6,22 +6,22 @@ let
   useTuxedo = hostVariables.useTuxedo or false;
 in {
   imports = [
-    ./openssh.nix
-    ./yubikey.nix
-    ./mailbox-drive.nix
-    ./network-hosts.nix
-    ./users.nix
-    ./nas-mounts.nix
-    ./wireguard.nix
-    ./docker.nix
-    ./printing.nix
-    ./scanners.nix
     ./backup-to-nas.nix
     ./backup-to-local.nix
-    ./openvpn.nix
-    ./virtualization.nix
+    ./docker.nix
     ./localization.nix
+    ./mailbox-drive.nix
+    ./network-hosts.nix
+    ./nas-mounts.nix
+    ./openssh.nix
+    ./openvpn.nix
+    ./printing.nix
+    ./scanners.nix
     ./secrets.nix
+    ./users.nix
+    ./virtualization.nix
+    ./wireguard.nix
+    ./yubikey.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;

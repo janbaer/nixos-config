@@ -1,13 +1,13 @@
 {pkgs, lib, username, ...}: {
   imports = [
     ./atuin.nix
-    ./zsh.nix
-    ./tmux.nix
     ./ghostty.nix
-    ./neovim.nix
     ./gopass.nix
-    ./moc.nix
     ./lf.nix
+    ./moc.nix
+    ./neovim.nix
+    ./tmux.nix
+    ./zsh.nix
   ];
 
   programs.zoxide = {

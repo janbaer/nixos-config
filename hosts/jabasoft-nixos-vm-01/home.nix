@@ -6,20 +6,17 @@
 
   modules = {
     dev = {
-      nodejs.enable = true;
+      claude.enable = true;
+      devops-tools.enable = false;
       golang.enable = true;
+      nodejs.enable = true;
+      python.enable = true;
       rust.enable = true;
       vscode.enable = true;
-      python.enable = true;
-      k8s-cli.enable = false;
-      claude.enable = true;
-      zed-editor.enable = false;
-      devops-tools.enable = false;
-      mongodb.enable = false;
     };
     desktop = {
-      hyprland.enable = true;
       browsers.enable = true;
+      hyprland.enable = true;
       thunderbird.enable = true;
       veracrypt.enable = true;
     };

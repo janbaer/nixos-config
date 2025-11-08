@@ -1,14 +1,14 @@
 {...}: {
   imports = [
-    ./shell
-    ./dev
     ./desktop
+    ./dev
     ./dotfiles.nix
-    ./ssh.nix
     ./gpg.nix
     ./onepassword.nix
-    ./usb-automount.nix
     ./secrets.nix
+    ./shell
+    ./ssh.nix
+    ./usb-automount.nix
   ];
 }
 

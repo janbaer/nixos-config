@@ -8,17 +8,17 @@ in {
   ];
 
   modules = {
+    backup-to-nas.enable = true;
+    docker.enable = true;
     mailbox-drive.enable = true;
-    yubikey.enable = true;
+    nas-mounts.enable = true;
     network-hosts.enable = true;
     openssh.enable = true;
-    nas-mounts.enable = true;
-    wireguard.enable = true;
-    docker.enable = true;
     printing.enable = true;
     scanners.enable = true;
-    backup-to-nas.enable = true;
     secrets.enable = true;
+    wireguard.enable = true;
+    yubikey.enable = true;
   };
 
   # Bootloader.

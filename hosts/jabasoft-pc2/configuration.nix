@@ -8,19 +8,19 @@
   ];
 
   modules = {
-    mailbox-drive.enable = true;
-    yubikey.enable = true;
-    network-hosts.enable = true;
-    openssh.enable = true;
-    nas-mounts.enable = true;
-    docker.enable = true;
-    printing.enable = true;
-    scanners.enable = true;
-    openvpn.enable = true;
     backup-to-nas.enable = true;
     backup-to-local.enable = true;
-    virtualization.enable = true;
+    docker.enable = true;
+    mailbox-drive.enable = true;
+    nas-mounts.enable = true;
+    network-hosts.enable = true;
+    yubikey.enable = true;
+    openssh.enable = true;
+    openvpn.enable = true;
+    printing.enable = true;
+    scanners.enable = true;
     secrets.enable = true;
+    virtualization.enable = true;
   };
 
   # Bootloader.

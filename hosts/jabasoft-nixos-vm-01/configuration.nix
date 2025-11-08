@@ -11,18 +11,16 @@ in
     ];
 
   modules = {
+    docker.enable = false;
     mailbox-drive.enable = false;
-    yubikey.enable = false;
+    nas-mounts.enable = false;
     network-hosts.enable = true;
     openssh.enable = true;
-    nas-mounts.enable = false;
-    docker.enable = false;
+    openvpn.enable = false;
     printing.enable = false;
     scanners.enable = false;
-    openvpn.enable = false;
-    backup-to-nas.enable = false;
-    backup-to-local.enable = false;
     secrets.enable = true;
+    yubikey.enable = false;
   };
 
   # Bootloader.
