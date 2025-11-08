@@ -19,7 +19,7 @@ function rsync_remote() {
   rsync -avu --progress --delete                                  \
         --dry-run                                                 \
         --exclude-from="$exclude_from_file"                       \
-        -e "ssh -i /home/$(whoami)/.ssh/id_ed25519_jabasoft-ug"   \
+        -e "ssh -i /home/$(whoami)/.ssh/id_ed25519-jabasoft-ug"   \
         "${source_dir}" "${target_dir}"
 }
 

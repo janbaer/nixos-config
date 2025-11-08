@@ -20,6 +20,7 @@
     backup-to-nas.enable = true;
     backup-to-local.enable = true;
     virtualization.enable = true;
+    secrets.enable = true;
   };
 
   # Bootloader.

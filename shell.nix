@@ -14,6 +14,7 @@ in pkgs.mkShell {
     cat > .zshrc.local << 'EOF'
       # Define aliases
       alias nhs='nh os switch .'
+      alias nhb='nh os build .'
     EOF
   '';
 }

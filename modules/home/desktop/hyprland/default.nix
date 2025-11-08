@@ -62,7 +62,7 @@ in
     ];
 
     home.file = {
-      ".config/swappy/comfig".source = ./swappy/config;
+      ".config/swappy/config".source = ./swappy/config;
       ".config/rofi".source = ./rofi;
       ".config/hypr/hyprpaper.conf".source = ./hyprpaper/hyprpaper.conf;
       ".config/nsxiv/exec/key-handler".source = ./nsxiv/exec/key-handler;

@@ -1,8 +1,7 @@
 # Common configuration for all hosts
 { ... }: {
-  imports = [
-    ./secrets.nix
-  ];
+
+  boot.initrd.verbose = false; # Activate for verbose logging output (check with journalctl -b)
 
   nixpkgs = {
     # You can add overlays here
@@ -48,4 +47,3 @@
     optimise.automatic = true;
   };
 }
-

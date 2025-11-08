@@ -21,6 +21,7 @@ in {
     ./openvpn.nix
     ./virtualization.nix
     ./localization.nix
+    ./secrets.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh.enable = true;

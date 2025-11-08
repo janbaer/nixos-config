@@ -1,10 +1,10 @@
-{pkgs, ...}: {
+{pkgs, lib, username, ...}: {
   imports = [
+    ./atuin.nix
     ./zsh.nix
     ./tmux.nix
     ./ghostty.nix
     ./neovim.nix
-    ./atuin.nix
     ./gopass.nix
     ./moc.nix
     ./lf.nix

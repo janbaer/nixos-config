@@ -53,6 +53,7 @@
                 sharedModules = [
                   agenix.homeManagerModules.age
                 ];
+                verbose = false;  # Enable verbose home-manager activation
               };
             }
           ];

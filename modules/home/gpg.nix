@@ -16,7 +16,7 @@ let
     };
   };
 
-  gpgImportKeys = pkgs.writeShellScriptBin "gpg-import-my-keys" ''
+  gpgImportKeys = pkgs.writeShellScriptBin "gpgImportKeys" ''
     echo "GPG Key Import Script"
     echo "====================="
     echo ""
@@ -26,7 +26,7 @@ let
       exit 0
     fi
 
-    PRIVATE_KEY_PATH="/run/agenix/gpg-key-private.asc"
+    PRIVATE_KEY_PATH="${config.age.secrets."gpg-key-private.asc".path}"
     PUBLIC_KEY_PATH="$HOME/.gnupg/gpg-key-public.asc"
 
     if [ ! -f "$PRIVATE_KEY_PATH" ]; then
@@ -104,6 +104,7 @@ in {
       sshKeys = gpgSshKeys;
     };
 
+    age.secrets."gpg-key-private.asc".file = ./../../secrets/gpg-key-private.age;
     home.file = {
       ".gnupg/gpg-key-public.asc".text = builtins.readFile ./../../secrets/gpg-key-public.asc;
     };
