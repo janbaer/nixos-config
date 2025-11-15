@@ -8,6 +8,7 @@ in {
   imports = [
     ./backup-to-nas.nix
     ./backup-to-local.nix
+    ./c24-bu-config.nix
     ./docker.nix
     ./localization.nix
     ./mailbox-drive.nix

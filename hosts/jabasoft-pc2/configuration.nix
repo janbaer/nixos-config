@@ -10,6 +10,7 @@
   modules = {
     backup-to-nas.enable = true;
     backup-to-local.enable = true;
+    c24-bu-config.enable = true;
     docker.enable = true;
     mailbox-drive.enable = true;
     nas-mounts.enable = true;
