@@ -6,9 +6,9 @@ in {
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      ansible       # Radically simple IT automation
-      ansible-lint  # Best practices checker for Ansible
       terraform     # Tool for building, changing, and versioning infrastructure
+      ansible       # Radically simple IT automation
+      # ansible-lint  # Best practices checker for Ansible
       yamllint      # Linter for YAML files
     ];
 
