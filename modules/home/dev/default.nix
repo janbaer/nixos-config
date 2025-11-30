@@ -32,6 +32,7 @@
     httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
     meld        # Visual diff and merge tool
     lazydocker  # Simple terminal UI for both docker and docker-compose
+    devbox      # Reproducible, shareable, and instant development environments
   ];
 
   home.shellAliases = {
