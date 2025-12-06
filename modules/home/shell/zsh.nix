@@ -42,7 +42,7 @@ in
         compinit -C
       fi
     '';
-    dotDir = ".config/zsh";
+    dotDir = "${config.home.homeDirectory}/.config/zsh";
     initContent = ''
       setopt CORRECT
 

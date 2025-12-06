@@ -32,7 +32,7 @@ in {
   };
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm = {
+  services.displayManager.gdm = {
     enable = true;
     wayland = true;
   };
@@ -89,7 +89,7 @@ in {
     git
     neovim
     ghostty
-    inputs.agenix.packages."${system}".default
+    inputs.agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

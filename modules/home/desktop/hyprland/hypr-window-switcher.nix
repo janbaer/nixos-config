@@ -24,7 +24,7 @@
         done <<< "$windows"
 
         # Show rofi menu and get selection
-        selected=$(echo -e "$menu_entries" | ${pkgs.rofi-wayland}/bin/rofi -dmenu -p "Switch to window:" -i -theme-str 'window {width: 50%;}')
+        selected=$(echo -e "$menu_entries" | ${pkgs.rofi}/bin/rofi -dmenu -p "Switch to window:" -i -theme-str 'window {width: 50%;}')
 
         # Focus the selected window
         if [ -n "$selected" ]; then

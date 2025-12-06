@@ -4,7 +4,7 @@
     enableZshIntegration = true;
     installVimSyntax = true;
     settings = {
-      theme = "tokyonight";
+      theme = "TokyoNight";
       font-family = "ComicShannsMono Nerd Font Mono";
       font-size = 16;
       background-opacity = 0.7;

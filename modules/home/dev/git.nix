@@ -1,20 +1,23 @@
-{ pkgs, ... }: {
-
+{pkgs, ...}: {
   programs.git = {
     enable = true;
-    aliases = {
-      aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
-      cp = "cherry-pick -xn";
-      co = "checkout";
-      fp = "!sh -c \"git fetch --prune && git pull\" -";
-      nfb = "!sh -c \"git checkout -b feature/$1\" -";
-      unstage = "reset head --";
-      undo = "checkout --";
-      undolastcommit = "reset --hard HEAD~1";
-      undounstaged = "!sh -c 'git checkout -- .; git clean -df;'";
-      undoall = "reset --hard";
-    };
-    extraConfig = {
+    settings = {
+      aliases = {
+        aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
+        cp = "cherry-pick -xn";
+        co = "checkout";
+        fp = "!sh -c \"git fetch --prune && git pull\" -";
+        nfb = "!sh -c \"git checkout -b feature/$1\" -";
+        unstage = "reset head --";
+        undo = "checkout --";
+        undolastcommit = "reset --hard HEAD~1";
+        undounstaged = "!sh -c 'git checkout -- .; git clean -df;'";
+        undoall = "reset --hard";
+      };
+      user = {
+        email = "jan@janbaer.de";
+        name = "Jan Baer";
+      };
       pull.rebase = true;
     };
     includes = [
@@ -23,8 +26,6 @@
         path = "~/.gitconfig_check24";
       }
     ];
-    userEmail = "jan@janbaer.de";
-    userName = "Jan Baer";
   };
 
   programs.lazygit = {

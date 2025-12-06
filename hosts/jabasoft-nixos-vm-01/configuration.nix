@@ -38,7 +38,7 @@ in
     variant = "";
   };
 
-  services.xserver.displayManager.gdm = {
+  services.displayManager.gdm = {
     enable = true;
     wayland = true;
   };  
@@ -58,7 +58,7 @@ in
     git
     neovim
     ghostty
-    inputs.agenix.packages."${system}".default
+    inputs.agenix.packages."${pkgs.stdenv.hostPlatform.system}".default
   ];
 
   services.qemuGuest.enable = true;

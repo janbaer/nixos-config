@@ -1,4 +1,4 @@
-{ config, lib, pkgs, username, hostname, ... }:
+{ config, lib, pkgs, hostname, ... }:
 with lib;
 let
   inherit
@@ -11,17 +11,17 @@ in {
   age.secrets = {
     "id_ed25519" = {
       file = ./../../secrets/id_ed25519.age;
-      path = "/home/${username}/.ssh/id_ed25519";
+      path = "${config.home.homeDirectory}/.ssh/id_ed25519";
       symlink = false;
     };
     "id_ed25519-hetzner-sb" = {
       file = ./../../secrets/id_ed25519-hetzner-sb.age;
-      path = "/home/${username}/.ssh/id_ed25519-hetzner-sb";
+      path = "${config.home.homeDirectory}/.ssh/id_ed25519-hetzner-sb";
       symlink = false;
     };
     "id_ed25519-jabasoft-ug" = {
       file = ./../../secrets/id_ed25519-jabasoft-ug.age;
-      path = "/home/${username}/.ssh/id_ed25519-jabasoft-ug";
+      path = "${config.home.homeDirectory}/.ssh/id_ed25519-jabasoft-ug";
       symlink = false;
     };
   };
@@ -38,6 +38,7 @@ in {
 
   programs.ssh = {
     enable = true;
+    enableDefaultConfig = false;
 
     # Global SSH settings
     extraConfig = ''
@@ -56,6 +57,15 @@ in {
       "jabasoft" = {
         host = "jabasoft-*";
         port = sshPort;
+      };
+      "*" = {
+        forwardAgent = false;
+        addKeysToAgent = "no";
+        compression = false;
+        serverAliveInterval = 60;
+        serverAliveCountMax = 3;
+        hashKnownHosts = false;
+        userKnownHostsFile = "~/.ssh/known_hosts";
       };
     } // sshMatchBlocks;
   };
