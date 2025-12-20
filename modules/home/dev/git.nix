@@ -5,7 +5,7 @@
       aliases = {
         aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
         cp = "cherry-pick -xn";
-        co = "checkout";
+        co = "!sh -c \"git checkout $(git branch --color=never | sort | fzf)\" -";
         fp = "!sh -c \"git fetch --prune && git pull\" -";
         nfb = "!sh -c \"git checkout -b feature/$1\" -";
         unstage = "reset head --";
@@ -69,6 +69,7 @@
   home.shellAliases = {
     g = "git";
     gfp = "git fetch --prune && git pull";
-    lg = "lazygit";
+    gcor = "git branch -r --color=never | grep -vE \"$(git b --color=never | sed ':a;N;$!ba;s/\n/|/g' | sed 's/ //g')\" | sed 's/origin\///g' | git checkout $(echo $REMOTE_BRANCHES | sort | fzf)";
+    gco = "git co";
   };
 }
