@@ -16,6 +16,80 @@ let
     };
   };
 
+  gpgSshKeygrips = builtins.concatStringsSep " " gpgSshKeys;
+
+  gpgUnlockAllSshKeys = pkgs.writeShellScriptBin "gpgUnlockAllSshKeys" ''
+    SSH_KEYGRIPS="${gpgSshKeygrips}"
+    PRESET_TOOL="${pkgs.gnupg}/libexec/gpg-preset-passphrase"
+
+    # Function to count uncached keys
+    count_uncached() {
+      local uncached=0
+      for keygrip in $SSH_KEYGRIPS; do
+        status=$(${pkgs.gnupg}/bin/gpg-connect-agent "keyinfo $keygrip" /bye 2>/dev/null | grep KEYINFO)
+        cached=$(echo "$status" | awk '{print $7}')
+        [ "$cached" != "1" ] && ((uncached++))
+      done
+      echo $uncached
+    }
+
+    # Handle --status flag (silent check, returns uncached count)
+    if [ "$1" = "--status" ]; then
+      uncached=$(count_uncached)
+      exit $uncached
+    fi
+
+    echo "GPG SSH Keys Unlock Script"
+    echo "=========================="
+    echo ""
+    echo "This will cache your GPG passphrase for all SSH subkeys."
+    echo ""
+
+    # Check current cache status
+    echo "Current cache status:"
+    for keygrip in $SSH_KEYGRIPS; do
+      status=$(${pkgs.gnupg}/bin/gpg-connect-agent "keyinfo $keygrip" /bye 2>/dev/null | grep KEYINFO)
+      cached=$(echo "$status" | awk '{print $7}')
+      if [ "$cached" = "1" ]; then
+        echo "  ✓ $keygrip (cached)"
+      else
+        echo "  ✗ $keygrip (not cached)"
+      fi
+    done
+    echo ""
+
+    # Ask for passphrase
+    passphrase=$(systemd-ask-password "Enter GPG passphrase to unlock all SSH keys:")
+    if [ -z "$passphrase" ]; then
+      echo "✗ Error: No passphrase provided."
+      exit 1
+    fi
+
+    # Preset passphrase for all SSH keygrips
+    success=0
+    failed=0
+
+    echo "Unlocking SSH keys..."
+    for keygrip in $SSH_KEYGRIPS; do
+      if echo "$passphrase" | "$PRESET_TOOL" --preset "$keygrip" 2>/dev/null; then
+        echo "  ✓ Unlocked: $keygrip"
+        ((success++))
+      else
+        echo "  ✗ Failed:   $keygrip"
+        ((failed++))
+      fi
+    done
+
+    echo ""
+    echo "Done: $success unlocked, $failed failed"
+
+    if [ $failed -gt 0 ]; then
+      echo ""
+      echo "Note: Failures may indicate wrong passphrase or keys not yet imported."
+      exit 1
+    fi
+  '';
+
   gpgImportKeys = pkgs.writeShellScriptBin "gpgImportKeys" ''
     echo "GPG Key Import Script"
     echo "====================="
@@ -83,9 +157,10 @@ in {
     };
 
     home.packages = with pkgs; [
-      seahorse        # Application for managing encryption keys and passwords in the GnomeKeyring
-      keychain        # Keychain management tool for SSH and GPG keys
-      gpgImportKeys   # Manual script to import GPG keys
+      seahorse              # Application for managing encryption keys and passwords in the GnomeKeyring
+      keychain              # Keychain management tool for SSH and GPG keys
+      gpgImportKeys         # Manual script to import GPG keys
+      gpgUnlockAllSshKeys   # Script to unlock all SSH subkeys at once
     ];
 
     programs.gpg = { enable = true; };
@@ -100,6 +175,7 @@ in {
       maxCacheTtlSsh = 604800; # 7 days
       pinentry.package = pkgs.pinentry-rofi;
       extraConfig = ''
+        allow-preset-passphrase
       '';
       sshKeys = gpgSshKeys;
     };
