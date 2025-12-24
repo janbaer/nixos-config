@@ -43,6 +43,7 @@ in
       ".claude/commands".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
       ".claude/skills".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
       ".claude/rules".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
+      ".claude/knowledge-base".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
     };
 
     home.sessionPath = [
