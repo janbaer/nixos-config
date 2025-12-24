@@ -8,7 +8,6 @@ in
   config = mkIf cfg.enable {
     networking = {
       hosts = {
-        "192.168.20.3" = [ "jabasoft-pve" ];
         "192.168.20.12" = [ "forgejo" ];
       };
     };
