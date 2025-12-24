@@ -6,6 +6,7 @@
 
   modules = {
     dev = {
+      bun.enable = true;
       claude.enable = true;
       devops-tools.enable = false;
       golang.enable = true;

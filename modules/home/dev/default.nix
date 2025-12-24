@@ -1,5 +1,6 @@
 { pkgs, ... }: {
   imports = [
+    ./bun.nix
     ./nodejs.nix
     ./git.nix
     ./vscode.nix
