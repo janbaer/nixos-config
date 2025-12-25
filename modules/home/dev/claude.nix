@@ -1,7 +1,8 @@
-{ config
-, lib
-, pkgs
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  ...
 }:
 with lib; let
   inherit (config.lib.file) mkOutOfStoreSymlink;
@@ -17,13 +18,17 @@ with lib; let
     echo "Installing claude-code..."
     ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
   '';
-in
-{
+  claudeCodeRouterInstall = pkgs.writeShellScriptBin "claudeCodeRouterInstall" ''
+    #!/usr/bin/env bash
+    ${pkgs.volta}/bin/volta install @musistudio/claude-code-router
+  '';
+in {
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
 
   config = mkIf cfg.enable {
     home.packages = [
       claudeInstall
+      claudeCodeRouterInstall
     ];
 
     home.file = {
@@ -44,6 +49,7 @@ in
       ".claude/skills".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
       ".claude/rules".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
       ".claude/knowledge-base".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
+      ".claude-code-router/config.json".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude-code-router/config.json";
     };
 
     home.sessionPath = [
