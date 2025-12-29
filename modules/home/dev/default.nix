@@ -30,14 +30,15 @@
     gojq        # Same as jq, but written in Go and without external dependencies
     jless       # less for Json files or streams
     yq-go       # yaml processor https://github.com/mikefarah/yq
-    httpie      # Command line HTTP client whose goal is to make CLI human-friendly.
     meld        # Visual diff and merge tool
     lazydocker  # Simple terminal UI for both docker and docker-compose
     devbox      # Reproducible, shareable, and instant development environments
+    xh          # Friendly and fast tool for sending HTTP requests (replacement for httpie) - https://github.com/ducaale/xh
   ];
 
   home.shellAliases = {
     gemini-update = "volta install @google/gemini-cli@latest";
     ld = "DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock lazydocker";
+    http = "xh";
   };
 }
