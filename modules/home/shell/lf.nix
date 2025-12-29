@@ -46,6 +46,8 @@
       gP = "cd ~/Projects";
       gp = "cd ~/Pictures";
       gV = "cd ~/Videos";
+      gM = "cd ~/Music";
+      gm = "cd /mnt/zb-data/metube/mp3";
       gN = "cd /home/${username}/mnt/mailbox-drive/Jan Baer/Notes/";
       gw = "cd /home/${username}/Secure/MyNotes/Wochenberichte/2024/";
       gx = "cd /mnt/xxx5/";
