@@ -3,15 +3,24 @@
     powerline
   ];
 
-  home.file = {
-    ".config/tmux/catppuccin.conf".text = builtins.readFile ./files/catppuccin.conf;
-  };
-
   programs.tmux = {
     enable = true;
     plugins = [
       pkgs.tmuxPlugins.resurrect
-      pkgs.tmuxPlugins.catppuccin
+      {
+        plugin = pkgs.tmuxPlugins.catppuccin;
+        extraConfig = ''
+          # Configure catppuccin before it initializes
+          set -g @catppuccin_flavor "mocha"
+          set -g @catppuccin_window_status_style "basic"
+          set -g @catppuccin_window_text "#W"
+          set -g @catppuccin_window_current_text "#W"
+          set -g status-right-length 101
+          set -g status-left-length 100
+          set -g status-left ""
+          set -g status-right "#{E:@catppuccin_status_application}#{E:@catppuccin_status_session}"
+        '';
+      }
     ];
     extraConfig = ''
       # unbind default prefix and set it to Ctrl+a
@@ -105,9 +114,6 @@
 
       # Required for support in nvim
       set-option -g focus-events on
-
-      # include config for catppuccin-theme
-      source-file ~/.config/tmux/catppuccin.conf
     '';
   };
 
