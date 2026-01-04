@@ -23,6 +23,7 @@
     shell = {
       gopass.enable = true;
       moc.enable = false;
+      yazi.enable = true;
     };
     gpg.enable = true;
     onepassword.enable = false;

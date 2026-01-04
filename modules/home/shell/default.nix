@@ -7,6 +7,7 @@
     ./moc.nix
     ./neovim.nix
     ./tmux.nix
+    ./yazi.nix
     ./zsh.nix
   ];
 

@@ -53,7 +53,6 @@ in
     ];
 
     home.shellAliases = {
-      y = "yarn";
       yi = "yarn install --pure-lockfile";
       yl = "yarn lint";
       ys = "yarn start";

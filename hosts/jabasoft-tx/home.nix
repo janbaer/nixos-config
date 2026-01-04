@@ -28,6 +28,7 @@
     shell = {
       gopass.enable = true;
       moc.enable = true;
+      yazi.enable = true;
     };
     gpg.enable = true;
     usb-automount.enable = true;
