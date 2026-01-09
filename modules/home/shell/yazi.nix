@@ -16,6 +16,7 @@ in {
       };
       keymap = {
         mgr.prepend_keymap = [
+          { on = [ "S" ]; run = "shell \"$SHELL\" --block"; desc = "Open $SHELL here"; }
           { on = [ "<C-d>" ]; run = "shell --confirm 'sudo rm -rf \"$@\"' -- %s"; desc = "Delete selected files with sudo"; }
           { on = [ "g" "H" ]; run = "cd ~/"; desc = "Go to home directory"; }
           { on = [ "g" "D" ]; run = "cd ~/Documents"; desc = "Go to Documents"; }
