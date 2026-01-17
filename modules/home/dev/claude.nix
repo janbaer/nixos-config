@@ -18,9 +18,17 @@ with lib; let
     echo "Installing claude-code..."
     ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
   '';
-  claudeCodeRouterInstall = pkgs.writeShellScriptBin "claudeCodeRouterInstall" ''
-    #!/usr/bin/env bash
-    ${pkgs.volta}/bin/volta install @musistudio/claude-code-router
+  openRouterClaude = pkgs.writeShellScriptBin "openCodeClaude" ''
+    #!/usr/bin/env zsh
+    export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
+    export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
+    export ANTHROPIC_API_KEY="" 
+
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="z-ai/glm-4.7"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="openai/gpt-5.2-codex"
+    export ANTHROPIC_DEFAULT_HAIKU_MODEL="minimax/minimax-m2.1"
+
+    claude --dangerously-skip-permissions "$@"
   '';
 in {
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
@@ -28,7 +36,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = [
       claudeInstall
-      claudeCodeRouterInstall
+      openRouterClaude
     ];
 
     home.file = {
@@ -38,6 +46,7 @@ in {
     home.shellAliases = {
       c = "claude --dangerously-skip-permissions";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
+      orc = "openRouterClaude";
     };
 
     home.file = {
@@ -49,7 +58,6 @@ in {
       ".claude/skills".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
       ".claude/rules".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
       ".claude/knowledge-base".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
-      ".claude-code-router/config.json".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude-code-router/config.json";
     };
 
     home.sessionPath = [
