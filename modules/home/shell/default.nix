@@ -6,6 +6,7 @@
     ./lf.nix
     ./moc.nix
     ./neovim.nix
+    ./tomb.nix
     ./tmux.nix
     ./yazi.nix
     ./zsh.nix
