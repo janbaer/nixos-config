@@ -84,4 +84,8 @@
 
     mplayer         # CLI music player
   ];
+
+  home.shellAliases = {
+    tgpt = "tgpt --provider=gemini --model=gemini-3-flash-preview --key=$GEMINI_API_KEY";
+  };
 }
