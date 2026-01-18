@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. The configuration uses NixOS 25.05 and supports three systems: `jabasoft-tx`, `jabasoft-pc2`, and `jabasoft-nixos-vm-01`, all running for user `jan`.
+This is a NixOS configuration repository that manages multiple systems using Nix Flakes, Home Manager, and agenix for secrets management. The configuration uses NixOS 25.11 and supports three systems: `jabasoft-tx`, `jabasoft-pc2`, and `jabasoft-nixos-vm-01`, all running for user `jan`.
 
 ## Architecture
 
 ### Flake Structure
-- `flake.nix`: Defines inputs (nixpkgs 25.05, home-manager, agenix, hyprland) and outputs with `mkSystem` helper function
+- `flake.nix`: Defines inputs (nixpkgs 25.11, home-manager, agenix, hyprland) and outputs with `mkSystem` helper function
 - Each system configuration follows the pattern: `./hosts/${hostname}/configuration.nix`, `./hosts/${hostname}/home.nix`, and `./hosts/${hostname}/variables.nix` for host-specific variables
 
 ### Module Organization
@@ -17,7 +17,7 @@ This is a NixOS configuration repository that manages multiple systems using Nix
 - `hosts/common/`: Shared configurations across all hosts (`default.nix`, `secrets.nix`)
 - `modules/nixos/`: System-level NixOS modules (openssh, yubikey, mailbox-drive, docker, printing, etc.)
 - `modules/home/`: Home Manager modules organized by category:
-  - `shell/`: Terminal tools (zsh, tmux, neovim, lf, atuin, moc, gopass)
+  - `shell/`: Terminal tools (zsh, tmux, neovim, lf, yazi, atuin, moc, gopass, tomb, ghostty)
   - `dev/`: Development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude, zed-editor)
   - `desktop/`: Desktop environment (hyprland, browsers, thunderbird, veracrypt)
 
@@ -32,7 +32,7 @@ Each host defines variables in `variables.nix` (extending `hosts/common/variable
 - `authorizedKeys`: SSH authorized keys for the host
 - `wgEndpoint`, `wgAllowedIPs`, `wgPublicKey`, `wgIPAddress`: WireGuard VPN configuration
 - `globalNpmPackages`: List of global npm packages to install with Volta
-- `sshPort`: Custom SSH port (default: 23)
+- `sshPort`: Custom SSH port (default: 22022)
 - Additional host-specific settings as needed
 
 ### Secrets Management
@@ -194,9 +194,9 @@ nixfmt-classic **/*.nix
 ## Secrets and SSH Configuration
 
 ### SSH Setup
-- Custom SSH port: 23 (defined in `hosts/common/variables.nix`)
+- Custom SSH port: 22022 (defined in `hosts/common/variables.nix`)
 - All systems use SSH keys for authentication
-- Get machine keys: `ssh-keyscan -t ed25519 -p23 $(hostname)`
+- Get machine keys: `ssh-keyscan -t ed25519 -p22022 $(hostname)`
 
 ### Agenix Encryption Keys
 All systems use SSH public keys for agenix encryption (defined in `secrets/secrets.nix`):
@@ -219,6 +219,7 @@ All systems use SSH public keys for agenix encryption (defined in `secrets/secre
 - **Agenix secrets**: Remember that agenix only works at the NixOS level (`configuration.nix`), not in Home Manager modules (`home.nix`)
 - **Rollback**: If a rebuild breaks something, use `sudo nixos-rebuild switch --rollback` to revert to the previous generation
 - **Generation comparison**: Use `./nixos-list-generations.sh` to see all available generations and their status
+- **Home Manager debugging**: See `DEBUG-HOME-MANAGER.md` for detailed guidance on debugging home-manager activation and agenix secrets
 
 ## Important Notes
 
@@ -268,7 +269,7 @@ The repository includes pre-configured modules for:
 - Tmux
 - Neovim
 - Ghostty terminal
-- lf file manager
+- lf and yazi file managers
 - atuin (shell history)
 - gopass (password manager)
 
