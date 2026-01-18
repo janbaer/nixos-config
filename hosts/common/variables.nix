@@ -26,12 +26,13 @@
 
   # Common global NPM packages
   globalNpmPackages = [
-    "typescript@5.8.3"
-    "prettier@3.5.3"
-    "eslint@9.28.0"
+    "typescript@latest"
+    "prettier@latest"
+    "eslint@9.39.2"
     "yarn@1.22.22"
     "@google/gemini-cli@latest"
     "vscode-langservers-extracted@latest"
+    "@fission-ai/openspec@latest"
   ];
 
   # Common SSH configuration
