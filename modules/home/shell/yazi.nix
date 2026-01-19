@@ -13,11 +13,16 @@ in {
           sort_by = "alphabetical";
           sort_dir_first = true;
         };
+        preview = {
+          image_delay = 100;
+        };
       };
       keymap = {
         mgr.prepend_keymap = [
           { on = [ "S" ]; run = "shell \"$SHELL\" --block"; desc = "Open $SHELL here"; }
           { on = [ "<C-d>" ]; run = "shell --confirm 'sudo rm -rf \"$@\"' -- %s"; desc = "Delete selected files with sudo"; }
+          { on = [ "t" ]; run = "plugin toggle-pane min-preview"; desc = "Toggle preview"; }
+          { on = [ "T" ]; run = "plugin toggle-pane max-preview"; desc = "Maximize preview"; }
           { on = [ "g" "H" ]; run = "cd ~/"; desc = "Go to home directory"; }
           { on = [ "g" "D" ]; run = "cd ~/Documents"; desc = "Go to Documents"; }
           { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
@@ -37,6 +42,10 @@ in {
 
     programs.zsh.shellAliases = {
       y = "yazi";
+    };
+
+    home.file = {
+      ".config/yazi/plugins/toggle-pane.yazi/main.lua".source = ./files/yazi/plugins/toggle-preview.lua;
     };
   };
 }
