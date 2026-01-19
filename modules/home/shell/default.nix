@@ -82,10 +82,17 @@
     # AI helpers
     tgpt            # ChatGPT in terminal without needing API keys
 
-    mplayer         # CLI music player
+    mpv             # Media player
   ];
 
   home.shellAliases = {
     tgpt = "tgpt --provider=gemini --model=gemini-3-flash-preview --key=$GEMINI_API_KEY";
+  };
+
+  # xdg stuff
+  xdg = {
+    mimeApps.defaultApplications = {
+      "video/mp4" = "mpv.desktop";
+    };
   };
 }

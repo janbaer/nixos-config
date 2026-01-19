@@ -148,9 +148,10 @@ in {
         "center,class:^(gedit)$"
 
         "size 900 700,class:^(gedit)$"
-        "float,class:^(MPlayer)$"
-        "center,class:^(MPlayer)$"
-        "size 900 700,class:^(MPlayer)$"
+
+        "float,class:^(MPlayer|mpv)$"
+        "center,class:^(MPlayer|mpv)$"
+        "size 900 700,class:^(MPlayer|mpv)$"
 
         "float,title:^(Administrator privileges required)$"
         "float, class:^(org.gnome.NautilusPreviewer)$"
