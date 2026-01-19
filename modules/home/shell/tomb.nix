@@ -8,7 +8,7 @@ let
     set -euo pipefail
 
     usage() {
-      echo "Usage: $0 <name> <optional mount-dir>"
+      echo "Usage: $0 <name>"
       echo "  name: Name of the tomb (without .tomb extension)"
       exit 1
     }
@@ -24,10 +24,6 @@ let
     key_file="''${base_dir}/''${name}.tomb.key"
     tomb_pwd="$(gopass show "/home/tomb/''${name}")"
 
-    mount_dir="''${2:-''${base_dir}}/''${name}"
-
-    mkdir -p "$mount_dir"
-
     if [[ ! -f "$tomb_file" ]]; then
       echo "Error: Tomb file '$tomb_file' not found"
       exit 1
@@ -39,7 +35,7 @@ let
     fi
 
     echo "Opening tomb '$tomb_file'..."
-    tomb open "$tomb_file" "$mount_dir" -k "$key_file" --unsafe --tomb-pwd "$tomb_pwd"
+    tomb open "$tomb_file" -k "$key_file" --unsafe --tomb-pwd "$tomb_pwd"
   '';
   tombInit = pkgs.writeShellScriptBin "tombInit" ''
     #!/usr/bin/env bash
@@ -93,26 +89,10 @@ in {
       "bin/unmount-xxx-kg".source = ./files/tomb/unmount-xxx-kg.sh;
       "bin/mount-xxx-susann".source = ./files/tomb/mount-xxx-susann.sh;
       "bin/unmount-xxx-susann".source = ./files/tomb/unmount-xxx-susann.sh;
+      "bin/mount-xxx".source = ./files/tomb/mount-xxx.sh;
+      "bin/unmount-xxx".source = ./files/tomb/unmount-xxx.sh;
     };
 
-    home.activation = {
-      create_veracrypt_mount_dirs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        user="${username}"
-        dir_names="MyDocuments MyNotes XXX-KG"
-
-        mkdir -p $HOME/Secure
-        chown $user $HOME/Secure
-        chmod 0777 $HOME/Secure
-
-        for dir in $dir_names; do
-          if [ ! -d "$HOME/Secure/$dir" ]; then
-            mkdir -p $HOME/Secure/$dir
-            chown -R $user $HOME/Secure/$dir
-            chmod 0777 $HOME/Secure/$dir
-          fi
-        done
-      '';
-    };
     home.packages = with pkgs; [
       tomb
       tombInit

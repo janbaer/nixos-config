@@ -23,7 +23,7 @@
       browsers.enable = true;
       hyprland.enable = true;
       thunderbird.enable = true;
-      veracrypt.enable = true;
+      veracrypt.enable = false;
     };
     shell = {
       gopass.enable = true;
