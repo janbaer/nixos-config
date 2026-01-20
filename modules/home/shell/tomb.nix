@@ -8,16 +8,35 @@ let
     set -euo pipefail
 
     usage() {
-      echo "Usage: $0 <name>"
-      echo "  name: Name of the tomb (without .tomb extension)"
+      echo "Usage: $0 [--readonly] <name>"
+      echo "  --readonly: Mount the tomb as read-only"
+      echo "  name:       Name of the tomb (without .tomb extension)"
       exit 1
     }
 
-    if [[ $# -eq 0 ]]; then
+    readonly_flag=""
+    name=""
+
+    while [[ $# -gt 0 ]]; do
+      case "$1" in
+        --readonly)
+          readonly_flag="-o ro"
+          shift
+          ;;
+        -*)
+          echo "Error: Unknown option '$1'"
+          usage
+          ;;
+        *)
+          name="$1"
+          shift
+          ;;
+      esac
+    done
+
+    if [[ -z "$name" ]]; then
       usage
     fi
-
-    name="$1"
 
     base_dir="$(pwd)";
     tomb_file="$base_dir/''${name}.tomb"
@@ -35,7 +54,7 @@ let
     fi
 
     echo "Opening tomb '$tomb_file'..."
-    tomb open "$tomb_file" -k "$key_file" --unsafe --tomb-pwd "$tomb_pwd"
+    tomb open "$tomb_file" -k "$key_file" --unsafe --tomb-pwd "$tomb_pwd" $readonly_flag
   '';
   tombInit = pkgs.writeShellScriptBin "tombInit" ''
     #!/usr/bin/env bash
