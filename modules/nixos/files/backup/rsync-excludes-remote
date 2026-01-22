@@ -41,8 +41,11 @@
 - VMs/
 - mnt/
 - tmp/
+- Projects/check24/
+- secrets/
 
 - node_modules
 - fact_cache
 - _temp
 - logs
+- .git
