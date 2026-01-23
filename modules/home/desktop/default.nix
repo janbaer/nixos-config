@@ -3,7 +3,6 @@
     ./browsers.nix
     ./thunderbird.nix
     ./hyprland
-    ./veracrypt
   ];
 
   home.packages = with pkgs; [

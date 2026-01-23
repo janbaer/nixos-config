@@ -19,7 +19,7 @@ This is a NixOS configuration repository that manages multiple systems using Nix
 - `modules/home/`: Home Manager modules organized by category:
   - `shell/`: Terminal tools (zsh, tmux, neovim, lf, yazi, atuin, moc, gopass, tomb, ghostty)
   - `dev/`: Development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude, zed-editor)
-  - `desktop/`: Desktop environment (hyprland, browsers, thunderbird, veracrypt)
+  - `desktop/`: Desktop environment (hyprland, browsers, thunderbird)
 
 ### Host Variables Pattern
 Each host defines variables in `variables.nix` (extending `hosts/common/variables.nix`) including:
