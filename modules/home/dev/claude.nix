@@ -18,7 +18,7 @@ with lib; let
     echo "Installing claude-code..."
     ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
   '';
-  openRouterClaude = pkgs.writeShellScriptBin "openCodeClaude" ''
+  openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
     #!/usr/bin/env zsh
     export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
     export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
