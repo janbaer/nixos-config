@@ -70,6 +70,6 @@
     g = "git";
     gfp = "git fetch --prune && git pull";
     gcor = "git branch -r --color=never | grep -vE \"$(git b --color=never | sed ':a;N;$!ba;s/\n/|/g' | sed 's/ //g')\" | sed 's/origin\///g' | git checkout $(echo $REMOTE_BRANCHES | sort | fzf)";
-    gco = "git co";
+    gco = "git checkout $(git branch --color=never | sort | fzf )";
   };
 }
