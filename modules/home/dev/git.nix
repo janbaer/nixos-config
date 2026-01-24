@@ -2,6 +2,9 @@
   programs.git = {
     enable = true;
     settings = {
+      init = {
+        defaultBranch = "main";
+      };
       aliases = {
         aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
         cp = "cherry-pick -xn";
