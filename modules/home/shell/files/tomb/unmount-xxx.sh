@@ -8,6 +8,3 @@ if [ -z "${NUMBER}" ]; then
 else
   tomb close "XXX${NUMBER}"
 fi
-
-
-sudo umount /mnt/xxx
