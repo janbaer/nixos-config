@@ -25,7 +25,7 @@ with lib; let
     export ANTHROPIC_API_KEY="" 
 
     export ANTHROPIC_DEFAULT_SONNET_MODEL="z-ai/glm-4.7"
-    export ANTHROPIC_DEFAULT_OPUS_MODEL="openai/gpt-5.2-codex"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="moonshotai/kimi-k2.5"
     export ANTHROPIC_DEFAULT_HAIKU_MODEL="minimax/minimax-m2.1"
 
     claude --dangerously-skip-permissions "$@"
