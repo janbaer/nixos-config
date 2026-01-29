@@ -28,6 +28,7 @@ in {
         "blueman-applet"
         # "nm-applet --indicator"
         "wl-paste --watch cliphist store"
+        "wayscriber --daemon"
       ];
 
       # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
@@ -199,6 +200,7 @@ in {
       bind = $mainMod, W, exec, warp
 
       bind = $mainMod SHIFT, RETURN, exec, $fileManager
+      bind = $mainMod SHIFT, D, exec, pkill -SIGUSR1 wayscriber
       bind = $mainMod SHIFT, Q, killactive,
       bind = $mainMod SHIFT, E, exec, wlogout
       bind = $mainMod SHIFT, L, exec, hyprlock

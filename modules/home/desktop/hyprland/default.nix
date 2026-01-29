@@ -30,6 +30,7 @@ in
       feh                             # Selecting Images for the wallpaper
       xdg-desktop-portal-hyprland     # xdg-desktop-portal backend for hyprland
       wl-clipboard                    # Handling system-wide clipboard in Wayland
+      wayscriber                      # ZoomIt-like screen annotation tool for Wayland compositors, written in Rust
       cliphist                        # The new clipboard manager
       grim                            # Required for making screenshots
       slurp                           # Required for making screenshots
