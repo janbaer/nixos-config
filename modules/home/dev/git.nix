@@ -2,10 +2,7 @@
   programs.git = {
     enable = true;
     settings = {
-      init = {
-        defaultBranch = "main";
-      };
-      aliases = {
+      alias = {
         aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
         cp = "cherry-pick -xn";
         co = "!sh -c \"git checkout $(git branch --color=never | sort | fzf)\" -";
@@ -17,11 +14,16 @@
         undounstaged = "!sh -c 'git checkout -- .; git clean -df;'";
         undoall = "reset --hard";
       };
+      init = {
+        defaultBranch = "main";
+      };
+      pull = {
+        rebase = true;
+      };
       user = {
         email = "jan@janbaer.de";
         name = "Jan Baer";
       };
-      pull.rebase = true;
     };
     includes = [
       {
