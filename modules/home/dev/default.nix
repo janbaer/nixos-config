@@ -38,6 +38,8 @@
 
   home.shellAliases = {
     gemini-update = "volta install @google/gemini-cli@latest";
+    codex-update = "volta install @openai/codex@latest";
+    cx = "codex";
     ld = "DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock lazydocker";
     http = "xh";
   };
