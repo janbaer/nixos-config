@@ -24,13 +24,14 @@
     , ...
     }@inputs:
     let
-      mkSystem = pkgs: system: hostname: username:
+      mkSystem = pkgs: system: hostname: username: userfullname:
         pkgs.lib.nixosSystem
         {
           specialArgs = {
             inherit system;
             inherit inputs;
             inherit username;
+            inherit userfullname;
             inherit hostname;
           };
           modules = [
@@ -44,6 +45,7 @@
                 useUserPackages = true;
                 extraSpecialArgs = {
                   inherit username;
+                  inherit userfullname;
                   inherit hostname;
                   inherit inputs;
                   inherit system;
@@ -60,9 +62,9 @@
     in
     {
       nixosConfigurations = {
-        jabasoft-tx = mkSystem nixpkgs "x86_64-linux" "jabasoft-tx" "jan";
-        jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan";
-        jabasoft-nixos-vm-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nixos-vm-01" "jan" ;
+        jabasoft-tx = mkSystem nixpkgs "x86_64-linux" "jabasoft-tx" "jan" "Jan Baer";
+        jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan" "Jan Baer";
+        jabasoft-nixos-vm-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nixos-vm-01" "jan" "Jan Baer";
       };
     };
 }

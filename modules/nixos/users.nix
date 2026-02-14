@@ -1,4 +1,4 @@
-{ pkgs, hostname, ... }:
+{ pkgs, hostname, username, userfullname, ... }:
 let
   inherit
     (import ./../../hosts/${hostname}/variables.nix)
@@ -7,7 +7,7 @@ in {
 
   users = {
     groups = {
-      jan = {
+      ${username} = {
         gid = 1000;
       };
       ssh-users = {
@@ -15,14 +15,29 @@ in {
       };
     };
     users = {
-      jan = {
+      ${username} = {
         isNormalUser = true;
-        description = "Jan Baer";
-        extraGroups = [ "jan" "networkmanager" "wheel" "ssh-users" ];
+        description = userfullname;
+        extraGroups = [ username "networkmanager" "wheel" "ssh-users" ];
         openssh.authorizedKeys.keys = authorizedKeys;
         shell = pkgs.zsh;
       };
     };
   };
+  security.sudo.extraRules = [
+    {
+      users = [ username ];
+      commands = [
+        {
+          command = "/run/wrappers/bin/mount -o loop *";
+          options = [ "NOPASSWD" ];
+        }
+        {
+          command = "/run/wrappers/bin/umount *";
+          options = [ "NOPASSWD" ];
+        }
+      ];
+    }
+  ];
 }
 
