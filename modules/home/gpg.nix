@@ -22,10 +22,19 @@ let
     SSH_KEYGRIPS="${gpgSshKeygrips}"
     PRESET_TOOL="${pkgs.gnupg}/libexec/gpg-preset-passphrase"
 
+    # Get the main GPG key's keygrip
+    # Use --with-keygrip and parse the output to find the first master key's keygrip
+    MAIN_KEY_KEYGRIP=$(${pkgs.gnupg}/bin/gpg --with-keygrip --list-secret-keys 2>/dev/null | \
+      sed -n '/^sec/{n;n;s/^[[:space:]]*Keygrip[[:space:]]*=[[:space:]]*//p;q}')
+
+    # Combine main key and SSH subkeys
+    ALL_KEYGRIPS="$MAIN_KEY_KEYGRIP $SSH_KEYGRIPS"
+
     # Function to count uncached keys
     count_uncached() {
       local uncached=0
-      for keygrip in $SSH_KEYGRIPS; do
+      for keygrip in $ALL_KEYGRIPS; do
+        [ -z "$keygrip" ] && continue
         status=$(${pkgs.gnupg}/bin/gpg-connect-agent "keyinfo $keygrip" /bye 2>/dev/null | grep KEYINFO)
         cached=$(echo "$status" | awk '{print $7}')
         [ "$cached" != "1" ] && ((uncached++))
@@ -39,14 +48,28 @@ let
       exit $uncached
     fi
 
-    echo "GPG SSH Keys Unlock Script"
-    echo "=========================="
+    echo "GPG Keys Unlock Script"
+    echo "======================"
     echo ""
-    echo "This will cache your GPG passphrase for all SSH subkeys."
+    echo "This will cache your GPG passphrase for the main key and all SSH subkeys."
     echo ""
 
     # Check current cache status
     echo "Current cache status:"
+    echo "Main GPG key:"
+    if [ -n "$MAIN_KEY_KEYGRIP" ]; then
+      status=$(${pkgs.gnupg}/bin/gpg-connect-agent "keyinfo $MAIN_KEY_KEYGRIP" /bye 2>/dev/null | grep KEYINFO)
+      cached=$(echo "$status" | awk '{print $7}')
+      if [ "$cached" = "1" ]; then
+        echo "  ✓ $MAIN_KEY_KEYGRIP (cached)"
+      else
+        echo "  ✗ $MAIN_KEY_KEYGRIP (not cached)"
+      fi
+    else
+      echo "  ⚠ Could not find main key keygrip"
+    fi
+    echo ""
+    echo "SSH subkeys:"
     for keygrip in $SSH_KEYGRIPS; do
       status=$(${pkgs.gnupg}/bin/gpg-connect-agent "keyinfo $keygrip" /bye 2>/dev/null | grep KEYINFO)
       cached=$(echo "$status" | awk '{print $7}')
@@ -65,12 +88,23 @@ let
       exit 1
     fi
 
-    # Preset passphrase for all SSH keygrips
+    # Validate passphrase by attempting to sign with the main key
+    echo "Validating passphrase..."
+    if ! echo "test" | ${pkgs.gnupg}/bin/gpg --batch --yes --passphrase "$passphrase" --pinentry-mode loopback --sign --default-key "${gpgKey}" -o /dev/null 2>/dev/null; then
+      echo "✗ Error: Incorrect passphrase!"
+      echo "  The passphrase you entered does not unlock your GPG key."
+      exit 1
+    fi
+    echo "✓ Passphrase is correct"
+    echo ""
+
+    # Preset passphrase for main key and all SSH keygrips
     success=0
     failed=0
 
-    echo "Unlocking SSH keys..."
-    for keygrip in $SSH_KEYGRIPS; do
+    echo "Unlocking keys..."
+    for keygrip in $ALL_KEYGRIPS; do
+      [ -z "$keygrip" ] && continue
       if echo "$passphrase" | "$PRESET_TOOL" --preset "$keygrip" 2>/dev/null; then
         echo "  ✓ Unlocked: $keygrip"
         ((success++))
@@ -160,7 +194,7 @@ in {
       seahorse              # Application for managing encryption keys and passwords in the GnomeKeyring
       keychain              # Keychain management tool for SSH and GPG keys
       gpgImportKeys         # Manual script to import GPG keys
-      gpgUnlockAllSshKeys   # Script to unlock all SSH subkeys at once
+      gpgUnlockAllSshKeys   # Script to unlock main GPG key and all SSH subkeys at once
     ];
 
     programs.gpg = { enable = true; };
