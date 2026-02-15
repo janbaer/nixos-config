@@ -24,20 +24,6 @@ in {
       };
     };
   };
-  security.sudo.extraRules = [
-    {
-      users = [ username ];
-      commands = [
-        {
-          command = "/run/wrappers/bin/mount -o loop *";
-          options = [ "NOPASSWD" ];
-        }
-        {
-          command = "/run/wrappers/bin/umount *";
-          options = [ "NOPASSWD" ];
-        }
-      ];
-    }
-  ];
+
 }
 

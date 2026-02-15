@@ -20,6 +20,7 @@ in {
     ./scanners.nix
     ./secrets.nix
     ./users.nix
+    ./tomb.nix
     ./virtualization.nix
     ./wireguard.nix
     ./yubikey.nix

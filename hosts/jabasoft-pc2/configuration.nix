@@ -21,6 +21,7 @@
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
+    tomb.enable = true;
     virtualization.enable = true;
   };
 

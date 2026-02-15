@@ -17,6 +17,7 @@ in {
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
+    tomb.enable = true;
     wireguard.enable = true;
     yubikey.enable = true;
   };
