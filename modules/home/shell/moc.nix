@@ -14,7 +14,7 @@ in {
     };
 
     home.sessionVariables = {
-      GOOD_SONGS_DIR = "$HOME/Music/good-songs";
+      GOOD_SONGS_DIR = "$HOME/Music/GoodSongs";
     };
   };
 }
