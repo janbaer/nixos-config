@@ -1,45 +1,82 @@
-# Jans NixOS config
+# Jan's NixOS Config
 
-This repo contains the configuration for NixOS, NixDarwin and the Nix HomeManager for all of my systems. This repo is indexed by [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/janbaer/nixos-config)
+This repo contains the NixOS, nix-darwin, and Home Manager configuration for all my systems. [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/janbaer/nixos-config)
 
-## Initial steps
+## Initial Setup
 
-Before applying this config to a new machine, you need to activate the support for flakes to the current `configuration.nix` with adding the following line
+Before applying this config to a new machine, enable flake support in the system's `configuration.nix`:
 
-`nix.settings.experimental-features = [ "nix-command" "flakes" ];`
+```nix
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+```
 
 ## Tooling
 
-I use the Nix helper [nh](https://github.com/viperML/nh) for easier execution of the Nix commands and better visibility to show diffs after a build was running.
-If you want to use `nh` before the nix-config was applied for the first time, you need to run `nix shell nixpkgs#nh`, to be able to use the helper.
+I use [nh](https://github.com/viperML/nh) as a Nix helper for cleaner command output and post-build diffs. To use it before applying the config for the first time, run:
+
+```bash
+nix shell nixpkgs#nh
+```
 
 ## Encryption
 
-After creating a new VM you need to read the public SSH-Keys of the machine, to be able to encrypt the secrets with using these public keys. So you need to activate the SSHD server for having a machine key.
-You can read the public key with `ssh-keyscan -t ed25519 -p23 $(hostname)` The key needs to be added to the `./secrets/secrets.nix` file. After adding the new key, you need to re-encrypt all of you secrets with `agenix --rekey`. [See also](https://github.com/ryantm/agenix?tab=readme-ov-file#rekeying)
-To encrypt a file you can use either **agenix** with calling `agenix -e secret.age` or also `age -R ~/.ssh/id_ed25519.pub ~/.ssh/id_ed25519 > ./secrets/id_ed25519.age`. But this will only use the specified public key.
-You can also pipe the content of a file to the **agenix** command with `cat ~/.ssh/id_ed25519.pub | agenix -e secret.age`. The file `secret.age` needs to be added before to the `./secrets/secrets.nix` file.
+This config uses [agenix](https://github.com/ryantm/agenix) to manage secrets.
 
-Before installing agenix, you can run agenix in a nix-shell with the command `nix shell github:ryantm/agenix`
+### Adding a New Machine
 
-[NixOS Wiki Agenix](https://nixos.wiki/wiki/Agenix)
-[See also](https://jonascarpay.com/posts/2021-07-27-agenix.html)
+1. Enable SSH on the new machine so it has a host key.
+2. Read its public key: `ssh-keyscan -t ed25519 -p23 $(hostname)`
+3. Add the key to `./secrets/secrets.nix`.
+4. Re-encrypt all secrets: `agenix --rekey`
 
-## Steps after applying the nix-config for the first time.
+### Encrypting a Secret
 
-### GPG Key Import
+Use agenix to encrypt a file (it must already be listed in `secrets.nix`):
 
-After the initial system setup on a new machine, you need to manually import your GPG private key. This is a one-time operation per machine.To do it, just run `gpgImportKeys` in your terminal.
+```bash
+agenix -e secret.age
+```
 
-### ATUIN login
+To pipe content directly:
 
-To be able to share my shell history between multiple machines, it's required to be logged in. So you need to run `atuinLogin` once.
+```bash
+cat ~/.ssh/id_ed25519.pub | agenix -e secret.age
+```
 
-## Known issues
+To run agenix without installing it:
 
-- In case that the command `nix flake update` fails with a strange error like `failed to insert entry: invalid object specified - package.nix` it helped, to delete the `~/.cache/nix/` directory.
+```bash
+nix shell github:ryantm/agenix
+```
+
+### Home Manager Secrets
+
+Some secrets use a dedicated `agenix-home-key` for Home Manager compatibility. To edit these, pass the key explicitly:
+
+```bash
+agenix -i /run/agenix/agenix-home-key -e zsh-secrets.age
+```
+
+See `secrets.nix` to identify which secrets require this key.
+
+**References:** [NixOS Wiki — Agenix](https://nixos.wiki/wiki/Agenix) · [Jonas Carpay's guide](https://jonascarpay.com/posts/2021-07-27-agenix.html)
+
+## First-Run Steps
+
+After applying the config to a new machine, complete these one-time tasks:
+
+### Import GPG Keys
+
+Run `gpgImportKeys` in your terminal.
+
+### Log In to Atuin
+
+Atuin syncs shell history across machines. Run `atuinLogin` once per machine.
+
+## Known Issues
+
+- If `nix flake update` fails with `failed to insert entry: invalid object specified - package.nix`, delete `~/.cache/nix/` and retry.
 
 ## Hints
 
-- In case you need to know the SHA256 of the NixOS configuration, you can use `nix-prefetch-url` command, which returns the SHA256 hash of the file.
-
+- To find the SHA256 hash of a NixOS configuration file, use `nix-prefetch-url`.
