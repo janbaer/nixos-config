@@ -7,7 +7,7 @@
         "https://forgejo.home.janbaer.de"
       ],
       "env": {
-        "FORGEJO_ACCESS_TOKEN": "${FORGEJO_ACCESS_TOKEN}"
+        "FORGEJO_ACCESS_TOKEN": "${FORGEJO_TOKEN}"
       }
     }
   }
