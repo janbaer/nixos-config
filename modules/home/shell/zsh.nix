@@ -18,6 +18,8 @@ let
     ${pkgs.uv}/bin/uv generate-shell-completion zsh > "$ZDOTDIR/completions/_uv"
     ${pkgs.uv}/bin/uvx --generate-shell-completion zsh > "$ZDOTDIR/completions/_uvx"
 
+    $VOLTA_HOME/bin/openspec completion generate > "$ZDOTDIR/completions/_openspec"
+
     fpath=($ZDOTDIR/completions $fpath)
     autoload -Uz compinit
     compinit
@@ -68,7 +70,7 @@ in
 
       source ${config.age.secrets.zsh-secrets.path}
 
-      [ -f $PWD/.zshrc.local ] && source $PWD/.zshrc.local
+      [ -f $ZDOTDIR/.zshrc.local ] && source $ZDOTDIR/.zshrc.local
     '';
     plugins = [
       {
