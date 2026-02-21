@@ -18,7 +18,7 @@
     filezilla           # Graphical FTP, FTPS and SFTP client
     easytag             # View and edit tags for various audio files
     pdfarranger         # PDF document editor
-    rquickshare         # Rust implementation of NearbyShare/QuickShare from Android for Linux
+    # rquickshare         # Rust implementation of NearbyShare/QuickShare from Android for Linux
     zathura             # Lightweight document viewer
   ];
 }
