@@ -18,7 +18,7 @@ let
 
   gpgSshKeygrips = builtins.concatStringsSep " " gpgSshKeys;
 
-  gpgUnlockAllSshKeys = pkgs.writeShellScriptBin "gpgUnlockAllSshKeys" ''
+  gpgUnlockAllKeys = pkgs.writeShellScriptBin "gpgUnlockAllKeys" ''
     SSH_KEYGRIPS="${gpgSshKeygrips}"
     PRESET_TOOL="${pkgs.gnupg}/libexec/gpg-preset-passphrase"
 
@@ -194,8 +194,12 @@ in {
       seahorse              # Application for managing encryption keys and passwords in the GnomeKeyring
       keychain              # Keychain management tool for SSH and GPG keys
       gpgImportKeys         # Manual script to import GPG keys
-      gpgUnlockAllSshKeys   # Script to unlock main GPG key and all SSH subkeys at once
+      gpgUnlockAllKeys      # Script to unlock main GPG key and all SSH subkeys at once
     ];
+
+    home.shellAliases = {
+      gpgUnlockAllSshKeys = "gpgUnlockAllKeys";
+    };
 
     programs.gpg = { enable = true; };
 
