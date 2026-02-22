@@ -24,6 +24,7 @@ in
     ".config/zsh/.functions".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.config/zsh/.functions";
     ".fzf-init.zsh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.fzf-init.zsh";
     "bin/close-ssh-connections.sh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/bin/close-ssh-connections.sh";
+    "bin/ntfy".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/bin/ntfy";
     ".gitconfig_check24".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.gitconfig_check24";
     ".editorconfig".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.editorconfig";
   };
