@@ -47,7 +47,7 @@ in {
       c = "claude --dangerously-skip-permissions";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
       orc = "openRouterClaude";
-      openrouter-update = "volta install @fission-ai/openspec@latest";
+      openspec-update = "volta install @fission-ai/openspec@latest";
     };
 
     home.file = {
