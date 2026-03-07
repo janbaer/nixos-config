@@ -5,6 +5,7 @@
     ./gopass.nix
     ./lf.nix
     ./moc.nix
+    ./aichat.nix
     ./neovim.nix
     ./tgpt.nix
     ./tomb.nix

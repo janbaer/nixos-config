@@ -25,6 +25,7 @@
       thunderbird.enable = true;
     };
     shell = {
+      aichat.enable = true;
       gopass.enable = true;
       moc.enable = true;
       tgpt.enable = true;
