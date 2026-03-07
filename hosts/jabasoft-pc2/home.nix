@@ -27,6 +27,7 @@
     shell = {
       gopass.enable = true;
       moc.enable = true;
+      tgpt.enable = true;
       tomb.enable = true;
       yazi.enable = true;
     };

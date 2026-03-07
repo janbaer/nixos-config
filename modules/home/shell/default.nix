@@ -6,6 +6,7 @@
     ./lf.nix
     ./moc.nix
     ./neovim.nix
+    ./tgpt.nix
     ./tomb.nix
     ./tmux.nix
     ./yazi.nix
@@ -79,15 +80,8 @@
     ltrace          # library call monitoring
     lsof            # list open files
 
-    # AI helpers
-    tgpt            # ChatGPT in terminal without needing API keys
-
     mpv             # Media player
   ];
-
-  home.shellAliases = {
-    tgpt = "tgpt --provider=gemini --model=gemini-3-flash-preview --key=$GEMINI_API_KEY";
-  };
 
   # xdg stuff
   xdg = {
