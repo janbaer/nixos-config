@@ -14,7 +14,7 @@
           pkgs = nixpkgs.legacyPackages.${system};
         in
         {
-          devShell = pkgs.mkShellNoCC {
+          default = pkgs.mkShellNoCC {
             buildInputs = with pkgs; [
               go
             ];
