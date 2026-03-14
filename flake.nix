@@ -59,12 +59,26 @@
             }
           ];
         };
+      pkgs = nixpkgs.legacyPackages."x86_64-linux";
+
+      nhs = pkgs.writeShellScriptBin "nhs" "nh os switch .";
+      nhb = pkgs.writeShellScriptBin "nhb" "nh os build .";
     in
     {
       nixosConfigurations = {
         jabasoft-tx = mkSystem nixpkgs "x86_64-linux" "jabasoft-tx" "jan" "Jan Baer";
         jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan" "Jan Baer";
         jabasoft-nixos-vm-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nixos-vm-01" "jan" "Jan Baer";
+      };
+
+      devShells."x86_64-linux".default = pkgs.mkShell {
+        packages = with pkgs; [
+          nh
+          nvd
+          nixfmt-classic
+          nhs
+          nhb
+        ];
       };
     };
 }
