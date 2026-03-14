@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Skills
+
+Always invoke the `nix` skill before making any changes to this repository.
+
 ## Project Overview
 
 NixOS configuration for three systems (`jabasoft-tx`, `jabasoft-pc2`, `jabasoft-nixos-vm-01`) using Nix Flakes, Home Manager (integrated into NixOS, not standalone), and agenix for secrets management. All systems are for user `jan`. Targets NixOS 25.11.

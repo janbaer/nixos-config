@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "nix": {
+      "source": "shakhzodkudratov/nixos-and-flakes-skill",
+      "sourceType": "github",
+      "computedHash": "f45c99444d2b5956deaea62170cf1c9e0c3dba95341d369ed1ecf65555a5faba"
+    }
+  }
+}

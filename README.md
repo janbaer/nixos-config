@@ -80,3 +80,14 @@ Atuin syncs shell history across machines. Run `atuinLogin` once per machine.
 ## Hints
 
 - To find the SHA256 hash of a NixOS configuration file, use `nix-prefetch-url`.
+
+
+## AI-Skills
+
+It is recommended to use the Nix skill for questions about this config, NixOS, nix-darwin, Home Manager, or general Nix usage.
+You can install it for Claude with
+
+```bash
+npx skills add https://github.com/shakhzodkudratov/nixos-and-flakes-skill --skill nix
+```
+
