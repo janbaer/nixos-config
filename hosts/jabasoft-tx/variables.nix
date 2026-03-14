@@ -9,6 +9,8 @@ commonVars // {
 
   useTuxedo = true;
 
+  obsidianVault = "/home/jan/Documents/Obsidian";
+
   # Host-specific WireGuard settings
   wgPublicKey = "xcQlGyurzhQ3NZnL1QWrVivP6yQioSCMnlNYwCoa9k4=";
   wgIPAddress = "192.168.2.6/32";

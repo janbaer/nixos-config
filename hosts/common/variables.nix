@@ -38,6 +38,9 @@
   # Common SSH configuration
   sshPort = 22022;
 
+  # Obsidian vault path
+  obsidianVault = "";
+
   # SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {};
 }

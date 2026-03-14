@@ -22,6 +22,7 @@
     desktop = {
       browsers.enable = true;
       hyprland.enable = true;
+      obsidian.enable = true;
       thunderbird.enable = true;
     };
     shell = {
