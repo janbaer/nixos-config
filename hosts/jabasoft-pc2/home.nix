@@ -10,7 +10,7 @@
       claude.enable = true;
       devops-tools.enable = true;
       golang.enable = true;
-      goose-cli.enable = true;
+      goose-cli.enable = false;
       k8s-cli.enable = true;
       mongodb.enable = true;
       nodejs.enable = true;
