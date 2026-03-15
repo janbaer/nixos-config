@@ -11,7 +11,7 @@ let
     version = "1.3.10";
     src = builtins.fetchurl {
       url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip";
-      sha256 = "sha256:1vqidhf94196ynwc333y4v5vfx4fqkss88svhy86c3am6hhqvacv";
+      sha256 = "sha256:021f7mrppp2lpa0ajcbipvbv51jlvagkhfms2vkksqirgqcc0yzm";
     };
   });
 in
