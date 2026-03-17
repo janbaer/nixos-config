@@ -8,8 +8,6 @@ commonVars // {
     monitor = HDMI-A-1, 1980x1080@60, 3840x240, 1, transform, 3
   '';
 
-  obsidianVault = "/mnt/zb-data/webdav/data/Obsidian";
-
   # Optional SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {
     "gitlab.com" = {
