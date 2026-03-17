@@ -1,11 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixpkgs-unstable";
-    claude-desktop = {
-      url = "github:k3d3/claude-desktop-linux-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-      # inputs.flake-utils.follows = "flake-utils";
-    };
+    claude-desktop.url = "github:aaddrick/claude-desktop-debian";
   };
 
   outputs = {
@@ -22,7 +18,7 @@
       in {
         default = pkgs.mkShellNoCC {
           buildInputs = [
-            claude-desktop.packages.${system}.claude-desktop-with-fhs
+            claude-desktop.packages.${system}.claude-desktop-fhs
           ];
 
           shellHook = ''
