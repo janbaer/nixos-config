@@ -52,7 +52,10 @@ in {
 
     home.file = {
       ".claude/hooks/task-complete-notify.sh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/hooks/task-complete-notify.sh";
-      ".claude/settings.json".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/settings.json";
+      ".claude/settings.json" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/settings.json";
+        force = true;
+      };
       ".claude/memory-mcp.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/memory-mcp.md";
 
       ".claude/commands".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
