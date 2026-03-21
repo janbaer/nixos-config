@@ -21,12 +21,10 @@ in {
         "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
         "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
         "~/.config/hypr/scripts/xdg.sh &"
-        # "= swaync &"
         "hypridle"
         "waybar &"
         "hyprpaper &"
         "blueman-applet"
-        # "nm-applet --indicator"
         "wl-paste --watch cliphist store"
         "wayscriber --daemon"
       ];

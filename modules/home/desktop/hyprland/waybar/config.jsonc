@@ -25,6 +25,7 @@
     "memory",
     "temperature",
     // "backlight",
+    "custom/vpn",
     "network",
     "battery",
     "custom/notification",
@@ -233,5 +234,13 @@
     "on-click": "sleep 0.1; swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
     "escape": true
+  },
+  "custom/vpn": {
+    "format": "{}",
+    "return-type": "json",
+    "interval": 5,
+    "exec": "~/.config/waybar/scripts/vpn-status.sh",
+    "on-click": "~/.config/waybar/scripts/vpn-toggle.sh",
+    "tooltip": true
   }
 }
