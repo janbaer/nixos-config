@@ -240,6 +240,7 @@
     "return-type": "json",
     "interval": 5,
     "exec": "~/.config/waybar/scripts/vpn-status.sh",
+    "exec-if": "nmcli -t -f TYPE con show 2>/dev/null | grep -qE '^(vpn|wireguard)$'",
     "on-click": "~/.config/waybar/scripts/vpn-toggle.sh",
     "tooltip": true
   }
