@@ -119,7 +119,7 @@ window#waybar {
   font-style: normal;
 }
 
-#pulseaudio, #network, #temperature, #memory, #cpu, #disk, #battery, #custom-wallpaper, #custom-cliphist, #custom-updates, #custom-pacman, #custom-launcher, #custom-keyhints, #custom-notification {
+#pulseaudio, #network, #temperature, #memory, #cpu, #disk, #battery, #custom-wallpaper, #custom-cliphist, #custom-updates, #custom-pacman, #custom-launcher, #custom-keyhints, #custom-notification, #custom-vpn {
   background-color: #282828;
   /*color: #8EC07C;*/
   border-radius: 16px;
@@ -155,4 +155,12 @@ window#waybar {
 
 #custom-pacman {
   color: @warning_color;
+}
+
+#custom-vpn.connected {
+  color: #9ece6a;
+}
+
+#custom-vpn.disconnected {
+  color: #928374;
 }
