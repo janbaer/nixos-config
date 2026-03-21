@@ -114,6 +114,9 @@
 
       # Required for support in nvim
       set-option -g focus-events on
+
+      # Allow programs in tmux to bypass tmux using escape sequences
+      set -g allow-passthrough on
     '';
   };
 
