@@ -13,6 +13,7 @@
     ./devops-tools.nix
     ./goose-cli.nix
     ./mongodb.nix
+    ./trivy.nix
   ];
 
   programs.direnv = {
