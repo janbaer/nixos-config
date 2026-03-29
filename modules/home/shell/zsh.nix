@@ -46,6 +46,10 @@ in
     '';
     dotDir = "${config.home.homeDirectory}/.config/zsh";
     initContent = ''
+      # Load Ghostty shell integration only when running directly in Ghostty (not inside tmux).
+      # Inside tmux, the integration's OSC 133 marks conflict with p10k's multiline prompt rendering.
+      [[ -n $GHOSTTY_RESOURCES_DIR && -z $TMUX ]] && source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+
       setopt CORRECT
 
       # Source local zshrc with local only settings
