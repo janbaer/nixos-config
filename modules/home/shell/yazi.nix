@@ -32,8 +32,8 @@ in {
           { on = [ "g" "V" ]; run = "cd ~/Videos"; desc = "Go to Videos"; }
           { on = [ "g" "M" ]; run = "cd ~/Music"; desc = "Go to Music"; }
           { on = [ "g" "m" ]; run = "cd /mnt/zb-data/metube/mp3"; desc = "Go to Metube music"; }
-          { on = [ "g" "N" ]; run = "cd /home/${username}/mnt/mailbox-drive/Jan Baer/Notes/"; desc = "Go to Notes"; }
-          { on = [ "g" "w" ]; run = "cd /run/media/${username}/MyNotes/Wochenberichte/2026/"; desc = "Go to Wochenberichte"; }
+          { on = [ "g" "O" ]; run = "cd /mnt/zb-data/webdav/data/Obsidian"; desc = "Go to Obsidian vault"; }
+          { on = [ "g" "N" ]; run = "cd /mnt/zb-data/webdav/data/Notes/"; desc = "Go to Notes vault"; }
           { on = [ "g" "x" ]; run = "cd /run/media/${username}/XXX5/"; desc = "Go to XXX5"; }
           { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to .config"; }
           { on = [ "g" "b" ]; run = "cd ~/bin"; desc = "Go to bin"; }
