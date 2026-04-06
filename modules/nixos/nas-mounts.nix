@@ -32,6 +32,7 @@ let
     "x-systemd.idle-timeout=60"
     "x-systemd.device-timeout=5s"
     "x-systemd.mount-timeout=5s"
+    "x-gvfs-hide"
     "rw"
     "uid=1000"
     "gid=100"
@@ -47,6 +48,7 @@ let
     "x-systemd.idle-timeout=60"
     "x-systemd.device-timeout=5s"
     "x-systemd.mount-timeout=5s"
+    "x-gvfs-hide"
     "nfsvers=4"
   ];
 

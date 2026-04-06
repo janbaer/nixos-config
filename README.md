@@ -77,6 +77,12 @@ Atuin syncs shell history across machines. Run `atuinLogin` once per machine.
 
 - If `nix flake update` fails with `failed to insert entry: invalid object specified - package.nix`, delete `~/.cache/nix/` and retry.
 
+## Nautilus / GVFS
+
+The NAS shares (SMB, NFS) are mounted via `x-systemd.automount`. To prevent Nautilus from freezing ("Application not responding") when a server is offline, all remote mounts use the `x-gvfs-hide` option — GVFS ignores them completely and will never poll or display them in the sidebar.
+
+The mounts still work normally from the terminal (e.g. `ls /mnt/music` triggers the automount). To browse the NAS from within Nautilus, use the address bar: `smb://jabasoft-ug/`.
+
 ## Hints
 
 - To find the SHA256 hash of a NixOS configuration file, use `nix-prefetch-url`.
