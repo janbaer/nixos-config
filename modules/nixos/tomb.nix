@@ -48,11 +48,19 @@ in {
       polkit.addRule(function(action, subject) {
         if ((action.id == "org.freedesktop.udisks2.loop-setup" ||
              action.id == "org.freedesktop.udisks2.encrypted-unlock" ||
-             action.id == "org.freedesktop.udisks2.filesystem-mount") &&
+             action.id == "org.freedesktop.udisks2.encrypted-unlock-system" ||
+             action.id == "org.freedesktop.udisks2.filesystem-mount" ||
+             action.id == "org.freedesktop.udisks2.filesystem-mount-system") &&
             subject.user == "${username}") {
           return polkit.Result.YES;
         }
       });
+    '';
+
+    # Tell udisks2 to ignore loop devices so it doesn't auto-prompt
+    # for LUKS passphrase when tomb creates a loop device
+    services.udev.extraRules = ''
+      KERNEL=="loop*", ENV{UDISKS_IGNORE}="1"
     '';
   };
 }
