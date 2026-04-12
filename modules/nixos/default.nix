@@ -26,8 +26,11 @@ in {
     ./yubikey.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
-  programs.zsh.enable = true;
-  # https://mynixos.com/home-manager/option/programs.zsh.enableCompletion
+  programs.zsh = {
+    enable = true;
+    enableCompletion = false;  # Home Manager handles compinit — avoid double init (~90ms saved)
+    promptInit = "";           # p10k replaces the default prompt — skip prompt suse
+  };
   environment.pathsToLink = [
     "/share/zsh"
   ];
