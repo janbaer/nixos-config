@@ -23,6 +23,11 @@ let
       mountPoint = "/mnt/pve3-data";
       device = "jabasoft-nixos-lxc-01.home.janbaer.de:/data";
     }
+    {
+      name = "zb-02-data";
+      mountPoint = "/mnt/zb-02-data";
+      device = "jabasoft-nixos-lxc-11.home.janbaer.de:/data";
+    }
   ];
 
   # Helper functions
