@@ -114,6 +114,10 @@
 
       # Required for support in nvim
       set-option -g focus-events on
+
+      # Fixing problems with voice mode in Claude
+      set -g extended-keys on
+      set -as terminal-features '*ghostty*:extkeys'
     '';
   };
 
