@@ -71,6 +71,10 @@ in
         export GLOBAL_NPM_PACKAGES='${lib.concatStringsSep " " globalNpmPackages}'
         ${nodeInstall}/bin/nodeInstall
       '';
+
+      volta_setup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD ${pkgs.volta}/bin/volta setup
+      '';
     };
   };
 }
