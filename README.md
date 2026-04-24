@@ -87,26 +87,6 @@ The mounts still work normally from the terminal (e.g. `ls /mnt/music` triggers 
 
 - To find the SHA256 hash of a NixOS configuration file, use `nix-prefetch-url`.
 
-
-## Dev Shells
-
-Reusable development environments are defined in `dev-shells/`. Enter any of them from any project directory:
-
-```bash
-nix develop path:$HOME/Projects/nixos-config/dev-shells/go
-nix develop path:$HOME/Projects/nixos-config/dev-shells/rust
-nix develop path:$HOME/Projects/nixos-config/dev-shells/devops
-nix develop path:$HOME/Projects/nixos-config/dev-shells/claude-desktop
-nix develop path:$HOME/Projects/nixos-config/dev-shells/zed-editor
-nix develop path:$HOME/Projects/nixos-config/dev-shells/antigravity
-```
-
-To use one with direnv, add this to a project's `.envrc`:
-
-```bash
-use flake path:$HOME/Projects/nixos-config/dev-shells/go
-```
-
 ## AI-Skills
 
 It is recommended to use the Nix skill for questions about this config, NixOS, nix-darwin, Home Manager, or general Nix usage.

@@ -8,6 +8,10 @@ commonVars // {
     monitor = HDMI-A-1,2560x1600@60,500x2160,1
   '';
 
+  aliases = {
+    trivy = "nix develop path:$HOME/Projects/nixos-config/dev-shells/trivy --command trivy";
+  };
+
   # Optional SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {
     "gitlab.com" = {

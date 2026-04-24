@@ -1,8 +1,13 @@
 { username, ... }:
+let
+  vars = import ./variables.nix;
+in
 {
   imports = [
     ./../../modules/home
   ];
+
+  home.shellAliases = vars.aliases;
 
   modules = {
     dev = {

@@ -41,6 +41,9 @@
   # Obsidian vault path
   obsidianVault = "";
 
+  # Shell aliases, extended per host
+  aliases = {};
+
   # SSH matchBlocks for host-specific configuration
   sshMatchBlocks = {};
 }
