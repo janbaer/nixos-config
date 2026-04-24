@@ -4,8 +4,9 @@
     settings = {
       alias = {
         aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";
-        cp = "cherry-pick -xn";
+        b = "branch";
         co = "checkout";
+        cp = "cherry-pick -xn";
         fp = "!sh -c \"git fetch --prune && git pull\" -";
         nfb = "!sh -c \"git checkout -b feature/$1\" -";
         unstage = "reset head --";
