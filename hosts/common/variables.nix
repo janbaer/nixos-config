@@ -33,6 +33,7 @@
     "@google/gemini-cli@latest"
     "vscode-langservers-extracted@latest"
     "@fission-ai/openspec@latest"
+    "gitnexus"
   ];
 
   # Common SSH configuration
