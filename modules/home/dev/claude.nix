@@ -51,18 +51,43 @@ in {
     };
 
     home.file = {
-      ".claude/hooks/task-complete-notify.sh".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/hooks/task-complete-notify.sh";
+      ".claude/hooks/task-complete-notify.sh" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/hooks/task-complete-notify.sh";
+        force = true;
+      };
       ".claude/settings.json" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/settings.json";
         force = true;
       };
-      ".claude/CLAUDE.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/CLAUDE.md";
-      ".claude/ABOUTME.md".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/ABOUTME.md";
+      ".claude/CLAUDE.md" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/CLAUDE.md";
+        force = true;
+      };
+      ".claude/ABOUTME.md" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/ABOUTME.md";
+        force = true;
+      };
 
-      ".claude/commands".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
-      ".claude/skills".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
-      ".claude/rules".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
-      ".claude/knowledge-base".source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
+      ".claude/agents" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/agents";
+        force = true;
+      };
+      ".claude/commands" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
+        force = true;
+      };
+      ".claude/skills" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
+        force = true;
+      };
+      ".claude/rules" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
+        force = true;
+      };
+      ".claude/knowledge-base" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
+        force = true;
+      };
     };
 
     home.sessionPath = [
