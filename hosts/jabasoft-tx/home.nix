@@ -30,6 +30,7 @@
       gopass.enable = true;
       moc.enable = true;
       tgpt.enable = true;
+      television.enable = true;
       tomb.enable = true;
       yazi.enable = true;
     };

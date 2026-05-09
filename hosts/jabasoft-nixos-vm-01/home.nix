@@ -22,6 +22,7 @@
     shell = {
       gopass.enable = true;
       moc.enable = false;
+      television.enable = true;
       yazi.enable = true;
     };
     gpg.enable = true;

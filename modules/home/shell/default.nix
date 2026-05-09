@@ -7,6 +7,7 @@
     ./aichat.nix
     ./neovim.nix
     ./tgpt.nix
+    ./television.nix
     ./tomb.nix
     ./tmux.nix
     ./yazi.nix
@@ -47,7 +48,6 @@
     eza         # A modern replacement for ‘ls’
     fzf         # A command-line fuzzy finder
     duf         # Disk Usage/Free Utility
-    # television  # Blazingly fast general purpose fuzzy finder TUI.
 
     # networking tools
     dnsutils    # `dig` + `nslookup`

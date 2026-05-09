@@ -35,6 +35,8 @@ in
       gopass.enable = true;
       moc.enable = true;
       tgpt.enable = true;
+      television.enable = true;
+      television.enableK8sAliases = true;
       tomb.enable = true;
       yazi.enable = true;
     };
