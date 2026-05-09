@@ -32,7 +32,7 @@ Each host has four files:
 ### Module Organization
 
 - `modules/nixos/` — system-level NixOS modules (openssh, yubikey, docker, printing, tomb, wireguard, etc.)
-- `modules/home/shell/` — terminal tools (zsh, tmux, neovim, lf, yazi, atuin, gopass, tomb, ghostty)
+- `modules/home/shell/` — terminal tools (zsh, tmux, neovim, yazi, atuin, gopass, tomb, ghostty)
 - `modules/home/dev/` — development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude, zed-editor)
 - `modules/home/desktop/` — desktop environment (hyprland, browsers, thunderbird)
 - `hosts/common/` — shared configs: `default.nix`, `secrets.nix`, `variables.nix`

@@ -89,7 +89,6 @@ in
       }
     ];
     shellAliases = {
-      l = "lf";
       lsa = "eza --long --header --git --all";
       lst = "eza --tree";
       ".." = "cd ..";
