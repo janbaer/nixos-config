@@ -30,7 +30,6 @@
     "prettier@latest"
     "eslint@9.39.2"
     "yarn@1.22.22"
-    "@google/gemini-cli@latest"
     "vscode-langservers-extracted@latest"
     "@fission-ai/openspec@latest"
     "gitnexus"
