@@ -24,9 +24,9 @@ with lib; let
     export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
     export ANTHROPIC_API_KEY="" 
 
-    export ANTHROPIC_DEFAULT_SONNET_MODEL="z-ai/glm-5.0"
-    export ANTHROPIC_DEFAULT_OPUS_MODEL="moonshotai/kimi-k2.5"
-    export ANTHROPIC_DEFAULT_HAIKU_MODEL="minimax/minimax-m2.5"
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.5-flash"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="google/gemini-3.5-flash"
+    export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/gemini-3.1-flash-lite"
 
     claude --dangerously-skip-permissions "$@"
   '';
@@ -34,9 +34,10 @@ in {
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
 
   config = mkIf cfg.enable {
-    home.packages = [
+    home.packages = with pkgs; [
       claudeInstall
       openRouterClaude
+      sox                 # Required for the Claude voice mode
     ];
 
     home.file = {
