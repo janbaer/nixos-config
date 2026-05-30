@@ -18,6 +18,12 @@ with lib; let
     echo "Installing claude-code..."
     ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
   '';
+  claudeRun = pkgs.writeShellScriptBin "claudeRun" ''
+    #!/usr/bin/env zsh
+    export OPENCVE_API_TOKEN="$(gopass show cloud/opencve/api-token)"
+    export VIKUNJA_API_TOKEN="$(gopass show home/vikunja/vikunja-mcp)"
+    claude "$@"
+  '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
     #!/usr/bin/env zsh
     export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
@@ -36,6 +42,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       claudeInstall
+      claudeRun
       openRouterClaude
       sox                 # Required for the Claude voice mode
     ];
@@ -45,7 +52,7 @@ in {
     };
 
     home.shellAliases = {
-      c = "claude --dangerously-skip-permissions";
+      c = "claudeRun --dangerously-skip-permissions";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
       orc = "openRouterClaude";
       openspec-update = "volta install @fission-ai/openspec@latest";
