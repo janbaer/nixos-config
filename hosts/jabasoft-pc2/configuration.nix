@@ -37,8 +37,8 @@
   #services.xserver.desktopManager.gnome.enable = true;
   services.displayManager.gdm = {
     enable = true;
-    wayland = true;
-  };  
+  };
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   programs.hyprland = {
     enable = true;

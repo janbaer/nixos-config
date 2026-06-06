@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Skills
 
-Always invoke the `nix` skill before making any changes to this repository.
+Always invoke the `nixos-best-practices` skill before making any changes to this repository.
+
+If the skill is missing, install it with:
+
+```bash
+npx skills add https://github.com/lihaoze123/my-skills --skill nixos-best-practices
+```
 
 ## Project Overview
 
@@ -69,7 +75,7 @@ Keys are defined in `secrets/secrets.nix`. Adding a new machine requires running
 ### Build and Apply
 
 ```bash
-# Enter dev shell (provides nh, nvd, nixfmt-classic)
+# Enter dev shell (provides nh, nvd, nixfmt)
 nix-shell
 
 # Quick rebuild with visual diff (alias in shell.nix)
@@ -107,7 +113,7 @@ sudo nixos-rebuild switch --rollback  # Revert to previous generation
 nix flake update                      # Update all flake inputs
 
 # Format Nix files
-nixfmt-classic **/*.nix
+nixfmt **/*.nix
 
 # If flake update fails with "invalid object specified"
 rm -rf ~/.cache/nix/

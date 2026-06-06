@@ -40,8 +40,8 @@ in
 
   services.displayManager.gdm = {
     enable = true;
-    wayland = true;
-  };  
+  };
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   programs.hyprland = {
     enable = true;
@@ -62,6 +62,7 @@ in
   ];
 
   services.qemuGuest.enable = true;
+  services.spice-vdagentd.enable = true;
 
   networking.firewall = {
     enable = true;

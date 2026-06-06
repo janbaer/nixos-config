@@ -35,8 +35,8 @@ in {
   # Enable the GNOME Desktop Environment.
   services.displayManager.gdm = {
     enable = true;
-    wayland = true;
   };
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   programs.hyprland = {
     enable = true;

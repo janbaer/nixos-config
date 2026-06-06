@@ -23,7 +23,6 @@ yad --width=530 --height=550 \
 "+p" "Dwindle effect" "pseudo" \
 "+s" "Suspend" "Lock screen and sleep" \
 "+Space" "run app" "Run app by name" \
-"+Shift+d" "Toggle Wayscriber" "Screen annotation (wayscriber)" \
 "+Shift+e" "Exit menu" "wlogout" \
 "+Shift+c" "Change wallpaper" "(wpaperd)" \
 "+Shift+p" "Clipboard" "Paste from clipboard" \

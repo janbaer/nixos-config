@@ -12,7 +12,7 @@ This repository is a flake-based NixOS and Home Manager configuration.
 - `*.sh` in repo root: operational helpers for rebuilds, diffs, and generation inspection.
 
 ## Build, Test, and Development Commands
-- `nix-shell`: enter the project shell (includes `nh`, `nvd`, `nixfmt-classic`).
+- `nix-shell`: enter the project shell (includes `nh`, `nvd`, `nixfmt`).
 - `nix flake check`: evaluate flake outputs and catch structural issues early.
 - `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`: build one host without switching.
   - Example: `nix build .#nixosConfigurations.jabasoft-tx.config.system.build.toplevel`
@@ -22,7 +22,7 @@ This repository is a flake-based NixOS and Home Manager configuration.
 
 ## Coding Style & Naming Conventions
 - Follow `.editorconfig`: UTF-8, LF, final newline, 2-space indentation.
-- Format Nix code with `nixfmt-classic` before committing.
+- Format Nix code with `nixfmt` before committing.
 - Keep module names descriptive and lowercase (for example `backup-to-nas.nix`, `wireguard.nix`).
 - Prefer small, composable modules over large host-specific blocks.
 

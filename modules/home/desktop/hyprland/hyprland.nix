@@ -5,6 +5,7 @@ let
 in {
   wayland.windowManager.hyprland = {
     enable = useHyprland;
+    configType = "hyprlang";
     package = pkgs.hyprland;
     plugins = [ ];
     systemd = {
@@ -23,10 +24,9 @@ in {
         "~/.config/hypr/scripts/xdg.sh &"
         "hypridle"
         "waybar &"
-        "hyprpaper &"
+        "hyprpaper"
         "blueman-applet"
         "wl-paste --watch cliphist store"
-        "wayscriber --daemon"
       ];
 
       # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
@@ -86,8 +86,8 @@ in {
 
       dwindle = {
         # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-        pseudotile =
-          true; # master switch for pseudotiling. Enabling is bound to mainMod + P in the keybinds section below
+        # `pseudotile` was removed as a dwindle option in Hyprland 0.55;
+        # pseudotiling is now only the `pseudo` dispatcher (mainMod + P below).
         preserve_split = true; # you probably want this
       };
 
@@ -103,6 +103,7 @@ in {
         force_default_wallpaper =
           0; # Set to 0 to disable the anime mascot wallpapers
         disable_hyprland_logo = true;
+        disable_splash_rendering = true; # Hide the "Thanks Brodie!" splash text
       };
 
       # Example per-device config
@@ -123,62 +124,39 @@ in {
         "XDG_SESSION_DESKTOP, Hyprland"
       ];
 
+      # Hyprland 0.55 replaced the inline `windowrule = effect,matcher` syntax
+      # with `windowrule { match:field = regex; effect = value; }` blocks. With
+      # home-manager, a list of attrsets renders as one block each, so rules for
+      # the same window are merged into a single block.
       windowrule = [
-        "opacity 1.0 0.95,class:.*" # Shows all inactive windows with opacity 0.9
+        # Dim inactive windows slightly
+        { name = "global-window-rule"; "match:class" = ".*"; opacity = "1.0 0.95"; }
 
-        "float,title:^(Bluetooth Devices)$"
-        "float,class:^(nm-applet)$"
-        "float,class:^(nm-connection-editor)$"
-        "float,class:^(polkit-gnome-authentication-agent-1)$"
-        "float,title:^(1Password)$"
+        { name = "bluetooth-devices-rule"; "match:title" = "^(Bluetooth Devices)$"; float = true; }
+        { name = "nmapplet-rule"; "match:class" = "^(nm-applet)$"; float = true; }
+        { name = "nm-connection-editor-rule"; "match:class" = "^(nm-connection-editor)$"; float = true; }
+        { name = "polkit-rule"; "match:class" = "^(polkit-gnome-authentication-agent-1)$"; float = true; }
+        { name = "1password-rule"; "match:title" = "^(1Password)$"; float = true; }
+        { name = "ssh-askpass-rule"; "match:class" = "^(SshAskpass)$"; float = true; }
+        { name = "virt-manager-rule"; "match:class" = "^(virt-manager)$"; float = true; }
+        { name = "sudo-rule"; "match:title" = "^(Administrator privileges required)$"; float = true; }
 
-        "float,class:^(org.keepassxc.KeePassXC)$"
-        "size 900 700,class:^(org.keepassxc.KeePassXC)$"
+        { name = "keepassxc-rule"; "match:class" = "^(org.keepassxc.KeePassXC)$"; float = true; size = "900 700"; }
+        { name = "nsxiv-rule"; "match:class" = "^(Nsxiv)$"; float = true; center = true; size = "900 700"; }
+        { name = "gedit-rule"; "match:class" = "^(gedit)$"; float = true; center = true; size = "900 700"; }
+        { name = "mpv-rule"; "match:class" = "^(MPlayer|mpv)$"; float = true; center = true; size = "900 700"; }
+        { name = "nautilus-preview-rule"; "match:class" = "^(org.gnome.NautilusPreviewer)$"; float = true; center = true; size = "900 700"; }
 
-        "float,class:^(SshAskpass)$"
+        { name = "rofi-rule"; "match:class" = "^(Rofi)$"; float = true; center = true; stayfocused = true; }
 
-        "float,class:^(Nsxiv)$"
-        "center,class:^(Nsxiv)$"
-        "size 900 700,class:^(Nsxiv)$"
-
-        "float,title:^(Administrator privileges required)$"
-
-        "float,class:^(gedit)$"
-        "center,class:^(gedit)$"
-
-        "size 900 700,class:^(gedit)$"
-
-        "float,class:^(MPlayer|mpv)$"
-        "center,class:^(MPlayer|mpv)$"
-        "size 900 700,class:^(MPlayer|mpv)$"
-
-        "float,title:^(Administrator privileges required)$"
-        "float, class:^(org.gnome.NautilusPreviewer)$"
-        "center, class:^(org.gnome.NautilusPreviewer)$"
-        "size 900 700, class:^(org.gnome.NautilusPreviewer)"
-
-        "float,class:^(virt-manager)$"
-
-        "float,class:^(Rofi)$"
-        "center,class:^(Rofi)$"
-        "stayfocused,class:^(Rofi)$"
-
-        # Rules for the Gnome notes app
-        "float , title:^(New and Recent)$"
-        "size 900 700 , title:^(New and Recent)"
-        # Rules for for the modal GTK dialogs""
-        "float , class:^(xdg-desktop-portal-gtk)$"
-        "center , class:^(xdg-desktop-portal-gtk)$"
-        "size 900 700, class:^(xdg-desktop-portal-gtk)"
-        # Firefox rules
-        "float,class:(firefox),title:(Library)"
-        "size 1200 800,class:(firefox),title:(Library)"
-        # Warp
-        "tile,class:(dev.warp.Warp)"
-
+        # Gnome notes app
+        { name = "gnome-notes-rule"; "match:title" = "^(New and Recent)$"; float = true; size = "900 700"; }
+        # Modal GTK dialogs
+        { name = "gtk-modal-dialog-rule"; "match:class" = "^(xdg-desktop-portal-gtk)$"; float = true; center = true; size = "900 700"; }
+        # Firefox Library
+        { name = "firefox-library-rule"; "match:class" = "(firefox)"; "match:title" = "(Library)"; float = true; size = "1200 800"; }
         # Thunderbird
-        "float,title:^(Edit Item)$"
-        "center,title:^(Edit Item)$"
+        { name = "thunder-bird-edit-rule"; "match:title" = "^(Edit Item)$"; float = true; center = true; }
       ];
 
     };
@@ -194,11 +172,9 @@ in {
       bind = $mainMod, D, exec, rofi -show drun
       bind = $mainMod, B, exec, $browser
       bind = $mainMod, P, pseudo, # dwindle
-      bind = $mainMod, J, togglesplit, # dwindle
-      bind = $mainMod, W, exec, warp
+      bind = $mainMod, J, layoutmsg, togglesplit # dwindle
 
       bind = $mainMod SHIFT, RETURN, exec, $fileManager
-      bind = $mainMod SHIFT, D, exec, pkill -SIGUSR1 wayscriber
       bind = $mainMod SHIFT, Q, killactive,
       bind = $mainMod SHIFT, E, exec, wlogout
       bind = $mainMod SHIFT, L, exec, hyprlock
@@ -307,6 +283,7 @@ in {
 
   gtk = {
     enable = true;
+    gtk4.theme = null;
     theme = {
       package = pkgs.gnome-themes-extra;
       name = "Adwaita-dark";

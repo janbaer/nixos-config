@@ -30,7 +30,6 @@ in
       feh                             # Selecting Images for the wallpaper
       xdg-desktop-portal-hyprland     # xdg-desktop-portal backend for hyprland
       wl-clipboard                    # Handling system-wide clipboard in Wayland
-      wayscriber                      # ZoomIt-like screen annotation tool for Wayland compositors, written in Rust
       cliphist                        # The new clipboard manager
       grim                            # Required for making screenshots
       slurp                           # Required for making screenshots
@@ -65,7 +64,15 @@ in
     home.file = {
       ".config/swappy/config".source = ./swappy/config;
       ".config/rofi".source = ./rofi;
-      ".config/hypr/hyprpaper.conf".source = ./hyprpaper/hyprpaper.conf;
+      # hyprpaper (hyprlang) does not expand $HOME, so bake the absolute path in.
+      # hyprpaper 0.8 (NixOS 26.05) replaced the flat preload/wallpaper lines with
+      # a wallpaper {} block; empty monitor applies to all outputs.
+      ".config/hypr/hyprpaper.conf".text = ''
+        wallpaper {
+            monitor =
+            path = ${config.home.homeDirectory}/.wallpaper.jpg
+        }
+      '';
       ".config/nsxiv/exec/key-handler".source = ./nsxiv/exec/key-handler;
       ".config/dunst/dunstrc".source = ./dunst/dunstrc;
     };

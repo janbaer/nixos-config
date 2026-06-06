@@ -11,7 +11,10 @@ in
 
   config = mkIf cfg.enable {
     programs = {
-      firefox.enable = true;
+      firefox = {
+        enable = true;
+        configPath = ".mozilla/firefox";
+      };
       chromium.enable = true;
     };
   };
