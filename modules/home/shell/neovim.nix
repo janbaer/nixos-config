@@ -1,4 +1,8 @@
-{pkgs, ...}: {
+{ config, pkgs, ... }:
+let
+  inherit (config.lib.file) mkOutOfStoreSymlink;
+in
+{
   programs.neovim = {
     enable = true;
     defaultEditor = true;
@@ -26,6 +30,13 @@
     vim = "nvim";
   };
 
+  home.file = {
+    ".config/nvim" = { 
+      source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/neovim/config";
+      force = true;
+    };
+  };
+
   home.packages = with pkgs; [
     python312
     python312Packages.pip
@@ -33,5 +44,6 @@
     luarocks
     fd
     nixd        # LSP support for the Nix language
+    tree-sitter # LSP support for the Nix language
   ];
 }
