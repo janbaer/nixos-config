@@ -147,7 +147,7 @@ in {
         { name = "mpv-rule"; "match:class" = "^(MPlayer|mpv)$"; float = true; center = true; size = "900 700"; }
         { name = "nautilus-preview-rule"; "match:class" = "^(org.gnome.NautilusPreviewer)$"; float = true; center = true; size = "900 700"; }
 
-        { name = "rofi-rule"; "match:class" = "^(Rofi)$"; float = true; center = true; stayfocused = true; }
+        { name = "rofi-rule"; "match:class" = "^(Rofi)$"; float = true; center = true; stay_focused = true; }
 
         # Gnome notes app
         { name = "gnome-notes-rule"; "match:title" = "^(New and Recent)$"; float = true; size = "900 700"; }
