@@ -68,6 +68,26 @@
           context = "localBranches";
           command = "git push --tags";
         }
+        {
+          key = "<f2>";
+          context = "files";
+          command = "claude -p \"/commit -y\" --allowed-tools \"Bash(git *)\"";
+          description = "Commit with Claude";
+        }
+        {
+          key = "<f3>";
+          context = "files";
+          prompts = [
+            {
+              type = "input";
+              title = "Enter Jira-Ticket";
+              key = "JiraTicket";
+              initialValue = "VERBU-9318";
+            }
+          ];
+          command = "claude -p \"/gitlab-commit {{.Form.JiraTicket}} -y\" --allowed-tools \"Bash(git *)\"";
+          description = "Commit for Jira-Ticket with Claude";
+        }
       ];
     };
   };
