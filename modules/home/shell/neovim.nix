@@ -1,6 +1,15 @@
 { config, pkgs, ... }:
 let
   inherit (config.lib.file) mkOutOfStoreSymlink;
+
+  nvimRun = pkgs.writeShellScriptBin "nvimRun" ''
+    #!/usr/bin/env zsh
+    export DEEPSEEK_API_KEY="$(gopass show cloud/deepseek/nvim-minuet)"
+    export MISTRAL_API_KEY="$(gopass show cloud/mistral/nvim-minuet)"
+    export OPENROUTER_API_KEY="$(gopass show cloud/openrouter/nvim-parrot)"
+
+    nvim "$@"
+  '';
 in
 {
   programs.neovim = {
@@ -26,24 +35,25 @@ in
   };
 
   home.shellAliases = {
-    n = "nvim";
-    vim = "nvim";
+    n = "nvimRun";
+    vim = "nvimRun";
   };
 
   home.file = {
-    ".config/nvim" = { 
+    ".config/nvim" = {
       source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/neovim/config";
       force = true;
     };
   };
 
   home.packages = with pkgs; [
+    nvimRun
     python312
     python312Packages.pip
     lua
     luarocks
     fd
     nixd        # LSP support for the Nix language
-    tree-sitter # LSP support for the Nix language
+    tree-sitter # Syntax highlighting
   ];
 }
