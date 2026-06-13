@@ -1,6 +1,5 @@
 {
-  extraMonitorSettings = ''
-  '';
+  monitors = [ ];
 
   useHyprland = true;
   useTuxedo = false;
@@ -16,11 +15,11 @@
   ];
 
   # SSH configuration
-  authorizedKeys = [];
+  authorizedKeys = [ ];
 
   # WireGuard configuration
   wgEndpoint = "janbaer.home64.de:1194";
-  wgAllowedIPs = ["0.0.0.0/0"];
+  wgAllowedIPs = [ "0.0.0.0/0" ];
   wgPublicKey = "";
   wgIPAddress = "";
 
@@ -42,8 +41,8 @@
   obsidianVault = "";
 
   # Shell aliases, extended per host
-  aliases = {};
+  aliases = { };
 
   # SSH matchBlocks for host-specific configuration
-  sshMatchBlocks = {};
+  sshMatchBlocks = { };
 }

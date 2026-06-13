@@ -1,11 +1,86 @@
-{ config, lib, pkgs, hostname, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  hostname,
+  ...
+}:
 let
   inherit (import ./../../../../hosts/${hostname}/variables.nix)
-    useHyprland extraMonitorSettings;
-in {
+    useHyprland
+    monitors
+    ;
+
+  inherit (lib.generators) mkLuaInline;
+
+  # Dispatcher helpers — each renders a raw `hl.dsp.*` Lua expression.
+  exec = cmd: mkLuaInline ''hl.dsp.exec_cmd("${cmd}")'';
+  killActive = mkLuaInline "hl.dsp.window.close()";
+  toggleFloat = mkLuaInline ''hl.dsp.window.float({ action = "toggle" })'';
+  fullscreen = mkLuaInline ''hl.dsp.window.fullscreen({ action = "toggle" })'';
+  pseudo = mkLuaInline "hl.dsp.window.pseudo()";
+  layoutMsg = msg: mkLuaInline ''hl.dsp.layout("${msg}")'';
+  focusDir = dir: mkLuaInline ''hl.dsp.focus({ direction = "${dir}" })'';
+  moveDir = dir: mkLuaInline ''hl.dsp.window.move({ direction = "${dir}" })'';
+  focusWs = ws: mkLuaInline ''hl.dsp.focus({ workspace = "${ws}" })'';
+  moveToWs = ws: mkLuaInline ''hl.dsp.window.move({ workspace = "${ws}" })'';
+  toggleSpecial = name: mkLuaInline ''hl.dsp.workspace.toggle_special("${name}")'';
+  submap = name: mkLuaInline ''hl.dsp.submap("${name}")'';
+  drag = mkLuaInline "hl.dsp.window.drag()";
+  mouseResize = mkLuaInline "hl.dsp.window.resize()";
+
+  # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
+  # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
+  bind = keys: dispatcher: {
+    _args = [
+      keys
+      dispatcher
+    ];
+  };
+  bindOpts = keys: dispatcher: opts: {
+    _args = [
+      keys
+      dispatcher
+      opts
+    ];
+  };
+
+  # SUPER + N focuses workspace N, SUPER + SHIFT + N moves the active window there.
+  # Key 0 maps to workspace 10, matching the previous hyprlang config.
+  workspaceBinds = lib.concatMap (
+    i:
+    let
+      key = toString (lib.mod i 10);
+    in
+    [
+      (bind "SUPER + ${key}" (focusWs (toString i)))
+      (bind "SUPER + SHIFT + ${key}" (moveToWs (toString i)))
+    ]
+  ) (lib.range 1 10);
+
+  # Applications previously launched via the hyprlang `exec-once` list. The
+  # systemd integration registers its own `hyprland.start` hook; `hl.on` is an
+  # event subscription, so this second hook coexists with it.
+  startupCommands = [
+    "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
+    "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+    "~/.config/hypr/scripts/xdg.sh &"
+    "hypridle"
+    "waybar &"
+    "hyprpaper"
+    "blueman-applet"
+    "wl-paste --watch cliphist store"
+  ];
+  # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
+  # produce broken Lua. (None contain `]]`, which long-strings can't hold.)
+  startupHook = mkLuaInline ''
+    function()
+    ${lib.concatMapStrings (c: "  hl.exec_cmd([[${c}]])\n") startupCommands}end'';
+in
+{
   wayland.windowManager.hyprland = {
     enable = useHyprland;
-    configType = "hyprlang";
+    configType = "lua";
     package = pkgs.hyprland;
     plugins = [ ];
     systemd = {
@@ -14,263 +89,458 @@ in {
     };
     xwayland.enable = true;
     settings = {
-      "$terminal" = "ghostty";
-      "$fileManager" = "nautilus";
-      "$browser" = "firefox";
-
-      exec-once = [
-        "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-        "~/.config/hypr/scripts/xdg.sh &"
-        "hypridle"
-        "waybar &"
-        "hyprpaper"
-        "blueman-applet"
-        "wl-paste --watch cliphist store"
-      ];
-
-      # For all categories, see https://wiki.hyprland.org/Configuring/Variables/
-      input = {
-        kb_layout = "us";
-        # kb_variant =
-        # kb_model =
-        kb_options = "compose:ralt,caps:escape";
-        # kb_rules =
-        follow_mouse = 1;
-        touchpad = { natural_scroll = false; };
-        sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
-      };
-
-      general = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        gaps_in = 5;
-        gaps_out = 10;
-        border_size = 2;
-        #col.active_border = "rgba(33ccffee) rgba(00ff99ee) 45deg";
-        #col.inactive_border = "rgba(595959aa)";
-        layout = "dwindle";
-        # Please see https://wiki.hyprland.org/Configuring/Tearing/ before you turn this on
-        allow_tearing = false;
-      };
-
-      decoration = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        rounding = 10;
-        blur = {
-          enabled = true;
-          size = 3;
-          passes = 1;
-          vibrancy = 0.1696;
-        };
-        shadow = {
-          enabled = true;
-          range = 4;
-          render_power = 3;
-          color = "rgba(1a1a1aee)";
-        };
-      };
-
-      animations = {
-        enabled = true;
-        # Some default animations, see https://wiki.hyprland.org/Configuring/Animations/ for more
-        bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
-        animation = [
-          "windows, 1, 7, myBezier"
-          "windowsOut, 1, 7, default, popin 80%"
-          "border, 1, 10, default"
-          "borderangle, 1, 8, default"
-          "fade, 1, 7, default"
-          "workspaces, 1, 6, default"
-        ];
-      };
-
-      dwindle = {
-        # See https://wiki.hyprland.org/Configuring/Dwindle-Layout/ for more
-        # `pseudotile` was removed as a dwindle option in Hyprland 0.55;
-        # pseudotiling is now only the `pseudo` dispatcher (mainMod + P below).
-        preserve_split = true; # you probably want this
-      };
-
-      master = {
-        # See https://wiki.hyprland.org/Configuring/Master-Layout/ for more
-        new_status = "master";
-      };
-
-      gesture = "3, horizontal, workspace";
-
-      misc = {
-        # See https://wiki.hyprland.org/Configuring/Variables/ for more
-        force_default_wallpaper =
-          0; # Set to 0 to disable the anime mascot wallpapers
-        disable_hyprland_logo = true;
-        disable_splash_rendering = true; # Hide the "Thanks Brodie!" splash text
-      };
-
-      # Example per-device config
-      # See https://wiki.hyprland.org/Configuring/Keywords/#per-device-input-configs for more
-      device = {
-        name = "epic-mouse-v1";
-        sensitivity = -0.5;
-      };
+      # Per-host monitor layout. Each attrset renders as one `hl.monitor({...})`.
+      monitor = monitors;
 
       env = [
-        "XCURSOR_SIZE,24"
-        "QT_QPA_PLATFORMTHEME,qt5ct" # change to qt6ct if you have that
-        "QT_QPA_PLATFORM,wayland"
-        "GTK_THEME,Adwaita:dark"
-        "XDG_SCREENSHOTS_DIR,$HOME/Pictures/Screenshots"
-        "XDG_CURRENT_DESKTOP, Hyprland"
-        "XDG_SESSION_TYPE, wayland"
-        "XDG_SESSION_DESKTOP, Hyprland"
+        {
+          _args = [
+            "XCURSOR_SIZE"
+            "24"
+          ];
+        }
+        {
+          _args = [
+            "QT_QPA_PLATFORMTHEME"
+            "qt5ct"
+          ];
+        }
+        {
+          _args = [
+            "QT_QPA_PLATFORM"
+            "wayland"
+          ];
+        }
+        {
+          _args = [
+            "GTK_THEME"
+            "Adwaita:dark"
+          ];
+        }
+        {
+          _args = [
+            "XDG_SCREENSHOTS_DIR"
+            "$HOME/Pictures/Screenshots"
+          ];
+        }
+        {
+          _args = [
+            "XDG_CURRENT_DESKTOP"
+            "Hyprland"
+          ];
+        }
+        {
+          _args = [
+            "XDG_SESSION_TYPE"
+            "wayland"
+          ];
+        }
+        {
+          _args = [
+            "XDG_SESSION_DESKTOP"
+            "Hyprland"
+          ];
+        }
       ];
 
-      # Hyprland 0.55 replaced the inline `windowrule = effect,matcher` syntax
-      # with `windowrule { match:field = regex; effect = value; }` blocks. With
-      # home-manager, a list of attrsets renders as one block each, so rules for
-      # the same window are merged into a single block.
-      windowrule = [
-        # Dim inactive windows slightly
-        { name = "global-window-rule"; "match:class" = ".*"; opacity = "1.0 0.95"; }
+      # Option categories — renders as a single `hl.config({...})` call.
+      # See https://wiki.hypr.land/Configuring/Variables/
+      config = {
+        input = {
+          kb_layout = "us";
+          kb_options = "compose:ralt,caps:escape";
+          follow_mouse = 1;
+          touchpad = {
+            natural_scroll = false;
+          };
+          sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
+        };
 
-        { name = "bluetooth-devices-rule"; "match:title" = "^(Bluetooth Devices)$"; float = true; }
-        { name = "nmapplet-rule"; "match:class" = "^(nm-applet)$"; float = true; }
-        { name = "nm-connection-editor-rule"; "match:class" = "^(nm-connection-editor)$"; float = true; }
-        { name = "polkit-rule"; "match:class" = "^(polkit-gnome-authentication-agent-1)$"; float = true; }
-        { name = "1password-rule"; "match:title" = "^(1Password)$"; float = true; }
-        { name = "ssh-askpass-rule"; "match:class" = "^(SshAskpass)$"; float = true; }
-        { name = "virt-manager-rule"; "match:class" = "^(virt-manager)$"; float = true; }
-        { name = "sudo-rule"; "match:title" = "^(Administrator privileges required)$"; float = true; }
+        general = {
+          gaps_in = 5;
+          gaps_out = 10;
+          border_size = 2;
+          layout = "dwindle";
+          allow_tearing = false;
+        };
 
-        { name = "keepassxc-rule"; "match:class" = "^(org.keepassxc.KeePassXC)$"; float = true; size = "900 700"; }
-        { name = "nsxiv-rule"; "match:class" = "^(Nsxiv)$"; float = true; center = true; size = "900 700"; }
-        { name = "gedit-rule"; "match:class" = "^(gedit)$"; float = true; center = true; size = "900 700"; }
-        { name = "mpv-rule"; "match:class" = "^(MPlayer|mpv)$"; float = true; center = true; size = "900 700"; }
-        { name = "nautilus-preview-rule"; "match:class" = "^(org.gnome.NautilusPreviewer)$"; float = true; center = true; size = "900 700"; }
+        decoration = {
+          rounding = 10;
+          blur = {
+            enabled = true;
+            size = 3;
+            passes = 1;
+            vibrancy = 0.1696;
+          };
+          shadow = {
+            enabled = true;
+            range = 4;
+            render_power = 3;
+            color = "rgba(1a1a1aee)";
+          };
+        };
 
-        { name = "rofi-rule"; "match:class" = "^(Rofi)$"; float = true; center = true; stay_focused = true; }
+        # Bezier curves and per-leaf animations are separate `hl.curve`/
+        # `hl.animation` calls below; only the master toggle lives here.
+        animations = {
+          enabled = true;
+        };
 
-        # Gnome notes app
-        { name = "gnome-notes-rule"; "match:title" = "^(New and Recent)$"; float = true; size = "900 700"; }
-        # Modal GTK dialogs
-        { name = "gtk-modal-dialog-rule"; "match:class" = "^(xdg-desktop-portal-gtk)$"; float = true; center = true; size = "900 700"; }
-        # Firefox Library
-        { name = "firefox-library-rule"; "match:class" = "(firefox)"; "match:title" = "(Library)"; float = true; size = "1200 800"; }
-        # Thunderbird
-        { name = "thunder-bird-edit-rule"; "match:title" = "^(Edit Item)$"; float = true; center = true; }
+        dwindle = {
+          preserve_split = true;
+        };
+
+        master = {
+          new_status = "master";
+        };
+
+        misc = {
+          force_default_wallpaper = 0;
+          disable_hyprland_logo = true;
+          disable_splash_rendering = true;
+        };
+      };
+
+      gesture = {
+        fingers = 3;
+        direction = "horizontal";
+        action = "workspace";
+      };
+
+      # `curve` is in home-manager's importantPrefixes, so it is emitted before
+      # the animations that reference `myBezier`.
+      curve = [
+        {
+          _args = [
+            "myBezier"
+            {
+              type = "bezier";
+              points = mkLuaInline "{ {0.05, 0.9}, {0.1, 1.05} }";
+            }
+          ];
+        }
       ];
 
+      animation = [
+        {
+          leaf = "windows";
+          enabled = true;
+          speed = 7;
+          bezier = "myBezier";
+        }
+        {
+          leaf = "windowsOut";
+          enabled = true;
+          speed = 7;
+          bezier = "default";
+          style = "popin 80%";
+        }
+        {
+          leaf = "border";
+          enabled = true;
+          speed = 10;
+          bezier = "default";
+        }
+        {
+          leaf = "borderangle";
+          enabled = true;
+          speed = 8;
+          bezier = "default";
+        }
+        {
+          leaf = "fade";
+          enabled = true;
+          speed = 7;
+          bezier = "default";
+        }
+        {
+          leaf = "workspaces";
+          enabled = true;
+          speed = 6;
+          bezier = "default";
+        }
+      ];
+
+      # `match` holds the regex selectors; remaining keys are rule effects.
+      # `size` takes a Lua vec2 table `{ w, h }`, so it is a Nix list here.
+      window_rule = [
+        {
+          name = "global-window-rule";
+          match = {
+            class = ".*";
+          };
+          opacity = "1.0 0.95";
+        }
+
+        {
+          name = "bluetooth-devices-rule";
+          match = {
+            title = "^(Bluetooth Devices)$";
+          };
+          float = true;
+        }
+        {
+          name = "nmapplet-rule";
+          match = {
+            class = "^(nm-applet)$";
+          };
+          float = true;
+        }
+        {
+          name = "nm-connection-editor-rule";
+          match = {
+            class = "^(nm-connection-editor)$";
+          };
+          float = true;
+        }
+        {
+          name = "polkit-rule";
+          match = {
+            class = "^(polkit-gnome-authentication-agent-1)$";
+          };
+          float = true;
+        }
+        {
+          name = "1password-rule";
+          match = {
+            title = "^(1Password)$";
+          };
+          float = true;
+        }
+        {
+          name = "ssh-askpass-rule";
+          match = {
+            class = "^(SshAskpass)$";
+          };
+          float = true;
+        }
+        {
+          name = "virt-manager-rule";
+          match = {
+            class = "^(virt-manager)$";
+          };
+          float = true;
+        }
+        {
+          name = "sudo-rule";
+          match = {
+            title = "^(Administrator privileges required)$";
+          };
+          float = true;
+        }
+
+        {
+          name = "keepassxc-rule";
+          match = {
+            class = "^(org.keepassxc.KeePassXC)$";
+          };
+          float = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "nsxiv-rule";
+          match = {
+            class = "^(Nsxiv)$";
+          };
+          float = true;
+          center = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "gedit-rule";
+          match = {
+            class = "^(gedit)$";
+          };
+          float = true;
+          center = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "mpv-rule";
+          match = {
+            class = "^(MPlayer|mpv)$";
+          };
+          float = true;
+          center = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "nautilus-preview-rule";
+          match = {
+            class = "^(org.gnome.NautilusPreviewer)$";
+          };
+          float = true;
+          center = true;
+          size = [
+            900
+            700
+          ];
+        }
+
+        {
+          name = "rofi-rule";
+          match = {
+            class = "^(Rofi)$";
+          };
+          float = true;
+          center = true;
+          stay_focused = true;
+        }
+
+        {
+          name = "gnome-notes-rule";
+          match = {
+            title = "^(New and Recent)$";
+          };
+          float = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "gtk-modal-dialog-rule";
+          match = {
+            class = "^(xdg-desktop-portal-gtk)$";
+          };
+          float = true;
+          center = true;
+          size = [
+            900
+            700
+          ];
+        }
+        {
+          name = "firefox-library-rule";
+          match = {
+            class = "(firefox)";
+            title = "(Library)";
+          };
+          float = true;
+          size = [
+            1200
+            800
+          ];
+        }
+        {
+          name = "thunder-bird-edit-rule";
+          match = {
+            title = "^(Edit Item)$";
+          };
+          float = true;
+          center = true;
+        }
+      ];
+
+      on = [
+        {
+          _args = [
+            "hyprland.start"
+            startupHook
+          ];
+        }
+      ];
+
+      bind = [
+        (bind "SUPER + RETURN" (exec "ghostty"))
+        (bind "SUPER + F" fullscreen)
+        (bind "SUPER + V" toggleFloat)
+        (bind "SUPER + D" (exec "rofi -show drun"))
+        (bind "SUPER + B" (exec "firefox"))
+        (bind "SUPER + P" pseudo) # dwindle
+        (bind "SUPER + J" (layoutMsg "togglesplit")) # dwindle
+
+        (bind "SUPER + SHIFT + RETURN" (exec "nautilus"))
+        (bind "SUPER + SHIFT + Q" killActive)
+        (bind "SUPER + SHIFT + E" (exec "wlogout"))
+        (bind "SUPER + SHIFT + L" (exec "hyprlock"))
+        (bind "SUPER + SHIFT + H" (exec "~/.config/waybar/scripts/keyhint.sh"))
+        (bind "SUPER + SHIFT + P" (exec "~/.config/waybar/scripts/cliphist.sh"))
+        (bind "SUPER + SHIFT + S" (exec "systemctl suspend"))
+        # Lua long-string `[[ ]]` avoids escaping the inner shell quotes.
+        (bind "SUPER + SHIFT + Y" (
+          mkLuaInline ''hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | swappy -f -]])''
+        ))
+
+        (bind "SUPER + SPACE" (exec "rofi -show run"))
+
+        # Special workspace (scratchpad). code:20 is the dash/minus key.
+        (bind "SUPER + SHIFT + code:20" (moveToWs "special:magic"))
+        (bind "SUPER + S" (toggleSpecial "magic"))
+        (bind "SUPER + code:20" (toggleSpecial "magic"))
+
+        # Move focus with SUPER + arrow keys
+        (bind "SUPER + left" (focusDir "l"))
+        (bind "SUPER + right" (focusDir "r"))
+        (bind "SUPER + up" (focusDir "u"))
+        (bind "SUPER + down" (focusDir "d"))
+
+        # Move window with SUPER + SHIFT + arrow keys
+        (bind "SUPER + SHIFT + left" (moveDir "l"))
+        (bind "SUPER + SHIFT + right" (moveDir "r"))
+        (bind "SUPER + SHIFT + up" (moveDir "u"))
+        (bind "SUPER + SHIFT + down" (moveDir "d"))
+
+        (bind "SUPER + HOME" (focusWs "1"))
+        (bind "SUPER + END" (focusWs "10"))
+
+        # Relative workspace switching
+        (bind "SUPER + ALT + left" (focusWs "e-1"))
+        (bind "SUPER + ALT + right" (focusWs "e+1"))
+        (bind "SUPER + mouse_down" (focusWs "e+1"))
+        (bind "SUPER + mouse_up" (focusWs "e-1"))
+
+        # Move/resize windows with SUPER + LMB/RMB
+        (bindOpts "SUPER + mouse:272" drag { mouse = true; })
+        (bindOpts "SUPER + SHIFT + mouse:272" mouseResize { mouse = true; })
+
+        # Function keys
+        (bind "XF86MonBrightnessUp" (exec "brightnessctl -q s +10%"))
+        (bind "XF86MonBrightnessDown" (exec "brightnessctl -q s 10%-"))
+        (bind "XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
+        (bind "XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
+        (bind "XF86AudioMute" (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
+        (bind "XF86AudioPlay" (exec "playerctl play-pause"))
+        (bind "XF86AudioPause" (exec "playerctl play-pause"))
+        (bind "XF86AudioNext" (exec "playerctl next"))
+        (bind "XF86AudioPrev" (exec "playerctl previous"))
+        (bind "XF86AudioMicMute" (exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
+        (bind "XF86Calculator" (exec "qalculate-gtk"))
+        (bind "XF86ScreenSaver" (exec "hyprlock"))
+
+        # Enter the resize submap
+        (bind "ALT + R" (submap "resize"))
+      ]
+      ++ workspaceBinds;
+
+      # Resize submap: arrow keys resize the active window, escape returns to the
+      # global submap. `reset` is reserved by home-manager for the default submap.
+      define_submap = {
+        _args = [
+          "resize"
+          (mkLuaInline ''
+            function()
+              hl.bind("right", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+              hl.bind("left", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+              hl.bind("up", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+              hl.bind("down", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
+              hl.bind("escape", hl.dsp.submap("reset"))
+            end'')
+        ];
+      };
     };
-    extraConfig = ''
-      ${extraMonitorSettings}
-
-      $mainMod = SUPER
-
-      bind = $mainMod, RETURN, exec, $terminal
-
-      bind = $mainMod, F, fullscreen
-      bind = $mainMod, V, togglefloating,
-      bind = $mainMod, D, exec, rofi -show drun
-      bind = $mainMod, B, exec, $browser
-      bind = $mainMod, P, pseudo, # dwindle
-      bind = $mainMod, J, layoutmsg, togglesplit # dwindle
-
-      bind = $mainMod SHIFT, RETURN, exec, $fileManager
-      bind = $mainMod SHIFT, Q, killactive,
-      bind = $mainMod SHIFT, E, exec, wlogout
-      bind = $mainMod SHIFT, L, exec, hyprlock
-      bind = $mainMod SHIFT, H, exec, ~/.config/waybar/scripts/keyhint.sh
-      bind = $mainMod SHIFT, P, exec, ~/.config/waybar/scripts/cliphist.sh
-      bind = $mainMod SHIFT, S, exec, systemctl suspend
-      bind = $mainMod SHIFT, Y, exec, grim -g "$(slurp -d)" - | swappy -f -
-
-      bind = $mainMod, SPACE, exec, rofi -show run
-
-      # Special workspace (scratchpad)
-      $key_dash = code:20
-      bind = $mainMod SHIFT, $key_dash, movetoworkspace, special:magic
-      bind = $mainMod, S, togglespecialworkspace, magic
-      bind = $mainMod, $key_dash, togglespecialworkspace, magic
-
-      # Move focus with mainMod + arrow keys
-      bind = $mainMod, left, movefocus, l
-      bind = $mainMod, right, movefocus, r
-      bind = $mainMod, up, movefocus, u
-      bind = $mainMod, down, movefocus, d
-      # Move focus with mainMod + SHIFT + arrow keys
-      bind = $mainMod SHIFT, left, movewindow, l
-      bind = $mainMod SHIFT, right, movewindow, r
-      bind = $mainMod SHIFT, up, movewindow, u
-      bind = $mainMod SHIFT, down, movewindow, d
-
-      # Switch workspaces with mainMod + [0-9]
-      bind = $mainMod, 1, workspace, 1
-      bind = $mainMod, 2, workspace, 2
-      bind = $mainMod, 3, workspace, 3
-      bind = $mainMod, 4, workspace, 4
-      bind = $mainMod, 5, workspace, 5
-      bind = $mainMod, 6, workspace, 6
-      bind = $mainMod, 7, workspace, 7
-      bind = $mainMod, 8, workspace, 8
-      bind = $mainMod, 9, workspace, 9
-      bind = $mainMod, 0, workspace, 10
-      bind = $mainMod, HOME, workspace, 1
-      bind = $mainMod, END, workspace, 10
-
-      # Move active window to a workspace with mainMod + SHIFT + [0-9]
-      bind = $mainMod SHIFT, 1, movetoworkspace, 1
-      bind = $mainMod SHIFT, 2, movetoworkspace, 2
-      bind = $mainMod SHIFT, 3, movetoworkspace, 3
-      bind = $mainMod SHIFT, 4, movetoworkspace, 4
-      bind = $mainMod SHIFT, 5, movetoworkspace, 5
-      bind = $mainMod SHIFT, 6, movetoworkspace, 6
-      bind = $mainMod SHIFT, 7, movetoworkspace, 7
-      bind = $mainMod SHIFT, 8, movetoworkspace, 8
-      bind = $mainMod SHIFT, 9, movetoworkspace, 9
-      bind = $mainMod SHIFT, 0, movetoworkspace, 10
-
-      bind = $mainMod ALT, left, workspace, e-1
-      bind = $mainMod ALT, right, workspace, e+1
-
-      # Scroll through existing workspaces with mainMod + scroll
-      bind = $mainMod, mouse_down, workspace, e+1
-      bind = $mainMod, mouse_up, workspace, e-1
-
-      # Move/resize windows with mainMod + LMB/RM
-      bindm = $mainMod, mouse:272, movewindow
-      bindm = $mainMod SHIFT, mouse:272, resizewindow
-      #
-      # Fn keys
-      bind = , XF86MonBrightnessUp, exec, brightnessctl -q s +10%
-      bind = , XF86MonBrightnessDown, exec, brightnessctl -q s 10%-
-      bind = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+
-      bind = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
-      bind = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
-      bind = , XF86AudioPlay, exec, playerctl play-pause
-      bind = , XF86AudioPause, exec, playerctl play-pause
-      bind = , XF86AudioNext, exec, playerctl next
-      bind = , XF86AudioPrev, exec, playerctl previous
-      bind = , XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle
-      bind = , XF86Calculator, exec, qalculate-gtk
-      bind = , XF86Lock, exec, swaylock
-
-      # to switch between windows in a floating workspace
-      # bind = SUPER,Tab,cyclenext,          # change focus to another window
-      bind = SUPER,Tab,bringactivetotop,   # bring it to the top
-
-      # will switch to a submap called resize
-      bind=ALT,R,submap,resize
-      # will start a submap called "resize"
-      submap=resize
-      # sets repeatable binds for resizing the active window
-      binde=,right,resizeactive,10 0
-      binde=,left,resizeactive,-10 0
-      binde=,up,resizeactive,0 -10
-      binde=,down,resizeactive,0 10
-      # use reset to go back to the global submap
-      bind=,escape,submap,reset 
-      # will reset the submap, meaning end the current one and return to the global one
-      submap=reset
-    '';
   };
 
   home.pointerCursor = {

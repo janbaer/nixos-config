@@ -1,11 +1,17 @@
 let
   commonVars = import ./../common/variables.nix;
 in
-commonVars // {
+commonVars
+// {
   # Host-specific overrides
-  extraMonitorSettings = ''
-    monitor = eDP-1,preferred,auto,1.5
-  '';
+  monitors = [
+    {
+      output = "eDP-1";
+      mode = "preferred";
+      position = "auto";
+      scale = 1.5;
+    }
+  ];
 
   useTuxedo = true;
 

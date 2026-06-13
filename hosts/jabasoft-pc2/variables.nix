@@ -1,12 +1,25 @@
 let
   commonVars = import ./../common/variables.nix;
 in
-commonVars // {
+commonVars
+// {
   # Host-specific overrides
-  extraMonitorSettings = ''
-    monitor = DP-1,3840x2160@60,0x0,auto
-    monitor = HDMI-A-1,2560x1600@60,500x2160,1
-  '';
+  monitors = [
+    {
+      output = "DP-1";
+      mode = "3840x2160@60";
+      position = "0x0";
+      scale = "auto";
+    }
+    # scale: numeric per docs; "auto" above is the keyword form. Mixing the two
+    # is accepted by hl.monitor (verified on 0.55.2) — the handler coerces both.
+    {
+      output = "HDMI-A-1";
+      mode = "2560x1600@60";
+      position = "500x2160";
+      scale = 1;
+    }
+  ];
 
   aliases = {
     trivy = "nix develop path:$HOME/Projects/nixos-config/dev-shells/trivy --command trivy";
