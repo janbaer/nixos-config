@@ -27,6 +27,8 @@ in
     desktop = {
       browsers.enable = true;
       hyprland.enable = true;
+      noctalia.enable = true;
+      noctalia.vpnToggle.enable = false; # desktop: no wg0 connection here
       obsidian.enable = true;
       thunderbird.enable = true;
     };
