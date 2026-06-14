@@ -89,7 +89,6 @@ let
     "~/.config/hypr/scripts/xdg.sh &"
     "hypridle"
     "hyprpaper"
-    "blueman-applet"
   ]
   # waybar and the standalone cliphist watcher are superseded by Noctalia's bar
   # and its built-in clipboard watcher when the shell is enabled.
