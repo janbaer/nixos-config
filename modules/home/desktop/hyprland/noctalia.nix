@@ -1,4 +1,10 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 with lib;
 let
   cfg = config.modules.desktop.noctalia;
@@ -28,8 +34,19 @@ in
 {
   imports = [ inputs.noctalia.homeModules.default ];
 
-  options.modules.desktop.noctalia.enable =
-    mkEnableOption "Noctalia desktop shell (Quickshell, v4 stable line)";
+  options.modules.desktop.noctalia = {
+    enable = mkEnableOption "Noctalia desktop shell (Quickshell, v4 stable line)";
+
+    vpnToggle.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Show the WireGuard (${vpnConnection}) left-click toggle CustomButton in
+        the bar. Disable on hosts without a ${vpnConnection} connection
+        (e.g. desktops), where the button would only ever read "VPN off".
+      '';
+    };
+  };
 
   config = mkIf cfg.enable {
     programs.noctalia-shell.enable = true;
@@ -79,16 +96,18 @@ in
         right = [
           { id = "Tray"; }
           { id = "NotificationHistory"; }
-          {
-            id = "CustomButton";
-            icon = "shield";
-            parseJson = true;
-            textStream = false;
-            textIntervalMs = 3000;
-            leftClickUpdateText = true;
-            leftClickExec = "${vpnToggle}";
-            textCommand = "${vpnStatus}";
-          }
+        ]
+        ++ optional cfg.vpnToggle.enable {
+          id = "CustomButton";
+          icon = "shield";
+          parseJson = true;
+          textStream = false;
+          textIntervalMs = 3000;
+          leftClickUpdateText = true;
+          leftClickExec = "${vpnToggle}";
+          textCommand = "${vpnStatus}";
+        }
+        ++ [
           { id = "Battery"; }
           { id = "Volume"; }
           { id = "Brightness"; }
