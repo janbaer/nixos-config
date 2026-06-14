@@ -29,6 +29,19 @@ let
   drag = mkLuaInline "hl.dsp.window.drag()";
   mouseResize = mkLuaInline "hl.dsp.window.resize()";
 
+  # Noctalia shell integration. When the Noctalia module is enabled for the host,
+  # these actions call its Quickshell IPC (via the noctalia-shell wrapper) instead
+  # of the standalone rofi / wlogout / hyprlock / cliphist stack. Hosts without
+  # Noctalia keep the original commands, so the rewrite is safe per-host.
+  noctaliaEnabled = config.modules.desktop.noctalia.enable;
+  ipc = target: fn: exec "noctalia-shell ipc call ${target} ${fn}";
+  launcherDrun = if noctaliaEnabled then ipc "launcher" "toggle" else exec "rofi -show drun";
+  launcherRun = if noctaliaEnabled then ipc "launcher" "command" else exec "rofi -show run";
+  clipboardMenu =
+    if noctaliaEnabled then ipc "launcher" "clipboard" else exec "~/.config/waybar/scripts/cliphist.sh";
+  sessionMenu = if noctaliaEnabled then ipc "sessionMenu" "toggle" else exec "wlogout";
+  lockScreen = if noctaliaEnabled then ipc "lockScreen" "lock" else exec "hyprlock";
+
   # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
   # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
   bind = keys: dispatcher: {
@@ -457,24 +470,24 @@ in
         (bind "SUPER + RETURN" (exec "ghostty"))
         (bind "SUPER + F" fullscreen)
         (bind "SUPER + V" toggleFloat)
-        (bind "SUPER + D" (exec "rofi -show drun"))
+        (bind "SUPER + D" launcherDrun)
         (bind "SUPER + B" (exec "firefox"))
         (bind "SUPER + P" pseudo) # dwindle
         (bind "SUPER + J" (layoutMsg "togglesplit")) # dwindle
 
         (bind "SUPER + SHIFT + RETURN" (exec "nautilus"))
         (bind "SUPER + SHIFT + Q" killActive)
-        (bind "SUPER + SHIFT + E" (exec "wlogout"))
-        (bind "SUPER + SHIFT + L" (exec "hyprlock"))
+        (bind "SUPER + SHIFT + E" sessionMenu)
+        (bind "SUPER + SHIFT + L" lockScreen)
         (bind "SUPER + SHIFT + H" (exec "~/.config/waybar/scripts/keyhint.sh"))
-        (bind "SUPER + SHIFT + P" (exec "~/.config/waybar/scripts/cliphist.sh"))
+        (bind "SUPER + SHIFT + P" clipboardMenu)
         (bind "SUPER + SHIFT + S" (exec "systemctl suspend"))
         # Lua long-string `[[ ]]` avoids escaping the inner shell quotes.
         (bind "SUPER + SHIFT + Y" (
           mkLuaInline ''hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | swappy -f -]])''
         ))
 
-        (bind "SUPER + SPACE" (exec "rofi -show run"))
+        (bind "SUPER + SPACE" launcherRun)
 
         # Special workspace (scratchpad). code:20 is the dash/minus key.
         (bind "SUPER + SHIFT + code:20" (moveToWs "special:magic"))
@@ -518,7 +531,7 @@ in
         (bind "XF86AudioPrev" (exec "playerctl previous"))
         (bind "XF86AudioMicMute" (exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
         (bind "XF86Calculator" (exec "qalculate-gtk"))
-        (bind "XF86ScreenSaver" (exec "hyprlock"))
+        (bind "XF86ScreenSaver" lockScreen)
 
         # Enter the resize submap
         (bind "ALT + R" (submap "resize"))
