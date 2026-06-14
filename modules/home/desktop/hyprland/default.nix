@@ -41,7 +41,6 @@ in
       imagemagick                     # Software suite to create, edit, compose, or convert bitmap images
       nsxiv                           # New Suckless X Image Viewer
       # network-manager-applet
-      pasystray
       playerctl                       # Command-line utility and library for controlling media players that implement MPRIS
       volumeicon
       brightnessctl                   # Control monitor brightness with fn-keys
@@ -51,6 +50,7 @@ in
     ]
     ++ lib.optionals (!noctaliaEnabled) [
       dunst                           # Show user messages (replaced by Noctalia)
+      pasystray                       # PulseAudio tray applet (replaced by Noctalia's Volume widget)
     ];
 
     home.shellAliases = {
@@ -58,7 +58,8 @@ in
     };
 
     services = {
-      network-manager-applet.enable = true;
+      # Noctalia's Network widget replaces nm-applet's tray icon.
+      network-manager-applet.enable = !noctaliaEnabled;
       mpris-proxy.enable = true;             # enable a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players
     };
 
