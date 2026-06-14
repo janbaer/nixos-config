@@ -50,6 +50,10 @@ in
       # lowercase. Point it at the real location.
       wallpaper.directory = "${config.home.homeDirectory}/Pictures/wallpapers";
 
+      # Fire session actions (logout/lock/reboot/shutdown) immediately instead of
+      # running a 10s countdown first.
+      sessionMenu.enableCountdown = false;
+
       # Bar layout mirrors Noctalia's default. The WireGuard toggle is a
       # CustomButton (left-click connect/disconnect wg0, icon reflects state via
       # the status script's JSON), replacing the old waybar custom/vpn module (#14)
