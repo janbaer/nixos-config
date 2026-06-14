@@ -589,9 +589,11 @@ in
       package = pkgs.gnome-themes-extra;
       name = "Adwaita-dark";
     };
+    # Papirus carries icons for the third-party tray apps (blueman, nm-applet, …)
+    # that Adwaita lacks, fixing the checkerboard placeholders in Noctalia's tray.
     iconTheme = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus-Dark";
     };
     font = {
       name = "Sans";
@@ -607,6 +609,7 @@ in
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       gtk-theme = "Adwaita-dark";
+      icon-theme = "Papirus-Dark";
       color-scheme = "prefer-dark";
     };
   };
