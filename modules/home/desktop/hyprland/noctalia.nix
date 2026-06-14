@@ -67,7 +67,14 @@ in
           { id = "MediaMini"; }
         ];
         center = [
-          { id = "Workspace"; }
+          {
+            id = "Workspace";
+            # Show the app icons of the windows open in each workspace (resolved
+            # via the Papirus theme), not just on hover. Replaces waybar's static
+            # per-workspace glyphs. The index number still shows (default labelMode).
+            showApplications = true;
+            showApplicationsHover = false;
+          }
         ];
         right = [
           { id = "Tray"; }
