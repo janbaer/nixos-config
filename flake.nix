@@ -3,6 +3,11 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Floated solely for noctalia-shell 4.7.7: 26.05 still ships 4.7.6, whose app
+    # launcher uses plain `hyprctl dispatch exec` and breaks on our Lua-configured
+    # Hyprland. 4.7.7 added the Lua-aware dispatch. Overlaid below; nothing else
+    # is pulled from this input.
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,6 +44,15 @@
           };
           modules = [
             ./hosts/${hostname}/configuration.nix
+            {
+              # Float only noctalia-shell (and its noctalia-qs dep, pulled
+              # transitively) from nixos-unstable to get 4.7.7's Lua-aware dispatch.
+              nixpkgs.overlays = [
+                (final: prev: {
+                  noctalia-shell = inputs.nixpkgs-unstable.legacyPackages.${system}.noctalia-shell;
+                })
+              ];
+            }
             agenix.nixosModules.default
             home-manager.nixosModules.home-manager
             {
