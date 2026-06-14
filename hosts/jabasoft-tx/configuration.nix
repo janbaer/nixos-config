@@ -55,6 +55,9 @@ in {
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
   services.blueman.enable = true;
 
+  # Battery/charge state for the Noctalia bar widget (Quickshell.Services.UPower).
+  services.upower.enable = true;
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
