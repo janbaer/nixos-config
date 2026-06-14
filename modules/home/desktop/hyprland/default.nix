@@ -7,6 +7,7 @@ in
     ./hyprland.nix
     ./hypr-window-switcher.nix
     ./hyprlock.nix
+    ./noctalia.nix
     ./waybar.nix
     ./waylogout.nix
   ];

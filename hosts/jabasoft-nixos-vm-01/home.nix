@@ -17,6 +17,7 @@
     desktop = {
       browsers.enable = true;
       hyprland.enable = true;
+      noctalia.enable = true;
       thunderbird.enable = true;
     };
     shell = {
