@@ -4,6 +4,9 @@
     useHyprland
     ;
 
+  # Noctalia replaces the bar; drop waybar where it is enabled.
+  noctaliaEnabled = config.modules.desktop.noctalia.enable;
+
   # Workaround for Alexays/Waybar#5008: with Hyprland's Lua config the native
   # hyprland/workspaces click sends the legacy `dispatch workspace N`, which the
   # Lua dispatch parser rejects, so clicking a workspace icon does nothing.
@@ -20,7 +23,7 @@
   });
 in
 {
-  programs.waybar.enable = useHyprland;
+  programs.waybar.enable = useHyprland && !noctaliaEnabled;
   programs.waybar.package = waybarLuaDispatch;
   home.file = {
     ".config/waybar".source = ./waybar;

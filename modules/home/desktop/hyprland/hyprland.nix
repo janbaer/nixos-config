@@ -42,6 +42,15 @@ let
   sessionMenu = if noctaliaEnabled then ipc "sessionMenu" "toggle" else exec "wlogout";
   lockScreen = if noctaliaEnabled then ipc "lockScreen" "lock" else exec "hyprlock";
 
+  # Volume/brightness via Noctalia IPC so its OSD shows; the bare wpctl/brightnessctl
+  # binds fire silently. Falls back to the silent commands where Noctalia is off.
+  volUp = if noctaliaEnabled then ipc "volume" "increase" else exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
+  volDown = if noctaliaEnabled then ipc "volume" "decrease" else exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+  volMute = if noctaliaEnabled then ipc "volume" "muteOutput" else exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+  micMute = if noctaliaEnabled then ipc "volume" "muteInput" else exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
+  brightUp = if noctaliaEnabled then ipc "brightness" "increase" else exec "brightnessctl -q s +10%";
+  brightDown = if noctaliaEnabled then ipc "brightness" "decrease" else exec "brightnessctl -q s 10%-";
+
   # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
   # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
   bind = keys: dispatcher: {
@@ -79,9 +88,13 @@ let
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "~/.config/hypr/scripts/xdg.sh &"
     "hypridle"
-    "waybar &"
     "hyprpaper"
     "blueman-applet"
+  ]
+  # waybar and the standalone cliphist watcher are superseded by Noctalia's bar
+  # and its built-in clipboard watcher when the shell is enabled.
+  ++ lib.optionals (!noctaliaEnabled) [
+    "waybar &"
     "wl-paste --watch cliphist store"
   ];
   # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
@@ -520,16 +533,16 @@ in
         (bindOpts "SUPER + SHIFT + mouse:272" mouseResize { mouse = true; })
 
         # Function keys
-        (bind "XF86MonBrightnessUp" (exec "brightnessctl -q s +10%"))
-        (bind "XF86MonBrightnessDown" (exec "brightnessctl -q s 10%-"))
-        (bind "XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
-        (bind "XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
-        (bind "XF86AudioMute" (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
+        (bind "XF86MonBrightnessUp" brightUp)
+        (bind "XF86MonBrightnessDown" brightDown)
+        (bind "XF86AudioRaiseVolume" volUp)
+        (bind "XF86AudioLowerVolume" volDown)
+        (bind "XF86AudioMute" volMute)
         (bind "XF86AudioPlay" (exec "playerctl play-pause"))
         (bind "XF86AudioPause" (exec "playerctl play-pause"))
         (bind "XF86AudioNext" (exec "playerctl next"))
         (bind "XF86AudioPrev" (exec "playerctl previous"))
-        (bind "XF86AudioMicMute" (exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
+        (bind "XF86AudioMicMute" micMute)
         (bind "XF86Calculator" (exec "qalculate-gtk"))
         (bind "XF86ScreenSaver" lockScreen)
 

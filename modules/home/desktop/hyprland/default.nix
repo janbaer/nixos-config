@@ -1,6 +1,8 @@
 { config, inputs, lib, pkgs, hostname, ... }:
 with lib; let
   cfg = config.modules.desktop.browsers;
+  # Noctalia provides notifications; drop dunst where the shell is enabled.
+  noctaliaEnabled = config.modules.desktop.noctalia.enable;
 in
 {
   imports = [
@@ -27,7 +29,6 @@ in
       hyprpaper                       # Show wallpapers in Hyprland
       hypridle
       rofi                            # A window switcher, application launcher and dmenu replacement
-      dunst                           # Show user messages
       feh                             # Selecting Images for the wallpaper
       xdg-desktop-portal-hyprland     # xdg-desktop-portal backend for hyprland
       wl-clipboard                    # Handling system-wide clipboard in Wayland
@@ -47,6 +48,9 @@ in
       wdisplays                       # Configuring display in Wayland
       dconf
       gsettings-desktop-schemas
+    ]
+    ++ lib.optionals (!noctaliaEnabled) [
+      dunst                           # Show user messages (replaced by Noctalia)
     ];
 
     home.shellAliases = {
@@ -75,6 +79,8 @@ in
         }
       '';
       ".config/nsxiv/exec/key-handler".source = ./nsxiv/exec/key-handler;
+    }
+    // lib.optionalAttrs (!noctaliaEnabled) {
       ".config/dunst/dunstrc".source = ./dunst/dunstrc;
     };
   };
