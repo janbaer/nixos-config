@@ -1,7 +1,14 @@
-{ config, lib, pkgs, hostname, ... }: let
-  inherit
-    (import ./../../../../hosts/${hostname}/variables.nix)
+{
+  config,
+  lib,
+  pkgs,
+  hostname,
+  ...
+}:
+let
+  inherit (import ./../../../../hosts/${hostname}/variables.nix)
     useHyprland
+    wallpaperDir
     ;
 in
 {
@@ -12,7 +19,7 @@ in
 
       background {
         monitor =
-        path = $HOME/Pictures/wallpapers/6-bunt-wp-sgs.png
+        path = $HOME/${wallpaperDir}/6-bunt-wp-sgs.png
       }
 
       input-field {
@@ -74,7 +81,7 @@ in
 
       image {
         monitor =
-        path = $HOME/Pictures/wallpapers/6-bunt-wp-sgs.png
+        path = $HOME/${wallpaperDir}/6-bunt-wp-sgs.png
         size = 280 # lesser side if not 1:1 ratio
         rounding = -1 # negative values mean circle
         border_size = 4

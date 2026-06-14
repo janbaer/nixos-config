@@ -3,11 +3,13 @@
   lib,
   pkgs,
   inputs,
+  hostname,
   ...
 }:
 with lib;
 let
   cfg = config.modules.desktop.noctalia;
+  inherit (import ./../../../../hosts/${hostname}/variables.nix) wallpaperDir;
 
   # Left-click VPN toggle for the bar, built from a CustomButton instead of the
   # built-in VPN widget (which only exposes a right-click menu). The scripts are
@@ -64,8 +66,8 @@ in
       appLauncher.enableClipboardHistory = true;
 
       # Noctalia defaults to ~/Pictures/Wallpapers (capital W); our directory is
-      # lowercase. Point it at the real location.
-      wallpaper.directory = "${config.home.homeDirectory}/Pictures/wallpapers";
+      # lowercase. Point it at the real location (shared via common variables).
+      wallpaper.directory = "${config.home.homeDirectory}/${wallpaperDir}";
 
       # Fire session actions (logout/lock/reboot/shutdown) immediately instead of
       # running a 10s countdown first.
