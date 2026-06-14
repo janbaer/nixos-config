@@ -96,6 +96,11 @@ let
   ++ lib.optionals (!noctaliaEnabled) [
     "waybar &"
     "wl-paste --watch cliphist store"
+  ]
+  # Launch the Noctalia shell from the compositor. The v4 home module's systemd
+  # service is deprecated, so the Hyprland startup hook is the supported method.
+  ++ lib.optionals noctaliaEnabled [
+    "noctalia-shell"
   ];
   # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
   # produce broken Lua. (None contain `]]`, which long-strings can't hold.)
