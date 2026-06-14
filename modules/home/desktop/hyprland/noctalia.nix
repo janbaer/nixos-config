@@ -66,6 +66,14 @@ in
   config = mkIf cfg.enable {
     programs.noctalia-shell.enable = true;
 
+    # Use the cached nixpkgs build instead of the flake's default package, which
+    # compiles the quickshell fork from source on every machine. nixpkgs ships
+    # noctalia-shell (same v4 line, settingsVersion 59) plus the fork as the
+    # cached `noctalia-qs` package, so this substitutes from cache.nixos.org with
+    # no local build and no behavioural change. Version now tracks the nixpkgs
+    # input; the flake input is retained for its home module + as a pinned fallback.
+    programs.noctalia-shell.package = pkgs.noctalia-shell;
+
     # Declarative settings. The home module writes ~/.config/noctalia/settings.json
     # as a read-only Nix-store symlink; pinning settingsVersion to the schema
     # version shipped by this input (59) keeps Noctalia from running migrations and
