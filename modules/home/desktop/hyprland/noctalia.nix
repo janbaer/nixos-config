@@ -24,6 +24,10 @@ in
       # runs its own wl-paste watcher, so the standalone one is dropped in hyprland.nix.
       appLauncher.enableClipboardHistory = true;
 
+      # Noctalia defaults to ~/Pictures/Wallpapers (capital W); our directory is
+      # lowercase. Point it at the real location.
+      wallpaper.directory = "${config.home.homeDirectory}/Pictures/wallpapers";
+
       # Bar layout mirrors Noctalia's default, plus the built-in WireGuard VPN
       # widget (nmcli-backed, replaces the old waybar custom/vpn module from #14).
       # On the VM it shows "disconnected" (no profiles); hardware-tested on jabasoft-tx.
