@@ -1,7 +1,29 @@
-{ config, lib, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 with lib;
 let
   cfg = config.modules.desktop.noctalia;
+
+  # Left-click VPN toggle for the bar, built from a CustomButton instead of the
+  # built-in VPN widget (which only exposes a right-click menu). The scripts are
+  # Nix-generated store paths, so nothing lives out-of-band. nmcli is pinned;
+  # Noctalia runs both via `sh -lc`.
+  vpnConnection = "wg0";
+  vpnToggle = pkgs.writeShellScript "noctalia-vpn-toggle" ''
+    if ${pkgs.networkmanager}/bin/nmcli -t -f NAME connection show --active | grep -qx ${vpnConnection}; then
+      ${pkgs.networkmanager}/bin/nmcli connection down ${vpnConnection}
+    else
+      ${pkgs.networkmanager}/bin/nmcli connection up ${vpnConnection}
+    fi
+  '';
+  # Emits JSON consumed by CustomButton's parseJson: swaps the icon shield <-> shield-lock,
+  # tints it when connected, and sets the tooltip. No "text" field keeps it icon-only.
+  vpnStatus = pkgs.writeShellScript "noctalia-vpn-status" ''
+    if ${pkgs.networkmanager}/bin/nmcli -t -f NAME connection show --active | grep -qx ${vpnConnection}; then
+      printf '{"icon":"shield-lock","tooltip":"VPN %s connected","iconColor":"primary"}' ${vpnConnection}
+    else
+      printf '{"icon":"shield","tooltip":"VPN off"}'
+    fi
+  '';
 in
 {
   imports = [ inputs.noctalia.homeModules.default ];
@@ -28,9 +50,10 @@ in
       # lowercase. Point it at the real location.
       wallpaper.directory = "${config.home.homeDirectory}/Pictures/wallpapers";
 
-      # Bar layout mirrors Noctalia's default, plus the built-in WireGuard VPN
-      # widget (nmcli-backed, replaces the old waybar custom/vpn module from #14).
-      # On the VM it shows "disconnected" (no profiles); hardware-tested on jabasoft-tx.
+      # Bar layout mirrors Noctalia's default. The WireGuard toggle is a
+      # CustomButton (left-click connect/disconnect wg0, icon reflects state via
+      # the status script's JSON), replacing the old waybar custom/vpn module (#14)
+      # and the built-in VPN widget's right-click-only menu.
       bar.widgets = {
         left = [
           { id = "Launcher"; }
@@ -45,7 +68,16 @@ in
         right = [
           { id = "Tray"; }
           { id = "NotificationHistory"; }
-          { id = "VPN"; }
+          {
+            id = "CustomButton";
+            icon = "shield";
+            parseJson = true;
+            textStream = false;
+            textIntervalMs = 3000;
+            leftClickUpdateText = true;
+            leftClickExec = "${vpnToggle}";
+            textCommand = "${vpnStatus}";
+          }
           { id = "Battery"; }
           { id = "Volume"; }
           { id = "Brightness"; }
