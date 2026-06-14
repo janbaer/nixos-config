@@ -24,8 +24,9 @@ in
       # runs its own wl-paste watcher, so the standalone one is dropped in hyprland.nix.
       appLauncher.enableClipboardHistory = true;
 
-      # Bar layout mirrors Noctalia's default. The WireGuard VPN widget is added
-      # to the right section in #20 (hardware-tested on jabasoft-tx).
+      # Bar layout mirrors Noctalia's default, plus the built-in WireGuard VPN
+      # widget (nmcli-backed, replaces the old waybar custom/vpn module from #14).
+      # On the VM it shows "disconnected" (no profiles); hardware-tested on jabasoft-tx.
       bar.widgets = {
         left = [
           { id = "Launcher"; }
@@ -40,6 +41,7 @@ in
         right = [
           { id = "Tray"; }
           { id = "NotificationHistory"; }
+          { id = "VPN"; }
           { id = "Battery"; }
           { id = "Volume"; }
           { id = "Brightness"; }
