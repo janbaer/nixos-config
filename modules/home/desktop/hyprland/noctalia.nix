@@ -53,12 +53,13 @@ in
       type = types.bool;
       default = true;
       description = ''
-        Auto-lock the screen on suspend (the lock screen then requires the PAM
-        password to unlock). Disable on trusted hosts (e.g. a desktop) where you
-        don't want to be prompted for a password — the screen never auto-locks.
-        Noctalia has no "skip password" toggle, so this works by suppressing the
-        lock trigger entirely (general.lockOnSuspend). Manual locking, if invoked,
-        still authenticates via PAM.
+        Lock the screen before suspend so waking requires the PAM password. When
+        enabled (default), this covers all suspend paths: idle and session-menu
+        suspend honour Noctalia's general.lockOnSuspend, and a hypridle pre-sleep
+        hook covers external suspends (lid close, power key, systemctl suspend) that
+        Noctalia has no logind inhibitor for. Disable on trusted hosts (e.g. a
+        desktop): no hypridle hook and general.lockOnSuspend is forced false, so the
+        screen never auto-locks and no password is demanded.
       '';
     };
   };
@@ -141,6 +142,19 @@ in
     // optionalAttrs (!cfg.autoLock.enable) {
       # Trusted host: never auto-lock, so the PAM password is never demanded.
       general.lockOnSuspend = false;
+    };
+
+    # Lock before external suspends (lid close, power key, `systemctl suspend`).
+    # Noctalia's lockOnSuspend only covers idle- and session-menu-initiated suspend;
+    # it has no logind PrepareForSleep inhibitor. hypridle runs purely as a pre-sleep
+    # locker here (no idle listeners — Noctalia's IdleService owns idle), taking a
+    # logind delay-inhibitor so the lock engages before the system sleeps.
+    services.hypridle = mkIf cfg.autoLock.enable {
+      enable = true;
+      settings.general = {
+        lock_cmd = "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call lockScreen lock";
+        before_sleep_cmd = "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call lockScreen lock";
+      };
     };
   };
 }

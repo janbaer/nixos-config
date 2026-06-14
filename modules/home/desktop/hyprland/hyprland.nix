@@ -87,7 +87,6 @@ let
     "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "~/.config/hypr/scripts/xdg.sh &"
-    "hypridle"
     "hyprpaper"
   ]
   # waybar and the standalone cliphist watcher are superseded by Noctalia's bar
