@@ -93,12 +93,6 @@ in
       bar.widgets = {
         left = [
           { id = "Launcher"; }
-          { id = "Clock"; }
-          { id = "SystemMonitor"; }
-          { id = "ActiveWindow"; }
-          { id = "MediaMini"; }
-        ];
-        center = [
           {
             id = "Workspace";
             # Show the app icons of the windows open in each workspace (resolved
@@ -107,6 +101,12 @@ in
             showApplications = true;
             showApplicationsHover = false;
           }
+        ];
+        center = [
+          { id = "MediaMini"; }
+          { id = "Clock"; }
+          { id = "SystemMonitor"; }
+          { id = "ActiveWindow"; }
         ];
         right = [
           { id = "Tray"; }
