@@ -1,8 +1,13 @@
-{ username, ... }:
+{ username, pkgs, ... }:
 {
   imports = [
     ./../../modules/home
   ];
+
+  # Trial: use the cached nixpkgs noctalia-shell (v4.7.6) instead of building the
+  # flake's quickshell fork from source. Same v4 line, settingsVersion 59 matches.
+  # Scoped to the VM first; promote to the shared module if it proves stable.
+  programs.noctalia-shell.package = pkgs.noctalia-shell;
 
   modules = {
     dev = {
