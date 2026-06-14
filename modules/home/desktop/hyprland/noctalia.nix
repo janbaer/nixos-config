@@ -48,6 +48,19 @@ in
         (e.g. desktops), where the button would only ever read "VPN off".
       '';
     };
+
+    autoLock.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''
+        Auto-lock the screen on suspend (the lock screen then requires the PAM
+        password to unlock). Disable on trusted hosts (e.g. a desktop) where you
+        don't want to be prompted for a password — the screen never auto-locks.
+        Noctalia has no "skip password" toggle, so this works by suppressing the
+        lock trigger entirely (general.lockOnSuspend). Manual locking, if invoked,
+        still authenticates via PAM.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -116,6 +129,10 @@ in
           { id = "ControlCenter"; }
         ];
       };
+    }
+    // optionalAttrs (!cfg.autoLock.enable) {
+      # Trusted host: never auto-lock, so the PAM password is never demanded.
+      general.lockOnSuspend = false;
     };
   };
 }

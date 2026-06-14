@@ -29,6 +29,7 @@ in
       hyprland.enable = true;
       noctalia.enable = true;
       noctalia.vpnToggle.enable = false; # desktop: no wg0 connection here
+      noctalia.autoLock.enable = false; # trusted desktop: never lock, no password prompt
       obsidian.enable = true;
       thunderbird.enable = true;
     };
