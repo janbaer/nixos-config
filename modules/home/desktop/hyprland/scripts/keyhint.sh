@@ -1,39 +1,42 @@
 #!/usr/bin/env bash
 
-# "Change keyboard layout in" "~/.config/hypr/hyprland.conf" " " \
-
-yad --width=530 --height=550 \
+yad --width=560 --height=720 \
 --center \
 --fixed \
 --title="Hyprland Keybindings" \
 --no-buttons \
 --list \
 --column=Key: \
---column=Description: \
---column=Command: \
+--column=Action: \
+--column=Notes: \
 --timeout=60 \
 --timeout-indicator=right \
-"+Enter" "Terminal" "" \
-"+Shift+Enter" "Filemanager" "Nautilus" \
-"+d" "Application Menu" "(Noctalia launcher)" \
-"+s/+-" "Toggle scratchpad" "Special workspace" \
-"+b" "Brave" "Open Browser" \
-"+f" "Fullscreen" "Toggles to full screen" \
+"+Enter" "Terminal" "Ghostty" \
+"+Shift+Enter" "File manager" "Nautilus" \
+"+b" "Browser" "Firefox" \
+"+d" "App launcher" "Noctalia (drun)" \
+"+Space" "Run command" "Noctalia" \
+"+Shift+p" "Clipboard history" "Noctalia" \
+"+f" "Fullscreen" "Toggle" \
+"+v" "Toggle floating" "" \
+"+p" "Pseudo tile" "dwindle" \
 "+j" "Toggle split" "dwindle" \
-"+p" "Dwindle effect" "pseudo" \
-"+s" "Suspend" "Lock screen and sleep" \
-"+Space" "run app" "Run app by name" \
-"+Shift+e" "Exit menu" "Noctalia session menu" \
-"+Shift+p" "Clipboard" "Paste from clipboard" \
-"+Shift+f" "Fullscreen" "Toggles to full screen" \
-"+Shift+q" "Close focused app" "(kill)" \
-"+Shift+h" "Show keyhints" "This window" \
-"+Shift+l" "Lock screen" "Locks the screen (Noctalia / hyprlock)" \
-"+Shift+s/+Shift+-" "Move to scratchpach" "Special workspace" \
-"+Shift+p" "Screenshot region" "Select a region of the screen for creating a screenshot" \
-"+mouse_down" "Next workspace" "Move to next workspace" \
-"+mouse_up" "Previous workspace" "Move to previous workspace" \
-"+left_mouse" "Move window" "" \
-"+right_mouse" "Resize window" "" \
-"Alt+r" "Resize mode window" "" \
-"" "" "     Window closed in 60 sec."\
+"+Shift+q" "Close window" "Kill active" \
+"+Arrows" "Move focus" "Left / Down / Up / Right" \
+"+Shift+Arrows" "Move window" "Left / Down / Up / Right" \
+"+LMB drag" "Move window" "" \
+"+Shift+LMB drag" "Resize window" "" \
+"Alt+r" "Resize mode" "Arrows resize, Esc exits" \
+"+1 .. 0" "Switch workspace" "1 to 10" \
+"+Shift+1 .. 0" "Send window to workspace" "1 to 10" \
+"+Home / End" "First / last workspace" "1 / 10" \
+"+Alt+Left/Right" "Prev / next workspace" "Relative" \
+"+Scroll" "Cycle workspaces" "Mouse wheel" \
+"+s  or  +-" "Scratchpad" "Toggle special workspace" \
+"+Shift+-" "Send to scratchpad" "Special workspace" \
+"+Shift+e" "Session menu" "Noctalia (logout/lock/reboot/off)" \
+"+Shift+l" "Lock screen" "Noctalia / hyprlock" \
+"+Shift+s" "Suspend" "systemctl suspend" \
+"+Shift+y" "Screenshot region" "grim + slurp -> swappy" \
+"+Shift+h" "This help" "Keybindings cheat sheet" \
+"" "" "Closes in 60 s"
