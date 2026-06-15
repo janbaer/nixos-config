@@ -29,27 +29,23 @@ let
   drag = mkLuaInline "hl.dsp.window.drag()";
   mouseResize = mkLuaInline "hl.dsp.window.resize()";
 
-  # Noctalia shell integration. When the Noctalia module is enabled for the host,
-  # these actions call its Quickshell IPC (via the noctalia-shell wrapper) instead
-  # of the standalone rofi / wlogout / hyprlock / cliphist stack. Hosts without
-  # Noctalia keep the original commands, so the rewrite is safe per-host.
-  noctaliaEnabled = config.modules.desktop.noctalia.enable;
+  # Noctalia shell integration. These actions call its Quickshell IPC (via the
+  # noctalia-shell wrapper) for the launcher, clipboard, session menu, lock screen
+  # and the volume/brightness OSDs.
   ipc = target: fn: exec "noctalia-shell ipc call ${target} ${fn}";
-  launcherDrun = if noctaliaEnabled then ipc "launcher" "toggle" else exec "rofi -show drun";
-  launcherRun = if noctaliaEnabled then ipc "launcher" "command" else exec "rofi -show run";
-  clipboardMenu =
-    if noctaliaEnabled then ipc "launcher" "clipboard" else exec "~/.config/waybar/scripts/cliphist.sh";
-  sessionMenu = if noctaliaEnabled then ipc "sessionMenu" "toggle" else exec "wlogout";
-  lockScreen = if noctaliaEnabled then ipc "lockScreen" "lock" else exec "hyprlock";
+  launcherDrun = ipc "launcher" "toggle";
+  launcherRun = ipc "launcher" "command";
+  clipboardMenu = ipc "launcher" "clipboard";
+  sessionMenu = ipc "sessionMenu" "toggle";
+  lockScreen = ipc "lockScreen" "lock";
 
-  # Volume/brightness via Noctalia IPC so its OSD shows; the bare wpctl/brightnessctl
-  # binds fire silently. Falls back to the silent commands where Noctalia is off.
-  volUp = if noctaliaEnabled then ipc "volume" "increase" else exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+";
-  volDown = if noctaliaEnabled then ipc "volume" "decrease" else exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-  volMute = if noctaliaEnabled then ipc "volume" "muteOutput" else exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-  micMute = if noctaliaEnabled then ipc "volume" "muteInput" else exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle";
-  brightUp = if noctaliaEnabled then ipc "brightness" "increase" else exec "brightnessctl -q s +10%";
-  brightDown = if noctaliaEnabled then ipc "brightness" "decrease" else exec "brightnessctl -q s 10%-";
+  # Volume/brightness via Noctalia IPC so its OSD shows.
+  volUp = ipc "volume" "increase";
+  volDown = ipc "volume" "decrease";
+  volMute = ipc "volume" "muteOutput";
+  micMute = ipc "volume" "muteInput";
+  brightUp = ipc "brightness" "increase";
+  brightDown = ipc "brightness" "decrease";
 
   # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
   # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
@@ -83,21 +79,13 @@ let
   # Applications previously launched via the hyprlang `exec-once` list. The
   # systemd integration registers its own `hyprland.start` hook; `hl.on` is an
   # event subscription, so this second hook coexists with it.
+  # Launch the Noctalia shell from the compositor. The v4 home module's systemd
+  # service is deprecated, so the Hyprland startup hook is the supported method.
+  # Noctalia owns the bar, wallpaper and the clipboard watcher.
   startupCommands = [
     "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "~/.config/hypr/scripts/xdg.sh &"
-    "hyprpaper"
-  ]
-  # waybar and the standalone cliphist watcher are superseded by Noctalia's bar
-  # and its built-in clipboard watcher when the shell is enabled.
-  ++ lib.optionals (!noctaliaEnabled) [
-    "waybar &"
-    "wl-paste --watch cliphist store"
-  ]
-  # Launch the Noctalia shell from the compositor. The v4 home module's systemd
-  # service is deprecated, so the Hyprland startup hook is the supported method.
-  ++ lib.optionals noctaliaEnabled [
     "noctalia-shell"
   ];
   # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
@@ -309,13 +297,6 @@ in
           float = true;
         }
         {
-          name = "nmapplet-rule";
-          match = {
-            class = "^(nm-applet)$";
-          };
-          float = true;
-        }
-        {
           name = "nm-connection-editor-rule";
           match = {
             class = "^(nm-connection-editor)$";
@@ -495,7 +476,7 @@ in
         (bind "SUPER + SHIFT + Q" killActive)
         (bind "SUPER + SHIFT + E" sessionMenu)
         (bind "SUPER + SHIFT + L" lockScreen)
-        (bind "SUPER + SHIFT + H" (exec "~/.config/waybar/scripts/keyhint.sh"))
+        (bind "SUPER + SHIFT + H" (exec "~/.config/hypr/scripts/keyhint.sh"))
         (bind "SUPER + SHIFT + P" clipboardMenu)
         (bind "SUPER + SHIFT + S" (exec "systemctl suspend"))
         # Lua long-string `[[ ]]` avoids escaping the inner shell quotes.
@@ -587,8 +568,8 @@ in
       package = pkgs.gnome-themes-extra;
       name = "Adwaita-dark";
     };
-    # Papirus carries icons for the third-party tray apps (blueman, nm-applet, …)
-    # that Adwaita lacks, fixing the checkerboard placeholders in Noctalia's tray.
+    # Papirus carries icons for third-party tray apps that Adwaita lacks, fixing
+    # the checkerboard placeholders in Noctalia's tray.
     iconTheme = {
       package = pkgs.papirus-icon-theme;
       name = "Papirus-Dark";

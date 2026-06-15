@@ -15,7 +15,7 @@ yad --width=530 --height=550 \
 --timeout-indicator=right \
 "+Enter" "Terminal" "" \
 "+Shift+Enter" "Filemanager" "Nautilus" \
-"+d" "Application Menu" "(rofi)" \
+"+d" "Application Menu" "(Noctalia launcher)" \
 "+s/+-" "Toggle scratchpad" "Special workspace" \
 "+b" "Brave" "Open Browser" \
 "+f" "Fullscreen" "Toggles to full screen" \
@@ -23,13 +23,12 @@ yad --width=530 --height=550 \
 "+p" "Dwindle effect" "pseudo" \
 "+s" "Suspend" "Lock screen and sleep" \
 "+Space" "run app" "Run app by name" \
-"+Shift+e" "Exit menu" "wlogout" \
-"+Shift+c" "Change wallpaper" "(wpaperd)" \
+"+Shift+e" "Exit menu" "Noctalia session menu" \
 "+Shift+p" "Clipboard" "Paste from clipboard" \
 "+Shift+f" "Fullscreen" "Toggles to full screen" \
 "+Shift+q" "Close focused app" "(kill)" \
 "+Shift+h" "Show keyhints" "This window" \
-"+Shift+l" "Lock screen" "Locks the screen with swaylock" \
+"+Shift+l" "Lock screen" "Locks the screen (Noctalia / hyprlock)" \
 "+Shift+s/+Shift+-" "Move to scratchpach" "Special workspace" \
 "+Shift+p" "Screenshot region" "Select a region of the screen for creating a screenshot" \
 "+mouse_down" "Next workspace" "Move to next workspace" \
