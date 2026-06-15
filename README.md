@@ -18,6 +18,29 @@ I use [nh](https://github.com/viperML/nh) as a Nix helper for cleaner command ou
 nix shell nixpkgs#nh
 ```
 
+## Helper Scripts
+
+Wrapper scripts in the repo root for everyday rebuild, inspection, and maintenance tasks.
+
+**Build & apply**
+
+- `./nixos-switch.sh` — `nixos-rebuild switch --flake .` plus a reboot check.
+- `./nixos-rebuild-verbose.sh` — verbose rebuild with trace and log capture in `/tmp`.
+
+**Inspect generations**
+
+- `./nixos-show-lastchanges.sh` — changes since the last rebuild.
+- `./nixos-show-allchanges.sh` — all changes between generations.
+- `./nixos-rebuild-show-nextchanges.sh` — preview the next rebuild without applying.
+- `./nixos-list-generations.sh` — list all generations and their status.
+- `./nixos-generation-diff.sh <g1> <g2>` — compare two generations.
+- `./nixos-reboot-required.sh` — check whether a reboot is needed.
+
+**Maintenance**
+
+- `./nixos-collect-garbage.sh` — delete old generations.
+- `./nixos-check-pkg-channels.sh [package]` — compare a package's version across the stable channel tip, the locked `flake.lock` pin, and unstable (defaults to `noctalia-shell`). Use it to tell when a package floated from unstable via an overlay has been backported to stable and the overlay can be dropped.
+
 ## Encryption
 
 This config uses [agenix](https://github.com/ryantm/agenix) to manage secrets.
