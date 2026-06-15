@@ -133,6 +133,7 @@ in
         }
         ++ [
           { id = "Battery"; }
+          { id = "Bluetooth"; }
           { id = "Volume"; }
           { id = "Brightness"; }
           { id = "ControlCenter"; }
