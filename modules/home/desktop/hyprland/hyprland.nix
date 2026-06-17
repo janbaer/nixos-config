@@ -29,6 +29,24 @@ let
   drag = mkLuaInline "hl.dsp.window.drag()";
   mouseResize = mkLuaInline "hl.dsp.window.resize()";
 
+  # Noctalia shell integration. These actions call its Quickshell IPC (via the
+  # noctalia-shell wrapper) for the launcher, clipboard, session menu, lock screen
+  # and the volume/brightness OSDs.
+  ipc = target: fn: exec "noctalia-shell ipc call ${target} ${fn}";
+  launcherDrun = ipc "launcher" "toggle";
+  launcherRun = ipc "launcher" "command";
+  clipboardMenu = ipc "launcher" "clipboard";
+  sessionMenu = ipc "sessionMenu" "toggle";
+  lockScreen = ipc "lockScreen" "lock";
+
+  # Volume/brightness via Noctalia IPC so its OSD shows.
+  volUp = ipc "volume" "increase";
+  volDown = ipc "volume" "decrease";
+  volMute = ipc "volume" "muteOutput";
+  micMute = ipc "volume" "muteInput";
+  brightUp = ipc "brightness" "increase";
+  brightDown = ipc "brightness" "decrease";
+
   # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
   # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
   bind = keys: dispatcher: {
@@ -61,15 +79,14 @@ let
   # Applications previously launched via the hyprlang `exec-once` list. The
   # systemd integration registers its own `hyprland.start` hook; `hl.on` is an
   # event subscription, so this second hook coexists with it.
+  # Launch the Noctalia shell from the compositor. The v4 home module's systemd
+  # service is deprecated, so the Hyprland startup hook is the supported method.
+  # Noctalia owns the bar, wallpaper and the clipboard watcher.
   startupCommands = [
     "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "~/.config/hypr/scripts/xdg.sh &"
-    "hypridle"
-    "waybar &"
-    "hyprpaper"
-    "blueman-applet"
-    "wl-paste --watch cliphist store"
+    "noctalia-shell"
   ];
   # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
   # produce broken Lua. (None contain `]]`, which long-strings can't hold.)
@@ -280,13 +297,6 @@ in
           float = true;
         }
         {
-          name = "nmapplet-rule";
-          match = {
-            class = "^(nm-applet)$";
-          };
-          float = true;
-        }
-        {
           name = "nm-connection-editor-rule";
           match = {
             class = "^(nm-connection-editor)$";
@@ -457,24 +467,24 @@ in
         (bind "SUPER + RETURN" (exec "ghostty"))
         (bind "SUPER + F" fullscreen)
         (bind "SUPER + V" toggleFloat)
-        (bind "SUPER + D" (exec "rofi -show drun"))
+        (bind "SUPER + D" launcherDrun)
         (bind "SUPER + B" (exec "firefox"))
         (bind "SUPER + P" pseudo) # dwindle
         (bind "SUPER + J" (layoutMsg "togglesplit")) # dwindle
 
         (bind "SUPER + SHIFT + RETURN" (exec "nautilus"))
         (bind "SUPER + SHIFT + Q" killActive)
-        (bind "SUPER + SHIFT + E" (exec "wlogout"))
-        (bind "SUPER + SHIFT + L" (exec "hyprlock"))
-        (bind "SUPER + SHIFT + H" (exec "~/.config/waybar/scripts/keyhint.sh"))
-        (bind "SUPER + SHIFT + P" (exec "~/.config/waybar/scripts/cliphist.sh"))
+        (bind "SUPER + SHIFT + E" sessionMenu)
+        (bind "SUPER + SHIFT + L" lockScreen)
+        (bind "SUPER + SHIFT + H" (exec "~/.config/hypr/scripts/keyhint.sh"))
+        (bind "SUPER + SHIFT + P" clipboardMenu)
         (bind "SUPER + SHIFT + S" (exec "systemctl suspend"))
         # Lua long-string `[[ ]]` avoids escaping the inner shell quotes.
         (bind "SUPER + SHIFT + Y" (
           mkLuaInline ''hl.dsp.exec_cmd([[grim -g "$(slurp -d)" - | swappy -f -]])''
         ))
 
-        (bind "SUPER + SPACE" (exec "rofi -show run"))
+        (bind "SUPER + SPACE" launcherRun)
 
         # Special workspace (scratchpad). code:20 is the dash/minus key.
         (bind "SUPER + SHIFT + code:20" (moveToWs "special:magic"))
@@ -507,18 +517,18 @@ in
         (bindOpts "SUPER + SHIFT + mouse:272" mouseResize { mouse = true; })
 
         # Function keys
-        (bind "XF86MonBrightnessUp" (exec "brightnessctl -q s +10%"))
-        (bind "XF86MonBrightnessDown" (exec "brightnessctl -q s 10%-"))
-        (bind "XF86AudioRaiseVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"))
-        (bind "XF86AudioLowerVolume" (exec "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"))
-        (bind "XF86AudioMute" (exec "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
+        (bind "XF86MonBrightnessUp" brightUp)
+        (bind "XF86MonBrightnessDown" brightDown)
+        (bind "XF86AudioRaiseVolume" volUp)
+        (bind "XF86AudioLowerVolume" volDown)
+        (bind "XF86AudioMute" volMute)
         (bind "XF86AudioPlay" (exec "playerctl play-pause"))
         (bind "XF86AudioPause" (exec "playerctl play-pause"))
         (bind "XF86AudioNext" (exec "playerctl next"))
         (bind "XF86AudioPrev" (exec "playerctl previous"))
-        (bind "XF86AudioMicMute" (exec "pactl set-source-mute @DEFAULT_SOURCE@ toggle"))
+        (bind "XF86AudioMicMute" micMute)
         (bind "XF86Calculator" (exec "qalculate-gtk"))
-        (bind "XF86ScreenSaver" (exec "hyprlock"))
+        (bind "XF86ScreenSaver" lockScreen)
 
         # Enter the resize submap
         (bind "ALT + R" (submap "resize"))
@@ -558,9 +568,11 @@ in
       package = pkgs.gnome-themes-extra;
       name = "Adwaita-dark";
     };
+    # Papirus carries icons for third-party tray apps that Adwaita lacks, fixing
+    # the checkerboard placeholders in Noctalia's tray.
     iconTheme = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
+      package = pkgs.papirus-icon-theme;
+      name = "Papirus-Dark";
     };
     font = {
       name = "Sans";
@@ -576,6 +588,7 @@ in
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       gtk-theme = "Adwaita-dark";
+      icon-theme = "Papirus-Dark";
       color-scheme = "prefer-dark";
     };
   };

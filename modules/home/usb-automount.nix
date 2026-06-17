@@ -9,6 +9,8 @@ in
   config = mkIf cfg.enable {
     services.udiskie = {
       enable = true;
+      # Noctalia owns the tray; run udiskie tray-less (automount keeps working).
+      tray = "never";
       settings = {
         # workaround for
         # https://github.com/nix-community/home-manager/issues/632

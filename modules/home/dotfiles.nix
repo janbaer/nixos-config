@@ -10,12 +10,6 @@ in
         ${pkgs.git}/bin/git clone https://github.com/janbaer/dotfiles.git $dotfiles_dir
       fi
     '';
-    download_wallpaper = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      wallpaper_path=/home/${username}/.wallpaper.jpg
-      if [ ! -f "$wallpaper_path" ]; then
-        ${pkgs.curl}/bin/curl -o $wallpaper_path https://raw.githubusercontent.com/janbaer/wallpapers/refs/heads/main/wallhaven-wqery6.jpg
-      fi
-    '';
   };
 
   home.file = {

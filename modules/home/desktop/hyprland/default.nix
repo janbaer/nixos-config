@@ -7,8 +7,7 @@ in
     ./hyprland.nix
     ./hypr-window-switcher.nix
     ./hyprlock.nix
-    ./waybar.nix
-    ./waylogout.nix
+    ./noctalia.nix
   ];
 
   options.modules.desktop.hyprland.enable = mkEnableOption "Install Hyprland with my prefered configuration";
@@ -23,11 +22,7 @@ in
       font-awesome_5
       noto-fonts
 
-      hyprpaper                       # Show wallpapers in Hyprland
       hypridle
-      rofi                            # A window switcher, application launcher and dmenu replacement
-      dunst                           # Show user messages
-      feh                             # Selecting Images for the wallpaper
       xdg-desktop-portal-hyprland     # xdg-desktop-portal backend for hyprland
       wl-clipboard                    # Handling system-wide clipboard in Wayland
       cliphist                        # The new clipboard manager
@@ -35,13 +30,9 @@ in
       slurp                           # Required for making screenshots
       swappy                          # Required for making screenshots
       yad                             # Show a GTK popup from the commandline
-      blueman                         # Toolbar applet for Bluetooth
       imagemagick                     # Software suite to create, edit, compose, or convert bitmap images
       nsxiv                           # New Suckless X Image Viewer
-      # network-manager-applet
-      pasystray
       playerctl                       # Command-line utility and library for controlling media players that implement MPRIS
-      volumeicon
       brightnessctl                   # Control monitor brightness with fn-keys
       wdisplays                       # Configuring display in Wayland
       dconf
@@ -53,7 +44,6 @@ in
     };
 
     services = {
-      network-manager-applet.enable = true;
       mpris-proxy.enable = true;             # enable a proxy forwarding Bluetooth MIDI controls via MPRIS2 to control media players
     };
 
@@ -63,18 +53,8 @@ in
 
     home.file = {
       ".config/swappy/config".source = ./swappy/config;
-      ".config/rofi".source = ./rofi;
-      # hyprpaper (hyprlang) does not expand $HOME, so bake the absolute path in.
-      # hyprpaper 0.8 (NixOS 26.05) replaced the flat preload/wallpaper lines with
-      # a wallpaper {} block; empty monitor applies to all outputs.
-      ".config/hypr/hyprpaper.conf".text = ''
-        wallpaper {
-            monitor =
-            path = ${config.home.homeDirectory}/.wallpaper.jpg
-        }
-      '';
+      ".config/hypr/scripts/keyhint.sh".source = ./scripts/keyhint.sh;
       ".config/nsxiv/exec/key-handler".source = ./nsxiv/exec/key-handler;
-      ".config/dunst/dunstrc".source = ./dunst/dunstrc;
     };
   };
 }

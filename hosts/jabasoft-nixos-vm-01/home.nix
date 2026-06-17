@@ -17,6 +17,8 @@
     desktop = {
       browsers.enable = true;
       hyprland.enable = true;
+      noctalia.enable = true;
+      noctalia.vpnToggle.enable = false; # VM: no wg0 profile
       thunderbird.enable = true;
     };
     shell = {

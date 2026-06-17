@@ -4,6 +4,9 @@
   useHyprland = true;
   useTuxedo = false;
 
+  # Wallpaper directory (relative to $HOME), shared across all hosts
+  wallpaperDir = "Pictures/wallpapers";
+
   # Common GPG configuration
   gpgKey = "EB90F9C1";
   gpgSshKeys = [

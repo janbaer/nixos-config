@@ -1,4 +1,10 @@
-{ config, pkgs, inputs, hostname, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  hostname,
+  ...
+}:
 
 {
   imports = [
@@ -51,7 +57,9 @@
   # Enable bluetooth support
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
-  services.blueman.enable = true;  
+  # blueman dropped under Noctalia: its bar widget opens a full BlueZ panel
+  # (scan/pair/connect/trust), replacing the blueman GUI. OBEX file transfer is
+  # unused, so the blueman-mechanism daemon is not needed.
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
