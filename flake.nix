@@ -24,17 +24,17 @@
   };
 
   outputs =
-    { 
-      self
-    , nixpkgs
-    , home-manager
-    , agenix
-    , ...
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      agenix,
+      ...
     }@inputs:
     let
-      mkSystem = pkgs: system: hostname: username: userfullname:
-        pkgs.lib.nixosSystem
-        {
+      mkSystem =
+        pkgs: system: hostname: username: userfullname:
+        pkgs.lib.nixosSystem {
           specialArgs = {
             inherit system;
             inherit inputs;
@@ -47,6 +47,8 @@
             {
               # Float only noctalia-shell (and its noctalia-qs dep, pulled
               # transitively) from nixos-unstable to get 4.7.7's Lua-aware dispatch.
+              # Applied to every host in the flake; drop once nixos-26.05 ships
+              # noctalia-shell >= 4.7.7 (verify with ./nixos-check-pkg-channels.sh).
               nixpkgs.overlays = [
                 (final: prev: {
                   noctalia-shell = inputs.nixpkgs-unstable.legacyPackages.${system}.noctalia-shell;
@@ -71,7 +73,7 @@
                 sharedModules = [
                   agenix.homeManagerModules.age
                 ];
-                verbose = false;  # Enable verbose home-manager activation
+                verbose = false; # Enable verbose home-manager activation
               };
             }
           ];

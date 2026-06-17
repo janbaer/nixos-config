@@ -22,18 +22,20 @@ PKG="${1:-noctalia-shell}"
 
 cd "$(dirname "$0")"
 
-# jq is needed to read flake.lock; fall back to a throwaway nix shell if absent
-JQ="jq"
-command -v jq >/dev/null 2>&1 || JQ="nix run nixpkgs#jq --"
+# jq is needed to read flake.lock; fall back to a throwaway nix shell if absent.
+# Array form so the multi-word fallback word-splits correctly when invoked.
+JQ=(jq)
+command -v jq >/dev/null 2>&1 || JQ=(nix run nixpkgs#jq --)
 
 # Branch names come from flake.nix so this tracks whatever the flake pins.
 STABLE_REF=$(grep -oP 'nixpkgs\.url\s*=\s*"github:NixOS/nixpkgs/\K[^"]+' flake.nix || true)
 UNSTABLE_REF=$(grep -oP 'nixpkgs-unstable\.url\s*=\s*"github:NixOS/nixpkgs/\K[^"]+' flake.nix || true)
 
 # Locked revisions come from flake.lock (what you actually build today).
-META=$(nix flake metadata --json)
-STABLE_REV=$(echo "$META" | $JQ -r '.locks.nodes.nixpkgs.locked.rev // empty')
-UNSTABLE_REV=$(echo "$META" | $JQ -r '.locks.nodes."nixpkgs-unstable".locked.rev // empty')
+# --no-update-lock-file keeps this diagnostic strictly read-only.
+META=$(nix flake metadata --no-update-lock-file --json)
+STABLE_REV=$(echo "$META" | "${JQ[@]}" -r '.locks.nodes.nixpkgs.locked.rev // empty')
+UNSTABLE_REV=$(echo "$META" | "${JQ[@]}" -r '.locks.nodes."nixpkgs-unstable".locked.rev // empty')
 
 # Resolve a package version from a nixpkgs ref, or "n/a" if it fails.
 pkg_version() {

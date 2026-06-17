@@ -160,8 +160,9 @@ in
     # logind delay-inhibitor so the lock engages before the system sleeps.
     services.hypridle = mkIf cfg.autoLock.enable {
       enable = true;
+      # Only before_sleep_cmd fires here: with no listener blocks (Noctalia's
+      # IdleService owns idle), hypridle never triggers lock_cmd, so it is omitted.
       settings.general = {
-        lock_cmd = "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call lockScreen lock";
         before_sleep_cmd = "${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call lockScreen lock";
       };
     };

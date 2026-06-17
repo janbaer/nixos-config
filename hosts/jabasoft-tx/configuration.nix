@@ -1,6 +1,14 @@
-{ config, pkgs, inputs, hostname, ... }:
-let inherit (import ./variables.nix) useHyprland;
-in {
+{
+  config,
+  pkgs,
+  inputs,
+  hostname,
+  ...
+}:
+let
+  inherit (import ./variables.nix) useHyprland;
+in
+{
   imports = [
     ./hardware-configuration.nix
     ./../common
@@ -53,6 +61,9 @@ in {
   # Enable bluetooth support
   hardware.bluetooth.enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  # blueman dropped under Noctalia: its bar widget opens a full BlueZ panel
+  # (scan/pair/connect/trust), replacing the blueman GUI. OBEX file transfer is
+  # unused, so the blueman-mechanism daemon is not needed.
 
   # Battery/charge state for the Noctalia bar widget (Quickshell.Services.UPower).
   services.upower.enable = true;
