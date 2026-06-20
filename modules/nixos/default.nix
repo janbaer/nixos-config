@@ -24,6 +24,7 @@ in {
     ./virtualization.nix
     ./wireguard.nix
     ./yubikey.nix
+    ./zram.nix
   ] ++ (if useTuxedo then [ ./tuxedo-flake.nix ] else []);
 
   programs.zsh = {

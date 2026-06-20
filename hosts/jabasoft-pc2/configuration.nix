@@ -29,6 +29,7 @@
     secrets.enable = true;
     tomb.enable = true;
     virtualization.enable = true;
+    zram.enable = true;
   };
 
   # Bootloader.
