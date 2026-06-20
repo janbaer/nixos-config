@@ -112,8 +112,15 @@ in
           }
         ];
         center = [
+          {
+            # Keybindings cheat sheet (yad popup), so the binds stay discoverable
+            # without having to remember SUPER+SHIFT+H, which also triggers it.
+            id = "CustomButton";
+            icon = "keyboard";
+            tooltip = "Keyboard shortcuts";
+            leftClickExec = "${config.home.homeDirectory}/.config/hypr/scripts/keyhint.sh";
+          }
           { id = "MediaMini"; }
-          { id = "Clock"; }
           { id = "SystemMonitor"; }
           { id = "ActiveWindow"; }
         ];
@@ -136,15 +143,8 @@ in
           { id = "Bluetooth"; }
           { id = "Volume"; }
           { id = "Brightness"; }
-          {
-            # Keybindings cheat sheet (yad popup), so the binds stay discoverable
-            # without having to remember SUPER+SHIFT+H, which also triggers it.
-            id = "CustomButton";
-            icon = "keyboard";
-            tooltip = "Keyboard shortcuts";
-            leftClickExec = "${config.home.homeDirectory}/.config/hypr/scripts/keyhint.sh";
-          }
           { id = "ControlCenter"; }
+          { id = "Clock"; }
         ];
       };
     }
