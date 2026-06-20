@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-cd ~/Secure
+cd ~/Secure || exit 1
+
 tombOpen MyNotes
