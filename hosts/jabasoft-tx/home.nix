@@ -12,6 +12,7 @@
       golang.enable = true;
       goose-cli.enable = false;
       k8s-cli.enable = true;
+      hunk.enable = true;
       mongodb.enable = false;
       nodejs.enable = true;
       python.enable = true;
