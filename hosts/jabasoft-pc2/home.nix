@@ -16,6 +16,7 @@ in
       devops-tools.enable = true;
       golang.enable = true;
       goose-cli.enable = false;
+      hunk.enable = true;
       k8s-cli.enable = true;
       mongodb.enable = true;
       nodejs.enable = true;

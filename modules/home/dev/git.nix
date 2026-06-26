@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ config, lib, pkgs, ... }: {
   programs.git = {
     enable = true;
     settings = {
@@ -87,6 +87,29 @@
           ];
           command = "claude -p \"/gitlab-commit {{.Form.JiraTicket}} -y\" --allowed-tools \"Bash(git *)\"";
           description = "Commit for Jira-Ticket with Claude";
+        }
+      ]
+      ++ lib.optionals config.modules.dev.hunk.enable [
+        {
+          key = "H";
+          context = "files";
+          command = "hunk diff HEAD";
+          output = "terminal";
+          description = "Review all uncommitted changes in hunk";
+        }
+        {
+          key = "H";
+          context = "commits";
+          command = "hunk show {{.SelectedLocalCommit.Hash}}";
+          output = "terminal";
+          description = "Review the selected commit in hunk";
+        }
+        {
+          key = "H";
+          context = "localBranches";
+          command = "hunk diff main...{{.SelectedLocalBranch.Name}}";
+          output = "terminal";
+          description = "Review branch vs main in hunk";
         }
       ];
     };

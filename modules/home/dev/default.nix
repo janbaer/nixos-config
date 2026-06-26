@@ -3,6 +3,7 @@
     ./bun.nix
     ./nodejs.nix
     ./git.nix
+    ./hunk.nix
     ./vscode.nix
     ./golang.nix
     ./python.nix
