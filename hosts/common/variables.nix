@@ -26,6 +26,11 @@
   wgPublicKey = "";
   wgIPAddress = "";
 
+  # Node.js major version installed via mise. Intentionally a floating major
+  # ("24" resolves to the latest 24.x) — matches volta's previous behaviour;
+  # patch versions are not pinned for dev tooling.
+  nodeVersion = "24";
+
   # Common global NPM packages
   globalNpmPackages = [
     "typescript@latest"

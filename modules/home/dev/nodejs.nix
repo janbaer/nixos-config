@@ -1,55 +1,61 @@
-{ config
-, lib
-, pkgs
-, hostname
-, ...
+{
+  config,
+  lib,
+  pkgs,
+  hostname,
+  ...
 }:
 with lib;
 let
-  inherit
-    (import ./../../../hosts/${hostname}/variables.nix)
+  inherit (import ./../../../hosts/${hostname}/variables.nix)
+    nodeVersion
     globalNpmPackages
     ;
   cfg = config.modules.dev.nodejs;
 
-  nodeInstall = pkgs.writeShellScriptBin "nodeInstall" ''
-    #!/usr/bin/env bash
-    
-    echo "Installing Node.js and global packages with volta..."
-    ${pkgs.volta}/bin/volta install node
+  # Turn a "name@version" / "@scope/name@version" / "name" spec from
+  # globalNpmPackages into a { "npm:<name>" = "<version>"; } pair for mise's
+  # tools table. A missing version defaults to "latest".
+  toNpmTool =
+    spec:
+    let
+      scoped = hasPrefix "@" spec;
+      body = if scoped then removePrefix "@" spec else spec;
+      parts = splitString "@" body;
+      name = (optionalString scoped "@") + head parts;
+      version = if length parts > 1 then last parts else "latest";
+    in
+    nameValuePair "npm:${name}" version;
 
-    if [ -z "$GLOBAL_NPM_PACKAGES" ]; then
-      echo "No global packages specified. Please specify the global packages to install."
-      exit 1
-    fi
-    
-    for package in $GLOBAL_NPM_PACKAGES; do
-      echo "Installing $package..."
-      ${pkgs.volta}/bin/volta install $package
-      if [ $? -eq 0 ]; then
-        echo "✓ Successfully installed $package"
-      else
-        echo "✗ Failed to install $package"
-      fi
-    done
-  '';
+  npmTools = listToAttrs (map toNpmTool globalNpmPackages);
 in
 {
   options.modules.dev.nodejs.enable = mkEnableOption "NodeJS with global packages";
 
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      volta
-      nodeInstall
-    ];
+    programs.mise = {
+      enable = true;
+      enableZshIntegration = true;
 
-    home.sessionVariables = {
-      VOLTA_HOME = "$HOME/.volta";
-      GLOBAL_NPM_PACKAGES = lib.concatStringsSep " " globalNpmPackages;
+      # Declarative global config. Home Manager renders this read-only at
+      # ~/.config/mise/config.toml, so the installed tool set is a pure function
+      # of this repo. Ad-hoc experiments go in a project-local mise.toml
+      # (`mise use npm:foo`) or are run ephemerally (`mise exec`).
+      globalConfig = {
+        # Download prebuilt Node binaries instead of compiling from source.
+        # mise defaults node.compile=true on NixOS (no FHS loader); nix-ld lets
+        # the prebuilt binary run, so force the precompiled download.
+        settings.node.compile = false;
+
+        tools = {
+          node = nodeVersion;
+        }
+        // npmTools;
+      };
     };
 
     home.sessionPath = [
-      "$HOME/.volta/bin"
+      "$HOME/.local/share/mise/shims"
     ];
 
     home.shellAliases = {
@@ -62,20 +68,16 @@ in
       yd = "yarn debug";
     };
 
-    home.activation = {
-      installing_nodejs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        if [ -f "$HOME/.volta/bin/node" ]; then
-          echo "Node.js and global packages already installed."
-          exit 0;
-        fi
-        export GLOBAL_NPM_PACKAGES='${lib.concatStringsSep " " globalNpmPackages}'
-        ${nodeInstall}/bin/nodeInstall
-      '';
-
-      volta_setup = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD ${pkgs.volta}/bin/volta setup
-      '';
-    };
+    # Materialize the declared tools. `mise install` only reads the config, so
+    # it works against the read-only config.toml and is idempotent (it skips
+    # already-installed versions).
+    #
+    # The HM activation runs with a minimal PATH. The npm backend needs `bash`
+    # (npm's script-shell) and `mise` (mise's npm wrapper calls `mise` by name);
+    # without them every npm tool fails with exit 127.
+    home.activation.installing_nodejs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      PATH="${lib.makeBinPath [ pkgs.bash pkgs.mise ]}:$PATH" \
+        $DRY_RUN_CMD ${pkgs.mise}/bin/mise install
+    '';
   };
 }
-

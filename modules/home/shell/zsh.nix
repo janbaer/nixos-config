@@ -13,18 +13,20 @@ let
     ${pkgs.curl}/bin/curl -s -o $ZDOTDIR/completions/_terraform https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/refs/heads/master/plugins/terraform/_terraform
 
     echo "Generating more ZSH completions..."
-    ${pkgs.volta}/bin/volta completions zsh > $ZDOTDIR/completions/_volta
+    ${pkgs.mise}/bin/mise completion zsh > $ZDOTDIR/completions/_mise
     ${pkgs.podman}/bin/podman completion zsh > $ZDOTDIR/completions/_podman
     ${pkgs.uv}/bin/uv generate-shell-completion zsh > "$ZDOTDIR/completions/_uv"
     ${pkgs.uv}/bin/uvx --generate-shell-completion zsh > "$ZDOTDIR/completions/_uvx"
 
-    $VOLTA_HOME/bin/openspec completion generate > "$ZDOTDIR/completions/_openspec"
+    if [ -x "$HOME/.local/share/mise/shims/openspec" ]; then
+      $HOME/.local/share/mise/shims/openspec completion generate > "$ZDOTDIR/completions/_openspec"
+    fi
 
     fpath=($ZDOTDIR/completions $fpath)
     autoload -Uz compinit
     compinit
   '';
-in 
+in
 {
   age.secrets."zsh-secrets".file = ./../../../secrets/zsh-secrets.age;
 
@@ -98,20 +100,19 @@ in
       kc = "$HOME/bin/init-keychain.sh";
       copy = "wl-copy";
       paste = "wl-paste --type=text/plain";
-      timezsh="for i in $(seq 1 5); do time zsh -i -c exit; done";
-      nushell="nix shell nixpkgs#nushell nixpkgs#carapace --command nu";
+      timezsh = "for i in $(seq 1 5); do time zsh -i -c exit; done";
+      nushell = "nix shell nixpkgs#nushell nixpkgs#carapace --command nu";
     };
     sessionVariables = {
       EDITOR = "nvim";
-      DIRENV_LOG_FORMAT= "";
+      DIRENV_LOG_FORMAT = "";
     };
   };
 
   home.file = {
     "tmp/.keep".text = "";
     ".config/zsh/.zlogout" = {
-      text = ''
-      '';
+      text = "";
     };
   };
 

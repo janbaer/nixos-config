@@ -4,7 +4,8 @@
   pkgs,
   ...
 }:
-with lib; let
+with lib;
+let
   inherit (config.lib.file) mkOutOfStoreSymlink;
   cfg = config.modules.dev.claude;
 
@@ -36,7 +37,8 @@ with lib; let
 
     claude --dangerously-skip-permissions "$@"
   '';
-in {
+in
+{
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
 
   config = mkIf cfg.enable {
@@ -44,7 +46,7 @@ in {
       claudeInstall
       claudeRun
       openRouterClaude
-      sox                 # Required for the Claude voice mode
+      sox # Required for the Claude voice mode
     ];
 
     home.file = {
@@ -55,7 +57,7 @@ in {
       c = "claudeRun --dangerously-skip-permissions";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
       orc = "openRouterClaude";
-      openspec-update = "volta install @fission-ai/openspec@latest";
+      openspec-update = "mise upgrade npm:@fission-ai/openspec";
     };
 
     home.file = {
