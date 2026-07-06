@@ -29,11 +29,18 @@ let
     #!/usr/bin/env zsh
     export ANTHROPIC_BASE_URL="https://openrouter.ai/api"
     export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
-    export ANTHROPIC_API_KEY="" 
+    export ANTHROPIC_API_KEY=""
 
     export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.5-flash"
     export ANTHROPIC_DEFAULT_OPUS_MODEL="google/gemini-3.5-flash"
     export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/gemini-3.1-flash-lite"
+
+    if [ -f "$HOME/.claude/openrouter.env" ]; then
+      echo "Using openrouter.env..."
+      set -a
+      source "$HOME/.claude/openrouter.env"
+      set +a
+    fi
 
     claude --dangerously-skip-permissions "$@"
   '';
