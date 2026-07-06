@@ -30,6 +30,7 @@
     shell = {
       aichat.enable = true;
       gopass.enable = true;
+      herdr.enable = true;
       moc.enable = true;
       tgpt.enable = true;
       television.enable = true;

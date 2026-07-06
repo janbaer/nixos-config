@@ -3,6 +3,7 @@
     ./atuin.nix
     ./ghostty.nix
     ./gopass.nix
+    ./herdr.nix
     ./moc.nix
     ./aichat.nix
     ./neovim.nix
