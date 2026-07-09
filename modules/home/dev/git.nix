@@ -107,9 +107,9 @@
         {
           key = "H";
           context = "localBranches";
-          command = "hunk diff main...{{.SelectedLocalBranch.Name}}";
+          command = "hunk diff $(git show-ref --verify --quiet refs/heads/main && echo main || echo master)...{{.SelectedLocalBranch.Name}}";
           output = "terminal";
-          description = "Review branch vs main in hunk";
+          description = "Review branch vs main/master in hunk";
         }
       ];
     };
