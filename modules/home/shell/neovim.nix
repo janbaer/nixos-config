@@ -1,15 +1,6 @@
 { config, pkgs, ... }:
 let
   inherit (config.lib.file) mkOutOfStoreSymlink;
-
-  nvimRun = pkgs.writeShellScriptBin "nvimRun" ''
-    #!/usr/bin/env zsh
-    export DEEPSEEK_API_KEY="$(gopass show cloud/deepseek/nvim-minuet)"
-    export MISTRAL_API_KEY="$(gopass show cloud/mistral/nvim-minuet)"
-    export OPENROUTER_API_KEY="$(gopass show cloud/openrouter/nvim-parrot)"
-
-    nvim "$@"
-  '';
 in
 {
   programs.neovim = {
@@ -35,8 +26,8 @@ in
   };
 
   home.shellAliases = {
-    n = "nvimRun";
-    vim = "nvimRun";
+    n = "nvim";
+    vim = "nvim";
   };
 
   home.file = {
@@ -47,7 +38,6 @@ in
   };
 
   home.packages = with pkgs; [
-    nvimRun
     python312
     python312Packages.pip
     lua
