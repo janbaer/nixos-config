@@ -139,7 +139,10 @@ in
           textCommand = "${vpnStatus}";
         }
         ++ [
-          { id = "Battery"; }
+          {
+            id = "Battery";
+            displayMode = "graphic";
+          }
           { id = "Bluetooth"; }
           { id = "Volume"; }
           { id = "Brightness"; }
