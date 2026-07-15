@@ -2,6 +2,7 @@
   imports = [
     ./browsers.nix
     ./dictate.nix
+    ./hermes-desktop.nix
     ./obsidian.nix
     ./thunderbird.nix
     ./hyprland

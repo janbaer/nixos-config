@@ -48,6 +48,12 @@
   # Obsidian vault path
   obsidianVault = "";
 
+  # Hermes Agent remote gateway, fronted by Nginx Proxy Manager (TLS terminates
+  # there, forwards to the dashboard on lxc-11:9119). The desktop client
+  # authenticates interactively against its cookie gate, so this is a reference
+  # value, not wired into an env override.
+  hermesRemoteUrl = "https://agent.home.janbaer.de";
+
   # Shell aliases, extended per host
   aliases = { };
 

@@ -21,6 +21,10 @@
       url = "github:noctalia-dev/noctalia/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Not pinned to our nixpkgs: the #desktop output is a prebuilt Electron app
+    # built against upstream's own pin. Forcing follows onto 26.05 risks missing
+    # its runtime deps. Tier-2 Nix support, same risk class as claude-desktop.
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs =

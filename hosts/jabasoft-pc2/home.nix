@@ -31,6 +31,7 @@ in
         enable = true;
         model = "mistralai/voxtral-mini-transcribe";
       };
+      hermes-desktop.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
       noctalia.vpnToggle.enable = false; # desktop: no wg0 connection here

@@ -26,6 +26,7 @@
         enable = true;
         model = "mistralai/voxtral-mini-transcribe";
       };
+      hermes-desktop.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
       obsidian.enable = true;
