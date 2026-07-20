@@ -22,7 +22,10 @@
     };
     desktop = {
       browsers.enable = true;
-      dictate.enable = true;
+      dictate = {
+        enable = true;
+        model = "mistralai/voxtral-mini-transcribe";
+      };
       hyprland.enable = true;
       noctalia.enable = true;
       obsidian.enable = true;

@@ -27,7 +27,10 @@ in
     };
     desktop = {
       browsers.enable = true;
-      dictate.enable = true;
+      dictate = {
+        enable = true;
+        model = "mistralai/voxtral-mini-transcribe";
+      };
       hyprland.enable = true;
       noctalia.enable = true;
       noctalia.vpnToggle.enable = false; # desktop: no wg0 connection here
