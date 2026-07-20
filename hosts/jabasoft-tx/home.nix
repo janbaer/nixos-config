@@ -22,6 +22,7 @@
     };
     desktop = {
       browsers.enable = true;
+      dictate.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
       obsidian.enable = true;

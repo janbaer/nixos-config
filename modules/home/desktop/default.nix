@@ -1,6 +1,7 @@
 { pkgs, ...}: {
   imports = [
     ./browsers.nix
+    ./dictate.nix
     ./obsidian.nix
     ./thunderbird.nix
     ./hyprland
