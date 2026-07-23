@@ -13,6 +13,9 @@ let
       clean=0
       if [ "''${1:-}" = "--clean" ]; then clean=1; fi
 
+      speech_model="''${DICTATION_SPEECH_MODEL:-${cfg.model}}"
+      cleanup_model="''${DICTATION_CLEANUP_MODEL:-${cfg.cleanupModel}}"
+
       notify() { notify-send -a Dictate -h string:x-canonical-private-synchronous:dictate -t "''${2:-2500}" "$1" || true; }
 
       if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
@@ -27,7 +30,7 @@ let
         args=(-sS https://openrouter.ai/api/v1/audio/transcriptions
           -H "Authorization: Bearer $key"
           -F "file=@$wavfile"
-          -F "model=${cfg.model}")
+          -F "model=$speech_model")
         ${optionalString (cfg.language != "") ''args+=(-F "language=${cfg.language}")''}
         text="$(curl "''${args[@]}" | jq -r '.text // empty')" || text=""
         rm -f "$wavfile"
@@ -41,7 +44,7 @@ let
           notify "Cleaning up…"
           sys=${escapeShellArg cfg.cleanupPrompt}
           # shellcheck disable=SC2016
-          body="$(jq -n --arg m "${cfg.cleanupModel}" --arg sys "$sys" --arg u "$text" \
+          body="$(jq -n --arg m "$cleanup_model" --arg sys "$sys" --arg u "$text" \
             '{model:$m, temperature:0, messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
           cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
             -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
