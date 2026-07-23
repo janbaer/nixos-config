@@ -43,6 +43,7 @@ in
     lua
     luarocks
     fd
+    shfmt       # Shell formatter (honours .editorconfig)
     nixd        # LSP support for the Nix language
     tree-sitter # Syntax highlighting
   ];
