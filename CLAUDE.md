@@ -150,7 +150,7 @@ Match existing commits: `<scope>: <short present-tense summary>`
 
 Examples: `nixos: Updating flakes`, `desktop: Adding wayscriber to Hyprland environment`
 
-Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`
+Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 
 ## Key Notes
 
