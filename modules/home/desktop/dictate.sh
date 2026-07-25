@@ -29,7 +29,12 @@ DICTATE_PASTE_MODE="${DICTATE_PASTE_MODE:-paste}"
 DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
 # Diagnostic switch, deliberately not a Nix option: it exists to split the
 # pipeline when the result looks wrong, not to be configured per host.
-DICTATE_DEBUG="${DICTATE_DEBUG:-0}"
+#
+# TEMPORARILY defaulted to 1: the lost-tail bug is intermittent, so it has to be
+# recorded while dictating normally via the keybind — an opt-in flag would only
+# ever be set when the bug is not happening. Costs a plaintext transcript of
+# every dictation in tmpfs. Set back to 0 once the cause is found.
+DICTATE_DEBUG="${DICTATE_DEBUG:-1}"
 DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
 
 # XDG_RUNTIME_DIR is tmpfs, per-user and wiped on logout — recordings never
