@@ -146,9 +146,11 @@ See `DEBUG-HOME-MANAGER.md` for the full debugging workflow.
 
 ## Commit Style
 
-Match existing commits: `<scope>: <short present-tense summary>`
+Format: `{scope} {emoji}: {message}`, following the global commit rules — same emoji set, same present-participle wording, and the subject states *why* the change happened, not what the diff shows.
 
-Examples: `nixos: Updating flakes`, `desktop: Adding wayscriber to Hyprland environment`
+Examples: `nixos 🔧: Updating flakes`, `dictation 🐛: Fixing characters dropped in longer dictations`
+
+Commits before `f75f89a` predate this and carry no emoji. Leave them alone.
 
 Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 
