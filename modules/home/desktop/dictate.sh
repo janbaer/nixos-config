@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Push-to-toggle dictation: one keybind starts the recording, the same keybind
-# stops it, uploads the WAV to OpenRouter and puts the transcript into the
+# stops it, uploads the recording to OpenRouter and puts the transcript into the
 # focused window. State lives in a pidfile because the two presses are two
 # independent process invocations — the second one has no shell context from
 # the first.
@@ -151,7 +151,23 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
       -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
       -d "$body" | jq -r '.choices[0].message.content // empty')" || cleaned=""
     debug "cleaned : $cleaned"
-    if [ -n "$cleaned" ]; then text="$cleaned"; fi
+    # The cleanup model breaks role on roughly a fifth of the dictations that
+    # end in a question aimed at an assistant: it answers the question instead
+    # of cleaning the text, in one observed case with a canned Chinese "I have
+    # no information on that". It happens with reasoning on and off alike, and
+    # rewording the prompt did not measurably help, so the output is checked
+    # rather than the input trusted. A real cleanup stays within a few percent
+    # of the raw length — 97-103% across every dictation logged so far — while
+    # an answer does not. Rejecting falls back to the raw transcript, which is
+    # always better than pasting something the user never said.
+    if [ -n "$cleaned" ]; then
+      ratio=$(( ${#cleaned} * 100 / ${#text} ))
+      if [ "$ratio" -ge 60 ] && [ "$ratio" -le 160 ]; then
+        text="$cleaned"
+      else
+        debug "rejected: cleanup returned ${ratio}% of the raw length"
+      fi
+    fi
   fi
   t_out="$(now)"
 
@@ -203,9 +219,24 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
 else
   # Clean up leftovers from a run that died between start and stop.
   rm -f "$pidfile" "$recfile"
-  # Mono 16 kHz is what Whisper resamples to internally — recording anything
-  # richer only inflates the upload.
-  rec -q -c 1 -r 16000 "$recfile" &
+  # 48 kHz although the speech models resample to 16 kHz anyway: sox captures
+  # into a fixed 32768-byte PCM block and discards the incomplete block when
+  # SIGINT arrives, so every recording loses a random 0..blocklength off its
+  # tail. The block is a fixed byte count, so its duration follows the sample
+  # rate — 1.024s at 16 kHz, 0.171s at 48 kHz. At 16 kHz the loss exceeded
+  # DICTATE_STOP_DELAY often enough to swallow the last words of roughly every
+  # fifth dictation; at 48 kHz it always fits inside that delay. Costs 1.9x
+  # upload size after ogg encoding, which is why this only became affordable
+  # once the recording stopped being uploaded as raw WAV.
+  #
+  # AUDIODRIVER=alsa because sox's default (pulse) hands audio over with about
+  # two seconds of pipeline delay, and everything still in flight is lost when
+  # rec is signalled — which ate the last word or two of a dictation no matter
+  # how large the block granularity was. Measured against wall clock, the
+  # capture deficit is 1.9-2.6s on pulse and ~0.1s on alsa, so DICTATE_STOP_DELAY
+  # covers it with room to spare. This still routes through PipeWire via
+  # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
+  AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
   echo "$!" > "$pidfile"
   notify "🎙 Recording — press again to stop"
 fi
