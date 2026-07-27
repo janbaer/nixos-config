@@ -27,6 +27,17 @@ DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
 DICTATE_TYPE_DELAY="${DICTATE_TYPE_DELAY:-12}"
 DICTATE_PASTE_MODE="${DICTATE_PASTE_MODE:-paste}"
 DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
+# Container for the recording, chosen by file extension. Ogg Vorbis instead of
+# WAV because the upload scales with the dictation length and dominates the wait
+# on a home uplink: 8s of German speech is 258 KB as 16 kHz WAV and 42 KB as
+# ogg, and Voxtral returned a byte-identical transcript for both. rec encodes
+# while recording, so the compression is paid during the dictation, not at stop.
+#
+# nixpkgs' sox cannot write mp3 (no encoder compiled in) or opus, so the
+# alternatives here are only wav and flac (lossless, ~1.9x). Overriding this
+# needs both invocations to agree — the start writes the file, the stop reads it
+# — so set it in the session environment, not for a single shell.
+DICTATE_AUDIO_FORMAT="${DICTATE_AUDIO_FORMAT:-ogg}"
 # Diagnostic switch, deliberately not a Nix option: it exists to split the
 # pipeline when the result looks wrong, not to be configured per host.
 #
@@ -41,7 +52,7 @@ DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanu
 # survive a session and never land on disk.
 state="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 pidfile="$state.pid"
-wavfile="$state.wav"
+recfile="$state.$DICTATE_AUDIO_FORMAT"
 logfile="$state.log"
 
 clean=0
@@ -65,7 +76,13 @@ debug() {
   fi
 }
 
+now() { date +%s%3N; }
+
 if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
+  # Timestamps are taken unconditionally and only logged under DICTATE_DEBUG.
+  # The wait after the stop key is the sum of four terms that scale differently,
+  # and the total alone cannot say which one to optimise.
+  t_key="$(now)"
   rec_pid="$(cat "$pidfile")"
   # Drop the pidfile before the delay: a stray second press during transcription
   # then starts a fresh recording instead of signalling a pid that is already
@@ -80,22 +97,24 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   tail --pid="$rec_pid" -f /dev/null 2>/dev/null || true
 
   notify "Transcribing…"
-  # soxi reads the duration from the WAV header, so this also confirms the
-  # header was written properly when rec was stopped.
-  debug "=== $(date -Is) speech=$speech_model clean=$clean audio=$(soxi -D "$wavfile" 2>/dev/null || echo '?')s"
+  t_stt="$(now)"
+  # soxi reads the duration back out of the finished file, so this also confirms
+  # the container was closed properly when rec was stopped.
+  debug "=== $(date -Is) speech=$speech_model clean=$clean fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
   # Key is read per invocation instead of via agenix: dictation is interactive
   # anyway, so the gopass agent is unlocked and the key never has to exist as a
   # file in the Nix store or /run.
   key="$(gopass show -o "$DICTATE_GOPASS_PATH")"
   args=(-sS https://openrouter.ai/api/v1/audio/transcriptions
     -H "Authorization: Bearer $key"
-    -F "file=@$wavfile"
+    -F "file=@$recfile"
     -F "model=$speech_model")
   if [ -n "$DICTATE_LANGUAGE" ]; then
     args+=(-F "language=$DICTATE_LANGUAGE")
   fi
   text="$(curl "${args[@]}" | jq -r '.text // empty')" || text=""
-  rm -f "$wavfile"
+  rm -f "$recfile"
+  t_cleanup="$(now)"
   debug "raw     : $text"
 
   if [ -z "$text" ]; then
@@ -108,15 +127,33 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # Build the request with jq -n --arg rather than string interpolation: both
     # the prompt and the transcript are arbitrary text and would otherwise break
     # the JSON on the first quote or newline.
+    # Two independent causes made the cleanup wait feel random, and both had to
+    # go before either was visible.
+    #
+    # reasoning: the model thinks before answering by default and burned 284 of
+    # 330 completion tokens on reasoning for a punctuation fix. Thinking length
+    # is unrelated to input length, which is why comparable dictations took
+    # anywhere from 1.0s to 13.2s. Turning it off costs a little accuracy on
+    # unusual words ("publischen" became "publizieren" with reasoning, but
+    # "publishen" without); the corrections that matter — proper nouns,
+    # sentence boundaries, dropped negations — survive.
+    #
+    # provider.sort: with reasoning noise gone, the remaining spread was purely
+    # which provider OpenRouter load-balanced onto. Identical 120-token requests
+    # took 2.5s on Alibaba and 36.6s on Io Net. Sorting by throughput rather
+    # than latency because this is a fixed-size rewrite where the whole output
+    # is needed — time to last token, not time to first.
     # shellcheck disable=SC2016
     body="$(jq -n --arg m "$cleanup_model" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
-      '{model:$m, temperature:0, messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
+      '{model:$m, temperature:0, reasoning:{enabled:false}, provider:{sort:"throughput"},
+        messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
     cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
       -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
       -d "$body" | jq -r '.choices[0].message.content // empty')" || cleaned=""
     debug "cleaned : $cleaned"
     if [ -n "$cleaned" ]; then text="$cleaned"; fi
   fi
+  t_out="$(now)"
 
   if [ "$DICTATE_PASTE_MODE" = "paste" ]; then
     # Borrow the clipboard and hand it back afterwards. Only text is preserved —
@@ -160,12 +197,15 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # arrives first. Better a lost modifier than a lost first character.
     wtype -d "$DICTATE_TYPE_DELAY" -k Shift_L "$text"
   fi
+
+  t_end="$(now)"
+  debug "timing  : stop=$((t_stt - t_key))ms stt=$((t_cleanup - t_stt))ms cleanup=$((t_out - t_cleanup))ms out=$((t_end - t_out))ms total=$((t_end - t_key))ms"
 else
   # Clean up leftovers from a run that died between start and stop.
-  rm -f "$pidfile" "$wavfile"
+  rm -f "$pidfile" "$recfile"
   # Mono 16 kHz is what Whisper resamples to internally — recording anything
   # richer only inflates the upload.
-  rec -q -c 1 -r 16000 "$wavfile" &
+  rec -q -c 1 -r 16000 "$recfile" &
   echo "$!" > "$pidfile"
   notify "🎙 Recording — press again to stop"
 fi
