@@ -19,7 +19,7 @@ set -euo pipefail
 # are the option defaults in dictate.nix.
 
 DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-openai/whisper-large-v3-turbo}"
-DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-deepseek/deepseek-v4-flash}"
+DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-google/gemini-3.1-flash-lite}"
 DICTATE_LANGUAGE="${DICTATE_LANGUAGE:-}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
@@ -128,7 +128,9 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # the prompt and the transcript are arbitrary text and would otherwise break
     # the JSON on the first quote or newline.
     # Two independent causes made the cleanup wait feel random, and both had to
-    # go before either was visible.
+    # go before either was visible. Both were measured on the previous default,
+    # deepseek/deepseek-v4-flash; the settings stay because they cost nothing on
+    # a model that does not need them and matter again on any model that does.
     #
     # reasoning: the model thinks before answering by default and burned 284 of
     # 330 completion tokens on reasoning for a punctuation fix. Thinking length

@@ -103,10 +103,14 @@ in {
 
     cleanupModel = mkOption {
       type = types.str;
-      default = "deepseek/deepseek-v4-flash";
+      default = "google/gemini-3.1-flash-lite";
       description = ''
         OpenRouter chat model used to clean up the raw transcript when
         `dictate --clean` is invoked.
+
+        Gemini 3.1 Flash-Lite won a comparison against Gemini 2.5 and
+        deepseek/deepseek-v4-flash, the previous default, on both quality and
+        latency: 0.7-1.2s per cleanup against 1.3-2.8s.
       '';
     };
 
