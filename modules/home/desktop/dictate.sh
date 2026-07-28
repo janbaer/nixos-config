@@ -18,7 +18,7 @@ set -euo pipefail
 # testing (`DICTATE_PASTE_MODE=type bash dictate.sh`); the authoritative values
 # are the option defaults in dictate.nix.
 
-DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-openai/whisper-large-v3-turbo}"
+DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-mistralai/voxtral-mini-transcribe}"
 DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-google/gemini-3.1-flash-lite}"
 DICTATE_LANGUAGE="${DICTATE_LANGUAGE:-}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
@@ -72,7 +72,7 @@ notify() { notify-send -a Dictate -h string:x-canonical-private-synchronous:dict
 # or the cleanup model instead of being guessed at from the final text.
 debug() {
   if [ "$DICTATE_DEBUG" = 1 ]; then
-    printf '%s\n' "$1" >> "$logfile" || true
+    printf '%s\n' "$1" >>"$logfile" || true
   fi
 }
 
@@ -163,7 +163,7 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # an answer does not. Rejecting falls back to the raw transcript, which is
     # always better than pasting something the user never said.
     if [ -n "$cleaned" ]; then
-      ratio=$(( ${#cleaned} * 100 / ${#text} ))
+      ratio=$((${#cleaned} * 100 / ${#text}))
       if [ "$ratio" -ge 60 ] && [ "$ratio" -le 160 ]; then
         text="$cleaned"
       else
@@ -182,7 +182,7 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # Terminals take Ctrl+Shift+V, everything else Ctrl+V, so the paste shortcut
     # depends on the class of the currently focused window.
     class="$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty')" || class=""
-    mapfile -t terminals <<< "$DICTATE_TERMINAL_CLASSES"
+    mapfile -t terminals <<<"$DICTATE_TERMINAL_CLASSES"
     shifted=0
     for t in "${terminals[@]}"; do
       if [ -n "$t" ] && [ "$class" = "$t" ]; then shifted=1; fi
@@ -239,6 +239,6 @@ else
   # covers it with room to spare. This still routes through PipeWire via
   # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
   AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
-  echo "$!" > "$pidfile"
+  echo "$!" >"$pidfile"
   notify "🎙 Recording — press again to stop"
 fi

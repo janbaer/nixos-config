@@ -33,8 +33,8 @@ in {
 
     model = mkOption {
       type = types.str;
-      default = "openai/whisper-large-v3-turbo";
-      description = "OpenRouter transcription model slug.";
+      default = "mistralai/voxtral-mini-transcribe";
+      description = "Mistral transcription model slug.";
     };
 
     language = mkOption {
