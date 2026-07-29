@@ -241,5 +241,36 @@ else
   # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
   AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
   echo "$!" >"$pidfile"
-  notify "🎙 Recording — press again to stop"
+
+  # The popup used to fire the moment rec had been launched, which is not the
+  # moment it starts capturing. Whatever was said in between was lost, and it
+  # cost the first two words often enough to be noticed. Waiting for evidence
+  # that audio is really flowing turns the popup into a signal that can be
+  # trusted; the price is that it appears when it appears rather than at once.
+  #
+  # PipeWire's stream state is the signal. Two other candidates failed: the size
+  # of the recording file depends on how well ogg compresses what the microphone
+  # picks up, which in a quiet room meant 3.2s instead of the expected 0.7s, and
+  # /proc/asound never leaves "closed" because PipeWire owns the hardware device.
+  # Measured here: the state flips 99-133ms after launch, and everything spoken
+  # from that point on is captured with about 60ms to spare.
+  #
+  # Matching on node.name rather than on any input stream, because a video call
+  # holding the microphone would otherwise satisfy the condition instantly.
+  ready=0
+  for _ in $(seq 1 100); do
+    # The stop branch removes the pidfile before anything else, so a second
+    # keypress during the wait leaves the notifications to it.
+    [ -f "$pidfile" ] || exit 0
+    if pw-dump 2>/dev/null | jq -e '.[] | select(.info.props."node.name" == "alsa_capture.sox" and .info.state == "running")' >/dev/null 2>&1; then
+      ready=1
+      break
+    fi
+    sleep 0.03
+  done
+  if [ "$ready" = 1 ]; then
+    notify "🎙 Recording — press again to stop"
+  else
+    notify "Dictate: recording did not start"
+  fi
 fi

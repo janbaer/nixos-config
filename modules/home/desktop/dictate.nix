@@ -13,7 +13,7 @@ let
   # the script's own fallback defaults are evaluated.
   dictate = pkgs.writeShellApplication {
     name = "dictate";
-    runtimeInputs = with pkgs; [ sox curl jq wtype libnotify gopass coreutils wl-clipboard cliphist hyprland ];
+    runtimeInputs = with pkgs; [ sox curl jq wtype libnotify gopass coreutils wl-clipboard cliphist hyprland pipewire ];
     text = ''
       export DICTATE_SPEECH_MODEL=${escapeShellArg cfg.model}
       export DICTATE_CLEANUP_MODEL=${escapeShellArg cfg.cleanupModel}
