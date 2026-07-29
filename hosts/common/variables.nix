@@ -53,4 +53,9 @@
 
   # SSH matchBlocks for host-specific configuration
   sshMatchBlocks = { };
+
+  dictation = {
+    sttModel = "mistralai/voxtral-mini-transcribe";
+    cleanupModel = "google/gemini-3.1-flash-lite";
+  };
 }

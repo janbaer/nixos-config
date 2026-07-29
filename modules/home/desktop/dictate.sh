@@ -15,7 +15,7 @@ set -euo pipefail
 #
 # Configuration arrives as DICTATE_* environment variables exported by the Nix
 # module. The defaults below only apply when the script is run directly for
-# testing (`DICTATE_PASTE_MODE=type bash dictate.sh`); the authoritative values
+# testing (`DICTATE_STOP_DELAY=2 bash dictate.sh`); the authoritative values
 # are the option defaults in dictate.nix.
 
 DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-mistralai/voxtral-mini-transcribe}"
@@ -24,8 +24,6 @@ DICTATE_LANGUAGE="${DICTATE_LANGUAGE:-}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
 DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
-DICTATE_TYPE_DELAY="${DICTATE_TYPE_DELAY:-12}"
-DICTATE_PASTE_MODE="${DICTATE_PASTE_MODE:-paste}"
 DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
 # Container for the recording, chosen by file extension. Ogg Vorbis instead of
 # WAV because the upload scales with the dictation length and dominates the wait
@@ -187,47 +185,46 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   fi
   t_out="$(now)"
 
-  if [ "$DICTATE_PASTE_MODE" = "paste" ]; then
-    # Borrow the clipboard and hand it back afterwards. Only text is preserved —
-    # an image on the clipboard is lost across a dictation.
-    previous="$(wl-paste --no-newline 2>/dev/null || true)"
-    printf '%s' "$text" | wl-copy --type text/plain
+  # Borrow the clipboard and hand it back afterwards. Only text is preserved —
+  # an image on the clipboard is lost across a dictation.
+  #
+  # There used to be a second route that synthesized one keystroke per character
+  # via wtype. It dropped characters on longer transcripts, because wtype maps
+  # the needed characters onto a limited set of virtual keycodes and two
+  # adjacent characters sharing a keycode lose one of them. German text with
+  # umlauts was the worst case. Pasting replaced it and has held up since.
+  previous="$(wl-paste --no-newline 2>/dev/null || true)"
+  printf '%s' "$text" | wl-copy --type text/plain
 
-    # Terminals take Ctrl+Shift+V, everything else Ctrl+V, so the paste shortcut
-    # depends on the class of the currently focused window.
-    class="$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty')" || class=""
-    mapfile -t terminals <<<"$DICTATE_TERMINAL_CLASSES"
-    shifted=0
-    for t in "${terminals[@]}"; do
-      if [ -n "$t" ] && [ "$class" = "$t" ]; then shifted=1; fi
-    done
+  # Terminals take Ctrl+Shift+V, everything else Ctrl+V, so the paste shortcut
+  # depends on the class of the currently focused window.
+  class="$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty')" || class=""
+  mapfile -t terminals <<<"$DICTATE_TERMINAL_CLASSES"
+  shifted=0
+  for t in "${terminals[@]}"; do
+    if [ -n "$t" ] && [ "$class" = "$t" ]; then shifted=1; fi
+  done
 
-    if [ "$shifted" = 1 ]; then
-      wtype -M ctrl -M shift -k v -m shift -m ctrl
-    else
-      wtype -M ctrl -k v -m ctrl
-    fi
-
-    sleep "$DICTATE_RESTORE_DELAY"
-
-    # cliphist watches the clipboard, so the transcript ends up in the clipboard
-    # history. Drop that entry again — but only if the newest entry really is our
-    # text, otherwise we would delete whatever the user copied in the meantime.
-    entry="$(cliphist list 2>/dev/null | head -1 || true)"
-    if [ -n "$entry" ] && [ "$(printf '%s\n' "$entry" | cliphist decode 2>/dev/null || true)" = "$text" ]; then
-      printf '%s\n' "$entry" | cliphist delete
-    fi
-
-    if [ -n "$previous" ]; then
-      printf '%s' "$previous" | wl-copy --type text/plain
-    else
-      wl-copy --clear
-    fi
+  if [ "$shifted" = 1 ]; then
+    wtype -M ctrl -M shift -k v -m shift -m ctrl
   else
-    # Leading Shift_L is a throwaway keypress: the compositor needs a moment to
-    # pick up wtype's freshly created virtual keyboard and swallows whatever
-    # arrives first. Better a lost modifier than a lost first character.
-    wtype -d "$DICTATE_TYPE_DELAY" -k Shift_L "$text"
+    wtype -M ctrl -k v -m ctrl
+  fi
+
+  sleep "$DICTATE_RESTORE_DELAY"
+
+  # cliphist watches the clipboard, so the transcript ends up in the clipboard
+  # history. Drop that entry again — but only if the newest entry really is our
+  # text, otherwise we would delete whatever the user copied in the meantime.
+  entry="$(cliphist list 2>/dev/null | head -1 || true)"
+  if [ -n "$entry" ] && [ "$(printf '%s\n' "$entry" | cliphist decode 2>/dev/null || true)" = "$text" ]; then
+    printf '%s\n' "$entry" | cliphist delete
+  fi
+
+  if [ -n "$previous" ]; then
+    printf '%s' "$previous" | wl-copy --type text/plain
+  else
+    wl-copy --clear
   fi
 
   t_end="$(now)"
