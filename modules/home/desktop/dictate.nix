@@ -32,7 +32,6 @@ let
     text = ''
       export DICTATE_SPEECH_MODEL=${escapeShellArg (requireModel "sttModel")}
       export DICTATE_CLEANUP_MODEL=${escapeShellArg (requireModel "cleanupModel")}
-      export DICTATE_LANGUAGE=${escapeShellArg cfg.language}
       export DICTATE_GOPASS_PATH=${escapeShellArg cfg.gopassPath}
       export DICTATE_STOP_DELAY=${escapeShellArg cfg.stopDelay}
       export DICTATE_RESTORE_DELAY=${escapeShellArg cfg.restoreDelay}
@@ -43,12 +42,6 @@ let
 in {
   options.modules.desktop.dictate = {
     enable = mkEnableOption "Push-to-toggle voice dictation via OpenRouter (pastes into the focused window)";
-
-    language = mkOption {
-      type = types.str;
-      default = "";
-      description = ''Force recognition language (e.g. "de"); empty = auto-detect.'';
-    };
 
     gopassPath = mkOption {
       type = types.str;

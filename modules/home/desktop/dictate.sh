@@ -20,7 +20,6 @@ set -euo pipefail
 
 DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-mistralai/voxtral-mini-transcribe}"
 DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-google/gemini-3.1-flash-lite}"
-DICTATE_LANGUAGE="${DICTATE_LANGUAGE:-}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
 DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
@@ -52,9 +51,6 @@ state="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 pidfile="$state.pid"
 recfile="$state.$DICTATE_AUDIO_FORMAT"
 logfile="$state.log"
-
-clean=0
-if [ "${1:-}" = "--clean" ]; then clean=1; fi
 
 # x-canonical-private-synchronous replaces the previous dictate popup instead of
 # stacking a new one for every state change.
@@ -91,27 +87,23 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
 
   notify "Transcribing…"
   t_stt="$(now)"
-  # Both model names go into the log rather than just an on/off flag for the
-  # cleanup. Which speech model ran was always answerable from the log; which
-  # cleanup model ran had to be argued from the shape of its output, which is a
-  # bad position to be in when the question is what produced a wrong transcript.
-  clean_field="off"
-  if [ "$clean" = 1 ]; then clean_field="$DICTATE_CLEANUP_MODEL"; fi
+  # Both model names go into the log. Which speech model ran was always
+  # answerable from it; which cleanup model ran had to be argued from the shape
+  # of its output, which is a bad position to be in when the question is what
+  # produced a wrong transcript.
   # soxi reads the duration back out of the finished file, so this also confirms
   # the container was closed properly when rec was stopped.
-  debug "=== $(date -Is) speech=$DICTATE_SPEECH_MODEL clean=$clean_field fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
+  debug "=== $(date -Is) speech=$DICTATE_SPEECH_MODEL clean=$DICTATE_CLEANUP_MODEL fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
   # Key is read per invocation instead of via agenix: dictation is interactive
   # anyway, so the gopass agent is unlocked and the key never has to exist as a
   # file in the Nix store or /run.
   key="$(gopass show -o "$DICTATE_GOPASS_PATH")"
-  args=(-sS https://openrouter.ai/api/v1/audio/transcriptions
-    -H "Authorization: Bearer $key"
-    -F "file=@$recfile"
-    -F "model=$DICTATE_SPEECH_MODEL")
-  if [ -n "$DICTATE_LANGUAGE" ]; then
-    args+=(-F "language=$DICTATE_LANGUAGE")
-  fi
-  text="$(curl "${args[@]}" | jq -r '.text // empty')" || text=""
+  # No language parameter: the model detects it per recording, and German and
+  # English dictations come back equally well without one.
+  text="$(curl -sS https://openrouter.ai/api/v1/audio/transcriptions \
+    -H "Authorization: Bearer $key" \
+    -F "file=@$recfile" \
+    -F "model=$DICTATE_SPEECH_MODEL" | jq -r '.text // empty')" || text=""
   # Under debug the recording is kept instead of deleted. Without it a report of
   # "the first word is missing" cannot be answered: the transcript alone cannot
   # say whether the word was never captured or was captured and not transcribed,
@@ -134,53 +126,51 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     exit 0
   fi
 
-  if [ "$clean" = 1 ]; then
-    notify "Cleaning up…"
-    # Build the request with jq -n --arg rather than string interpolation: both
-    # the prompt and the transcript are arbitrary text and would otherwise break
-    # the JSON on the first quote or newline.
-    # Two independent causes made the cleanup wait feel random, and both had to
-    # go before either was visible. Both were measured on the previous default,
-    # deepseek/deepseek-v4-flash; the settings stay because they cost nothing on
-    # a model that does not need them and matter again on any model that does.
-    #
-    # reasoning: the model thinks before answering by default and burned 284 of
-    # 330 completion tokens on reasoning for a punctuation fix. Thinking length
-    # is unrelated to input length, which is why comparable dictations took
-    # anywhere from 1.0s to 13.2s. Turning it off costs a little accuracy on
-    # unusual words ("publischen" became "publizieren" with reasoning, but
-    # "publishen" without); the corrections that matter — proper nouns,
-    # sentence boundaries, dropped negations — survive.
-    #
-    # provider.sort: with reasoning noise gone, the remaining spread was purely
-    # which provider OpenRouter load-balanced onto. Identical 120-token requests
-    # took 2.5s on Alibaba and 36.6s on Io Net. Sorting by throughput rather
-    # than latency because this is a fixed-size rewrite where the whole output
-    # is needed — time to last token, not time to first.
-    # shellcheck disable=SC2016
-    body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
-      '{model:$m, temperature:0, reasoning:{enabled:false}, provider:{sort:"throughput"},
-        messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
-    cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
-      -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
-      -d "$body" | jq -r '.choices[0].message.content // empty')" || cleaned=""
-    debug "cleaned : $cleaned"
-    # The cleanup model breaks role on roughly a fifth of the dictations that
-    # end in a question aimed at an assistant: it answers the question instead
-    # of cleaning the text, in one observed case with a canned Chinese "I have
-    # no information on that". It happens with reasoning on and off alike, and
-    # rewording the prompt did not measurably help, so the output is checked
-    # rather than the input trusted. A real cleanup stays within a few percent
-    # of the raw length — 97-103% across every dictation logged so far — while
-    # an answer does not. Rejecting falls back to the raw transcript, which is
-    # always better than pasting something the user never said.
-    if [ -n "$cleaned" ]; then
-      ratio=$((${#cleaned} * 100 / ${#text}))
-      if [ "$ratio" -ge 60 ] && [ "$ratio" -le 160 ]; then
-        text="$cleaned"
-      else
-        debug "rejected: cleanup returned ${ratio}% of the raw length"
-      fi
+  notify "Cleaning up…"
+  # Build the request with jq -n --arg rather than string interpolation: both
+  # the prompt and the transcript are arbitrary text and would otherwise break
+  # the JSON on the first quote or newline.
+  # Two independent causes made the cleanup wait feel random, and both had to
+  # go before either was visible. Both were measured on the previous default,
+  # deepseek/deepseek-v4-flash; the settings stay because they cost nothing on
+  # a model that does not need them and matter again on any model that does.
+  #
+  # reasoning: the model thinks before answering by default and burned 284 of
+  # 330 completion tokens on reasoning for a punctuation fix. Thinking length
+  # is unrelated to input length, which is why comparable dictations took
+  # anywhere from 1.0s to 13.2s. Turning it off costs a little accuracy on
+  # unusual words ("publischen" became "publizieren" with reasoning, but
+  # "publishen" without); the corrections that matter — proper nouns,
+  # sentence boundaries, dropped negations — survive.
+  #
+  # provider.sort: with reasoning noise gone, the remaining spread was purely
+  # which provider OpenRouter load-balanced onto. Identical 120-token requests
+  # took 2.5s on Alibaba and 36.6s on Io Net. Sorting by throughput rather
+  # than latency because this is a fixed-size rewrite where the whole output
+  # is needed — time to last token, not time to first.
+  # shellcheck disable=SC2016
+  body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
+    '{model:$m, temperature:0, reasoning:{enabled:false}, provider:{sort:"throughput"},
+      messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
+  cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
+    -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
+    -d "$body" | jq -r '.choices[0].message.content // empty')" || cleaned=""
+  debug "cleaned : $cleaned"
+  # The cleanup model breaks role on roughly a fifth of the dictations that
+  # end in a question aimed at an assistant: it answers the question instead
+  # of cleaning the text, in one observed case with a canned Chinese "I have
+  # no information on that". It happens with reasoning on and off alike, and
+  # rewording the prompt did not measurably help, so the output is checked
+  # rather than the input trusted. A real cleanup stays within a few percent
+  # of the raw length — 97-103% across every dictation logged so far — while
+  # an answer does not. Rejecting falls back to the raw transcript, which is
+  # always better than pasting something the user never said.
+  if [ -n "$cleaned" ]; then
+    ratio=$((${#cleaned} * 100 / ${#text}))
+    if [ "$ratio" -ge 60 ] && [ "$ratio" -le 160 ]; then
+      text="$cleaned"
+    else
+      debug "rejected: cleanup returned ${ratio}% of the raw length"
     fi
   fi
   t_out="$(now)"
