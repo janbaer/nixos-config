@@ -58,11 +58,6 @@ logfile="$state.log"
 clean=0
 if [ "${1:-}" = "--clean" ]; then clean=1; fi
 
-# The DICTATION_* names are the ad-hoc override layer: they let a single shell
-# try another model without touching the host config or rebuilding.
-speech_model="${DICTATION_SPEECH_MODEL:-$DICTATE_SPEECH_MODEL}"
-cleanup_model="${DICTATION_CLEANUP_MODEL:-$DICTATE_CLEANUP_MODEL}"
-
 # x-canonical-private-synchronous replaces the previous dictate popup instead of
 # stacking a new one for every state change.
 notify() { notify-send -a Dictate -h string:x-canonical-private-synchronous:dictate -t "${2:-2500}" "$1" || true; }
@@ -98,9 +93,15 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
 
   notify "Transcribing…"
   t_stt="$(now)"
+  # Both model names go into the log rather than just an on/off flag for the
+  # cleanup. Which speech model ran was always answerable from the log; which
+  # cleanup model ran had to be argued from the shape of its output, which is a
+  # bad position to be in when the question is what produced a wrong transcript.
+  clean_field="off"
+  if [ "$clean" = 1 ]; then clean_field="$DICTATE_CLEANUP_MODEL"; fi
   # soxi reads the duration back out of the finished file, so this also confirms
   # the container was closed properly when rec was stopped.
-  debug "=== $(date -Is) speech=$speech_model clean=$clean fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
+  debug "=== $(date -Is) speech=$DICTATE_SPEECH_MODEL clean=$clean_field fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
   # Key is read per invocation instead of via agenix: dictation is interactive
   # anyway, so the gopass agent is unlocked and the key never has to exist as a
   # file in the Nix store or /run.
@@ -108,7 +109,7 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   args=(-sS https://openrouter.ai/api/v1/audio/transcriptions
     -H "Authorization: Bearer $key"
     -F "file=@$recfile"
-    -F "model=$speech_model")
+    -F "model=$DICTATE_SPEECH_MODEL")
   if [ -n "$DICTATE_LANGUAGE" ]; then
     args+=(-F "language=$DICTATE_LANGUAGE")
   fi
@@ -146,7 +147,7 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     # than latency because this is a fixed-size rewrite where the whole output
     # is needed — time to last token, not time to first.
     # shellcheck disable=SC2016
-    body="$(jq -n --arg m "$cleanup_model" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
+    body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
       '{model:$m, temperature:0, reasoning:{enabled:false}, provider:{sort:"throughput"},
         messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
     cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
