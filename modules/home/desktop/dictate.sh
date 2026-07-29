@@ -46,7 +46,7 @@ DICTATE_AUDIO_FORMAT="${DICTATE_AUDIO_FORMAT:-ogg}"
 # ever be set when the bug is not happening. Costs a plaintext transcript of
 # every dictation in tmpfs. Set back to 0 once the cause is found.
 DICTATE_DEBUG="${DICTATE_DEBUG:-1}"
-DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
+DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
 
 # XDG_RUNTIME_DIR is tmpfs, per-user and wiped on logout — recordings never
 # survive a session and never land on disk.

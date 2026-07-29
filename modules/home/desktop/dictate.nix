@@ -116,8 +116,17 @@ in {
 
     cleanupPrompt = mkOption {
       type = types.str;
-      default = "You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.";
-      description = "System prompt for the cleanup model.";
+      default = "You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.";
+      description = ''
+        System prompt for the cleanup model.
+
+        The proper-noun list comes from the debug log rather than guesswork: over
+        80 dictations "Claude" arrived as "Cloud" nine times against seven
+        correct ones, and "Voxtral" arrived as "VoxTrill" four times without ever
+        being corrected. It only helps where the transcript still resembles the
+        target word. "Environment-Variablen" came back as "Bayern-Programm" and
+        "In-Wireman-Wire", and no list rescues that.
+      '';
     };
   };
 
