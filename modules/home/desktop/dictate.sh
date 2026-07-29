@@ -114,7 +114,20 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
     args+=(-F "language=$DICTATE_LANGUAGE")
   fi
   text="$(curl "${args[@]}" | jq -r '.text // empty')" || text=""
-  rm -f "$recfile"
+  # Under debug the recording is kept instead of deleted. Without it a report of
+  # "the first word is missing" cannot be answered: the transcript alone cannot
+  # say whether the word was never captured or was captured and not transcribed,
+  # and by the time the question comes up the evidence is gone. Same mistake as
+  # the empty transcription earlier, where the API response was discarded too.
+  # Stays in tmpfs, so it disappears at logout, and goes away with the debug
+  # switch.
+  if [ "$DICTATE_DEBUG" = 1 ]; then
+    keepfile="$state-$(date +%Y%m%d-%H%M%S).$DICTATE_AUDIO_FORMAT"
+    mv -f "$recfile" "$keepfile" 2>/dev/null || rm -f "$recfile"
+    debug "audio   : $keepfile"
+  else
+    rm -f "$recfile"
+  fi
   t_cleanup="$(now)"
   debug "raw     : $text"
 
