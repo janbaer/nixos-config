@@ -19,7 +19,8 @@ set -euo pipefail
 # are the option defaults in dictate.nix.
 
 DICTATE_SPEECH_MODEL="${DICTATE_SPEECH_MODEL:-mistralai/voxtral-mini-transcribe}"
-DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-google/gemini-3.1-flash-lite}"
+DICTATE_CLEANUP_MODEL="${DICTATE_CLEANUP_MODEL:-mistralai/mistral-small-2603}"
+DICTATE_CLEANUP_PROVIDERS="${DICTATE_CLEANUP_PROVIDERS:-mistral}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
 DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
@@ -143,14 +144,27 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   # "publishen" without); the corrections that matter — proper nouns,
   # sentence boundaries, dropped negations — survive.
   #
-  # provider.sort: with reasoning noise gone, the remaining spread was purely
-  # which provider OpenRouter load-balanced onto. Identical 120-token requests
-  # took 2.5s on Alibaba and 36.6s on Io Net. Sorting by throughput rather
-  # than latency because this is a fixed-size rewrite where the whole output
-  # is needed — time to last token, not time to first.
+  # Provider routing. Choosing a European model says nothing about who runs it:
+  # OpenRouter is a router, and mistral-small-2603 is offered by Mistral and by
+  # Venice alike, so without a restriction the transcript can land at either.
+  # An allow-list is enforced rather than preferred — an unknown slug fails with
+  # "No allowed providers are available" instead of quietly routing elsewhere.
+  #
+  # An empty list means no origin requirement, and then sorting matters again:
+  # with the reasoning noise gone, the remaining spread was purely which
+  # provider OpenRouter load-balanced onto, and identical 120-token requests
+  # took 2.5s on Alibaba against 36.6s on Io Net. Throughput and not latency,
+  # because this is a fixed-size rewrite where the whole output is needed —
+  # time to last token, not time to first.
+  if [ -n "$DICTATE_CLEANUP_PROVIDERS" ]; then
+    provider="$(jq -n --arg p "$DICTATE_CLEANUP_PROVIDERS" \
+      '{only: ($p | split("\n") | map(select(length > 0)))}')"
+  else
+    provider='{"sort":"throughput"}'
+  fi
   # shellcheck disable=SC2016
-  body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" \
-    '{model:$m, temperature:0, reasoning:{enabled:false}, provider:{sort:"throughput"},
+  body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" --argjson prov "$provider" \
+    '{model:$m, temperature:0, reasoning:{enabled:false}, provider:$prov,
       messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
   cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
     -H "Authorization: Bearer $key" -H "Content-Type: application/json" \

@@ -11,7 +11,7 @@ let
   dictation =
     vars.dictation
       or (throw "modules.desktop.dictate: no `dictation` block in hosts/${hostname}/variables.nix");
-  requireModel =
+  require =
     name:
     dictation.${name}
       or (throw "modules.desktop.dictate: `dictation.${name}` is not set in hosts/${hostname}/variables.nix");
@@ -30,12 +30,13 @@ let
     name = "dictate";
     runtimeInputs = with pkgs; [ sox curl jq wtype libnotify gopass coreutils wl-clipboard cliphist hyprland pipewire ];
     text = ''
-      export DICTATE_SPEECH_MODEL=${escapeShellArg (requireModel "sttModel")}
-      export DICTATE_CLEANUP_MODEL=${escapeShellArg (requireModel "cleanupModel")}
+      export DICTATE_SPEECH_MODEL=${escapeShellArg (require "sttModel")}
+      export DICTATE_CLEANUP_MODEL=${escapeShellArg (require "cleanupModel")}
       export DICTATE_GOPASS_PATH=${escapeShellArg cfg.gopassPath}
       export DICTATE_STOP_DELAY=${escapeShellArg cfg.stopDelay}
       export DICTATE_RESTORE_DELAY=${escapeShellArg cfg.restoreDelay}
       export DICTATE_TERMINAL_CLASSES=${escapeShellArg (concatStringsSep "\n" cfg.terminalClasses)}
+      export DICTATE_CLEANUP_PROVIDERS=${escapeShellArg (concatStringsSep "\n" (require "cleanupProviders"))}
       export DICTATE_CLEANUP_PROMPT=${escapeShellArg cfg.cleanupPrompt}
     '' + builtins.readFile ./dictate.sh;
   };
