@@ -37,13 +37,22 @@ DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
 # — so set it in the session environment, not for a single shell.
 DICTATE_AUDIO_FORMAT="${DICTATE_AUDIO_FORMAT:-ogg}"
 # Diagnostic switch, deliberately not a Nix option: it exists to split the
-# pipeline when the result looks wrong, not to be configured per host.
+# pipeline when a result looks wrong, not to be configured per host. Set it to 1
+# here and rebuild; the keybind is spawned from the session environment and
+# never sees a variable exported in a shell.
 #
-# TEMPORARILY defaulted to 1: the lost-tail bug is intermittent, so it has to be
-# recorded while dictating normally via the keybind — an opt-in flag would only
-# ever be set when the bug is not happening. Costs a plaintext transcript of
-# every dictation in tmpfs. Set back to 0 once the cause is found.
-DICTATE_DEBUG="${DICTATE_DEBUG:-1}"
+# Turned on, it writes the audio duration and upload size, both model names, the
+# raw and the cleaned transcript, a rejection note when the length guard fires,
+# and a timing line splitting the wait into stop delay, transcription, cleanup
+# and paste. It also keeps each recording next to the log instead of deleting it
+# after upload.
+#
+# That last part is what makes "a word is missing" answerable at all, because
+# the transcript alone cannot say whether a word was never captured or was
+# captured and not transcribed. Everything lands in tmpfs and is gone at logout,
+# but while it is on, a plaintext copy and the audio of every dictation exist.
+# Off by default for that reason.
+DICTATE_DEBUG="${DICTATE_DEBUG:-0}"
 DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
 
 # XDG_RUNTIME_DIR is tmpfs, per-user and wiped on logout — recordings never
