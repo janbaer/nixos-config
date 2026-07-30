@@ -53,4 +53,20 @@
 
   # SSH matchBlocks for host-specific configuration
   sshMatchBlocks = { };
+
+  dictation = {
+    sttModel = "mistralai/voxtral-mini-transcribe";
+    cleanupModel = "mistralai/mistral-small-2603";
+
+    # Anbieter, die das Cleanup ausführen dürfen, als OpenRouter-Slugs. Ein
+    # europäisches Modell zu wählen genügt nicht: mistral-small-2603 wird von
+    # Mistral und von Venice angeboten, und ohne diese Einschränkung ging bei
+    # einem Test einer von drei Aufrufen an Venice. voxtral-mini-transcribe hat
+    # als einziger Anbieter Mistral, deshalb war die Spracherkennung nie betroffen.
+    #
+    # Leere Liste bedeutet: OpenRouter wählt frei, sortiert nach Durchsatz. Das
+    # ist die Einstellung für ein Modell ohne Herkunftsanspruch, etwa beim
+    # Zurückwechseln auf google/gemini-3.1-flash-lite.
+    cleanupProviders = [ "mistral" ];
+  };
 }
