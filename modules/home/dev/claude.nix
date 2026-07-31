@@ -68,14 +68,6 @@ in
     };
 
     home.file = {
-      ".claude/hooks/task-complete-notify.sh" = {
-        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/hooks/task-complete-notify.sh";
-        force = true;
-      };
-      ".claude/settings.json" = {
-        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/settings.json";
-        force = true;
-      };
       ".claude/CLAUDE.md" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/CLAUDE.md";
         force = true;
