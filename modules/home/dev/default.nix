@@ -14,6 +14,7 @@
     ./devops-tools.nix
     ./goose-cli.nix
     ./mongodb.nix
+    ./omp.nix
   ];
 
   programs.direnv = {

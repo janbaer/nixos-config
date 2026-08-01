@@ -35,6 +35,10 @@
         "root"
         "jan"
       ]; # Set users that are allowed to use the flake command
+      extra-substituters = [ "https://cache.numtide.com" ]; # Prebuilt llm-agents.nix packages (omp)
+      extra-trusted-public-keys = [
+        "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+      ];
     };
     # Configure automatic cleanup and also garbage-collect of old generations
     gc = {

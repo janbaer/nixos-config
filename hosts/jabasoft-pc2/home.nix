@@ -20,6 +20,7 @@ in
       k8s-cli.enable = true;
       mongodb.enable = true;
       nodejs.enable = true;
+      omp.enable = true;
       python.enable = true;
       rust.enable = true;
       vscode.enable = true;

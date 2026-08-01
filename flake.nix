@@ -21,6 +21,13 @@
       url = "github:noctalia-dev/noctalia/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Source of the omp package. Deliberately not following our nixpkgs: omp is
+    # built from source (Rust + bun) and only the upstream pin matches the
+    # binaries in cache.numtide.com, which is added as a substituter in
+    # hosts/common/default.nix. Following 26.05 would rebuild it locally.
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+    };
   };
 
   outputs =
