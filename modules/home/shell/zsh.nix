@@ -61,9 +61,6 @@ in
 
       [ -f $HOME/.fzf-init.zsh ] && source $HOME/.fzf-init.zsh
 
-      # Config keys for Atuin together with Fzf and run init for Zsh
-      [ -f $HOME/.config/atuin/atuin-setup.sh ] && source $HOME/.config/atuin/atuin-setup.sh
-
       [ -f $HOME/.cargo/env ] && source $HOME/.cargo/env
 
       # Some kubernetes things
