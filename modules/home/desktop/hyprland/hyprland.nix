@@ -136,6 +136,12 @@ in
         }
         {
           _args = [
+            "GTK_IM_MODULE"
+            "simple"
+          ];
+        }
+        {
+          _args = [
             "XDG_SCREENSHOTS_DIR"
             "$HOME/Pictures/Screenshots"
           ];
