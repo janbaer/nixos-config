@@ -14,12 +14,12 @@ in
     home.packages = [ pkgs.aichat ];
 
     home.shellAliases = {
-      ai = "aichat";
+      ai = "aichat \"$1\", give a short answer please";
     };
 
     xdg.configFile."aichat/config.yaml".text = ''
       ---
-      model: openrouter:inception/mercury-2
+      model: openrouter:~deepseek/deepseek-v4-flash-latest
       clients:
         - type: openai-compatible
           name: openrouter
