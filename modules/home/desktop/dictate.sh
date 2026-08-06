@@ -59,6 +59,7 @@ DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanu
 # survive a session and never land on disk.
 state="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 pidfile="$state.pid"
+lockfile="$state.lock"
 recfile="$state.$DICTATE_AUDIO_FORMAT"
 logfile="$state.log"
 
@@ -77,16 +78,37 @@ debug() {
 
 now() { date +%s%3N; }
 
-if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
+# The toggle decision (read pidfile, decide start vs stop) must be atomic:
+# without the lock two near-simultaneous presses can both find no pidfile,
+# both launch rec, and the loser's recorder keeps running until logout.
+# The lock is released right after the pidfile is removed or written — never
+# held across a wait — so a press during transcription still starts a fresh
+# recording immediately.
+exec 9>"$lockfile"
+flock 9
+
+rec_pid=""
+if [ -f "$pidfile" ]; then
+  candidate="$(cat "$pidfile" 2>/dev/null || true)"
+  # kill -0 alone is not enough: a pid from a stale pidfile may have been
+  # recycled by an unrelated process, and the stop press would SIGINT it and
+  # then block on tail --pid until it exits. Only a live process whose comm
+  # is rec is a recording; anything else is a leftover from a crashed run.
+  if [ -n "$candidate" ] && [ "$(cat "/proc/$candidate/comm" 2>/dev/null || true)" = rec ]; then
+    rec_pid="$candidate"
+  fi
+fi
+
+if [ -n "$rec_pid" ]; then
   # Timestamps are taken unconditionally and only logged under DICTATE_DEBUG.
   # The wait after the stop key is the sum of four terms that scale differently,
   # and the total alone cannot say which one to optimise.
   t_key="$(now)"
-  rec_pid="$(cat "$pidfile")"
   # Drop the pidfile before the delay: a stray second press during transcription
   # then starts a fresh recording instead of signalling a pid that is already
   # gone.
   rm -f "$pidfile"
+  flock -u 9
   sleep "$DICTATE_STOP_DELAY"
   # SIGINT, not SIGTERM — sox only writes the final WAV header on a clean
   # shutdown. A killed rec leaves a file the API rejects.
@@ -106,11 +128,20 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   debug "=== $(date -Is) speech=$DICTATE_SPEECH_MODEL clean=$DICTATE_CLEANUP_MODEL fmt=$DICTATE_AUDIO_FORMAT audio=$(soxi -D "$recfile" 2>/dev/null || echo '?')s bytes=$(stat -c%s "$recfile" 2>/dev/null || echo '?')"
   # Key is read per invocation instead of via agenix: dictation is interactive
   # anyway, so the gopass agent is unlocked and the key never has to exist as a
-  # file in the Nix store or /run.
-  key="$(gopass show -o "$DICTATE_GOPASS_PATH")"
+  # file in the Nix store or /run. A locked or failing agent must say so — an
+  # unguarded set -e abort here used to end the session silently right after
+  # the "Transcribing…" popup.
+  key="$(gopass show -o "$DICTATE_GOPASS_PATH")" || {
+    rm -f "$recfile"
+    notify "Dictate: could not read API key"
+    exit 1
+  }
+  # --max-time: a hung connection must not hang the stop branch forever — the
+  # pidfile is already gone at this point, so the next press would start a new
+  # recording while this invocation still owns the clipboard.
   # No language parameter: the model detects it per recording, and German and
   # English dictations come back equally well without one.
-  text="$(curl -sS https://openrouter.ai/api/v1/audio/transcriptions \
+  text="$(curl -sS --max-time 30 https://openrouter.ai/api/v1/audio/transcriptions \
     -H "Authorization: Bearer $key" \
     -F "file=@$recfile" \
     -F "model=$DICTATE_SPEECH_MODEL" | jq -r '.text // empty')" || text=""
@@ -175,7 +206,7 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   body="$(jq -n --arg m "$DICTATE_CLEANUP_MODEL" --arg sys "$DICTATE_CLEANUP_PROMPT" --arg u "$text" --argjson prov "$provider" \
     '{model:$m, temperature:0, reasoning:{enabled:false}, provider:$prov,
       messages:[{role:"system",content:$sys},{role:"user",content:$u}]}')"
-  cleaned="$(curl -sS https://openrouter.ai/api/v1/chat/completions \
+  cleaned="$(curl -sS --max-time 30 https://openrouter.ai/api/v1/chat/completions \
     -H "Authorization: Bearer $key" -H "Content-Type: application/json" \
     -d "$body" | jq -r '.choices[0].message.content // empty')" || cleaned=""
   debug "cleaned : $cleaned"
@@ -189,8 +220,12 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   # an answer does not. Rejecting falls back to the raw transcript, which is
   # always better than pasting something the user never said.
   if [ -n "$cleaned" ]; then
+    # Named so the rejection note in the debug log can be grepped back to the
+    # bounds that produced it.
+    min_ratio=60
+    max_ratio=160
     ratio=$((${#cleaned} * 100 / ${#text}))
-    if [ "$ratio" -ge 60 ] && [ "$ratio" -le 160 ]; then
+    if [ "$ratio" -ge "$min_ratio" ] && [ "$ratio" -le "$max_ratio" ]; then
       text="$cleaned"
     else
       debug "rejected: cleanup returned ${ratio}% of the raw length"
@@ -207,21 +242,26 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   # adjacent characters sharing a keycode lose one of them. German text with
   # umlauts was the worst case. Pasting replaced it and has held up since.
   previous="$(wl-paste --no-newline 2>/dev/null || true)"
-  printf '%s' "$text" | wl-copy --type text/plain
+  # From here to the restore every command carries || true: a failing wtype
+  # (screen locked, virtual-keyboard denied) or wl-copy must not abort the
+  # script under set -e before the previous clipboard contents are back.
+  printf '%s' "$text" | wl-copy --type text/plain || true
 
   # Terminals take Ctrl+Shift+V, everything else Ctrl+V, so the paste shortcut
   # depends on the class of the currently focused window.
   class="$(hyprctl activewindow -j 2>/dev/null | jq -r '.class // empty')" || class=""
-  mapfile -t terminals <<<"$DICTATE_TERMINAL_CLASSES"
+  # Newline-separated from the Nix module, comma-separated tolerated so ad-hoc
+  # env overrides (`DICTATE_TERMINAL_CLASSES=a,b bash dictate.sh`) also work.
+  mapfile -t terminals <<<"${DICTATE_TERMINAL_CLASSES//,/$'\n'}"
   shifted=0
   for t in "${terminals[@]}"; do
     if [ -n "$t" ] && [ "$class" = "$t" ]; then shifted=1; fi
   done
 
   if [ "$shifted" = 1 ]; then
-    wtype -M ctrl -M shift -k v -m shift -m ctrl
+    wtype -M ctrl -M shift -k v -m shift -m ctrl || true
   else
-    wtype -M ctrl -k v -m ctrl
+    wtype -M ctrl -k v -m ctrl || true
   fi
 
   sleep "$DICTATE_RESTORE_DELAY"
@@ -231,13 +271,13 @@ if [ -f "$pidfile" ] && kill -0 "$(cat "$pidfile")" 2>/dev/null; then
   # text, otherwise we would delete whatever the user copied in the meantime.
   entry="$(cliphist list 2>/dev/null | head -1 || true)"
   if [ -n "$entry" ] && [ "$(printf '%s\n' "$entry" | cliphist decode 2>/dev/null || true)" = "$text" ]; then
-    printf '%s\n' "$entry" | cliphist delete
+    printf '%s\n' "$entry" | cliphist delete || true
   fi
 
   if [ -n "$previous" ]; then
-    printf '%s' "$previous" | wl-copy --type text/plain
+    printf '%s' "$previous" | wl-copy --type text/plain || true
   else
-    wl-copy --clear
+    wl-copy --clear || true
   fi
 
   t_end="$(now)"
@@ -264,6 +304,7 @@ else
   # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
   AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
   echo "$!" >"$pidfile"
+  flock -u 9
 
   # The popup used to fire the moment rec had been launched, which is not the
   # moment it starts capturing. Whatever was said in between was lost, and it
