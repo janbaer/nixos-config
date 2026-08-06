@@ -62,6 +62,17 @@ in
         screen never auto-locks and no password is demanded.
       '';
     };
+
+    wifi.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Show the Network widget in the bar: Wi-Fi signal-strength icon, SSID on
+        hover, left-click opens the network panel, right-click toggles Wi-Fi.
+        Off by default — enable only on hosts with a wireless interface, since on
+        wired-only machines the widget just shows a static ethernet icon.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -138,15 +149,16 @@ in
           leftClickExec = "${vpnToggle}";
           textCommand = "${vpnStatus}";
         }
+        ++ optional cfg.wifi.enable { id = "Network"; }
         ++ [
-          {
-            id = "Battery";
-            displayMode = "graphic";
-          }
           { id = "Bluetooth"; }
           { id = "Volume"; }
           { id = "Brightness"; }
           { id = "ControlCenter"; }
+          {
+            id = "Battery";
+            displayMode = "graphic";
+          }
           { id = "Clock"; }
         ];
       };

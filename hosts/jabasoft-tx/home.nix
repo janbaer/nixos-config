@@ -25,6 +25,7 @@
       dictate.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
+      noctalia.wifi.enable = true; # laptop: wlp1s0 present, show the Wi-Fi widget
       obsidian.enable = true;
       thunderbird.enable = true;
     };
