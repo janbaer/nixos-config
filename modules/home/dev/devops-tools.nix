@@ -15,7 +15,6 @@ in {
     home.shellAliases = {
       tf = "terraform";
       agi = "ansible-galaxy install -r requirements.yml -f";
-      mo = "molecule";
     };
   };
 }

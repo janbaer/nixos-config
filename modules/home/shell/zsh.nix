@@ -94,7 +94,6 @@ in
       "..." = "cd ../..";
       "...." = "cd ../../..";
       reload = "source $ZDOTDIR/.zshrc";
-      kc = "$HOME/bin/init-keychain.sh";
       copy = "wl-copy";
       paste = "wl-paste --type=text/plain";
       timezsh = "for i in $(seq 1 5); do time zsh -i -c exit; done";
