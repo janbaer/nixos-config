@@ -85,16 +85,20 @@ in
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
         force = true;
       };
-      ".claude/skills" = {
-        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
+      ".claude/knowledge-base" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
+        force = true;
+      };
+      ".claude/output-styles" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/output-styles";
         force = true;
       };
       ".claude/rules" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/rules";
         force = true;
       };
-      ".claude/knowledge-base" = {
-        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/knowledge-base";
+      ".claude/skills" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
         force = true;
       };
     };
