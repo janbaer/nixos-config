@@ -9,10 +9,10 @@ let
 
   herdrBin = pkgs.stdenv.mkDerivation rec {
     pname = "herdr";
-    version = "0.7.1";
+    version = "0.8.0";
     src = pkgs.fetchurl {
       url = "https://github.com/ogulcancelik/herdr/releases/download/v${version}/herdr-linux-x86_64";
-      hash = "sha256-uWWsr/wsIvVLbmxkr3z46Yo/SsJiJjCgWZxnpLnYplQ=";
+      hash = "sha256-uHLqfkD6LLF+hXrJtisb8m23tAPGIvXS8/WzX26azSg=";
     };
     dontUnpack = true;
     installPhase = ''
