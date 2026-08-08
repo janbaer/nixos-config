@@ -66,9 +66,9 @@
     gnutar
     gawk
     zstd
-    pwgen 
+    pwgen
     wget
-    
+
     btop            # replacement of htop/nmon
     htop
     iotop           # io monitoring
@@ -89,5 +89,9 @@
     mimeApps.defaultApplications = {
       "video/mp4" = "mpv.desktop";
     };
+  };
+
+  home.shellAliases = {
+    hermes-desktop = "nix run github:NousResearch/hermes-agent#desktop";
   };
 }
