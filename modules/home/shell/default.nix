@@ -90,8 +90,4 @@
       "video/mp4" = "mpv.desktop";
     };
   };
-
-  home.shellAliases = {
-    hermes-desktop = "nix run github:NousResearch/hermes-agent#desktop";
-  };
 }
