@@ -8,9 +8,11 @@
       systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      version = "0.70.0";
-      hash = "sha256-xMj5xA/q3ekMW8k1aHCKa5hsYZSFShghOO5K6MnDCBo=";
-      vendorHash = "sha256-VbkCDzSF8gHxXpzzNxtPVRqUn/4l0AVHNzlsOKmXNG8=";
+      version = "0.73.0";
+      hash = "sha256-+iJb/Eg97kjNzg6OTuEWXAPJ/32FpfVU2ED4/6A4U+I=";
+      vendorHash = "sha256-0upMQ2fKKfaHAL/SVyzPpdRoBwMNS9PdHPHGAmEm148=";
+      # hash = nixpkgs.lib.fakeHash;
+      # vendorHash = nixpkgs.lib.fakeHash;
     in
     {
       devShells = forAllSystems (system:
@@ -21,6 +23,7 @@
             doCheck = false;
             src = old.src.override {
               tag = "v${version}";
+              name = "trivy-${version}-source";
               inherit hash;
             };
           });
