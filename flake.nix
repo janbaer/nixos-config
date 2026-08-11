@@ -21,6 +21,9 @@
       url = "github:noctalia-dev/noctalia/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Deliberately not following our nixpkgs: the uv2nix wheels are hashed
+    # against the pinned one and a different tree breaks the build.
+    hermes-agent.url = "github:NousResearch/hermes-agent";
   };
 
   outputs =
@@ -89,6 +92,18 @@
         jabasoft-pc2 = mkSystem nixpkgs "x86_64-linux" "jabasoft-pc2" "jan" "Jan Baer";
         jabasoft-nixos-vm-01 = mkSystem nixpkgs "x86_64-linux" "jabasoft-nixos-vm-01" "jan" "Jan Baer";
       };
+
+      # The client only ever talks to the agent on agent.home.janbaer.de, so the
+      # bundled one is 1.5 GB of closure and the two most expensive derivations
+      # in the build for nothing. Stays out of the system generation on purpose:
+      # build with `nix build .#hermes-desktop --out-link ~/hermes-desktop`.
+      packages."x86_64-linux".hermes-desktop =
+        inputs.hermes-agent.packages."x86_64-linux".desktop.override {
+          hermesAgent = pkgs.writeShellScriptBin "hermes" ''
+            echo "This client is built for remote use against agent.home.janbaer.de." >&2
+            exit 1
+          '';
+        };
 
       devShells."x86_64-linux".default = pkgs.mkShell {
         packages = with pkgs; [

@@ -23,6 +23,7 @@
     desktop = {
       browsers.enable = true;
       dictate.enable = true;
+      hermes-desktop.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
       noctalia.wifi.enable = true; # laptop: wlp1s0 present, show the Wi-Fi widget

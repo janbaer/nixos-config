@@ -28,6 +28,7 @@ in
     desktop = {
       browsers.enable = true;
       dictate.enable = true;
+      hermes-desktop.enable = true;
       hyprland.enable = true;
       noctalia.enable = true;
       noctalia.vpnToggle.enable = false; # desktop: no wg0 connection here
