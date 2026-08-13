@@ -13,10 +13,8 @@ in
 
   nixpkgs.overlays = [ tuxedo.outputs.overlays.default ];
 
-  hardware.tuxedo-rs = {
-    enable = true;
-    tailor-gui.enable = true;
-  };
+  # tuxedo-rs (tailord + tailor-gui) is a community reimplementation and drives
+  # the same fan and profile hardware as TCC. Only TCC stays.
   hardware.tuxedo-drivers.enable = true;
   hardware.tuxedo-control-center.enable = true;
 }

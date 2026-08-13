@@ -63,6 +63,18 @@ in
       '';
     };
 
+    idle.enable = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Blank the display after 5 minutes of inactivity and suspend after 20.
+        Noctalia's IdleService ships disabled, which is why nothing on this
+        machine ever turned the panel off. Off by default — enable on laptops,
+        where the panel is the single largest consumer on battery. A desktop
+        that suspends on idle is usually a nuisance, not a saving.
+      '';
+    };
+
     wifi.enable = mkOption {
       type = types.bool;
       default = false;
@@ -161,6 +173,18 @@ in
           }
           { id = "Clock"; }
         ];
+      };
+    }
+    // optionalAttrs cfg.idle.enable {
+      # Noctalia's IdleService, not a hypridle listener: it owns idle here, and
+      # two idle daemons on the same session would blank and suspend twice.
+      # The lock trails the blank by a minute, mirroring Noctalia's own default
+      # spacing, so an unattended machine is not merely dark but locked.
+      idle = {
+        enabled = true;
+        screenOffTimeout = 300;
+        lockTimeout = if cfg.autoLock.enable then 360 else 0;
+        suspendTimeout = 1200;
       };
     }
     // optionalAttrs (!cfg.autoLock.enable) {

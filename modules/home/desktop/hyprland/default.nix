@@ -8,6 +8,7 @@ in
     ./hypr-window-switcher.nix
     ./hyprlock.nix
     ./noctalia.nix
+    ./refresh-rate.nix
   ];
 
   options.modules.desktop.hyprland.enable = mkEnableOption "Install Hyprland with my prefered configuration";

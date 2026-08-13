@@ -25,7 +25,9 @@
       dictate.enable = true;
       hermes-desktop.enable = true;
       hyprland.enable = true;
+      hyprland.batteryRefreshRate.enable = true; # 2.8K@120 is the biggest drain on battery
       noctalia.enable = true;
+      noctalia.idle.enable = true; # laptop: blank at 5 min, suspend at 20
       noctalia.wifi.enable = true; # laptop: wlp1s0 present, show the Wi-Fi widget
       obsidian.enable = true;
       thunderbird.enable = true;

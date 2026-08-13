@@ -22,6 +22,7 @@ in
     nas-mounts.enable = true;
     network-hosts.enable = true;
     openssh.enable = true;
+    power-management.enable = true;
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
@@ -33,6 +34,11 @@ in
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Panel self-refresh on the eDP display. The default mask is 2, the PSR bit
+  # (0x8) is not set, so the display engine keeps scanning out a static image.
+  # Drop back to 2 if the panel starts flickering.
+  boot.kernelParams = [ "amdgpu.dcfeaturemask=0xa" ];
 
   networking = {
     hostName = hostname;

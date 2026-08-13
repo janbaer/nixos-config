@@ -16,6 +16,7 @@ in {
     ./nas-mounts.nix
     ./openssh.nix
     ./openvpn.nix
+    ./power-management.nix
     ./printing.nix
     ./scanners.nix
     ./secrets.nix
