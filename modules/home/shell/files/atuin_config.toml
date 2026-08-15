@@ -141,9 +141,12 @@ enter_accept = true
 #  "pnpm",
 #  "kubectl",
 #]
-# 
+#
 # Set commands that should be totally stripped and ignored from stats
 #common_prefix = ["sudo"]
 
 [sync]
 records = true
+
+[ai]
+enabled = true
