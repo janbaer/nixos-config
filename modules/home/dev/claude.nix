@@ -23,6 +23,9 @@ let
     #!/usr/bin/env zsh
     export OPENCVE_API_TOKEN="$(gopass show cloud/opencve/api-token)"
     export VIKUNJA_API_TOKEN="$(gopass show home/vikunja/vikunja-mcp)"
+    export MAILBOX_ORG_USERNAME="jan.baer@mailbox.org"
+    export MAILBOX_ORG_IMAP_PASSWORD="$(gopass show mailbox.org/imap-mcp)"
+    export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
     claude "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
@@ -31,9 +34,9 @@ let
     export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
     export ANTHROPIC_API_KEY=""
 
-    export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.5-flash"
-    export ANTHROPIC_DEFAULT_OPUS_MODEL="google/gemini-3.5-flash"
-    export ANTHROPIC_DEFAULT_HAIKU_MODEL="google/gemini-3.1-flash-lite"
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.7-flash"
+    export ANTHROPIC_DEFAULT_OPUS_MODEL="moonshotai/kimi-k3"
+    export ANTHROPIC_DEFAULT_HAIKU_MODEL="deepseek/deepseek-v4-flash-latest"
 
     if [ -f "$HOME/.claude/openrouter.env" ]; then
       echo "Using openrouter.env..."
