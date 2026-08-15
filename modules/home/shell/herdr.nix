@@ -28,18 +28,6 @@ in
   config = mkIf cfg.enable {
     home.packages = [ herdrBin ];
 
-    # Seed the config once. We deliberately do NOT use xdg.configFile here:
-    # that would symlink the file into the read-only Nix store, making it
-    # impossible to edit at runtime. Instead we copy it on activation and
-    # only if it does not already exist, so the user's edits are preserved.
-    home.activation.herdrConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-      configDir="${config.xdg.configHome}/herdr"
-      configFile="$configDir/config.toml"
-      if [ ! -e "$configFile" ]; then
-        $DRY_RUN_CMD mkdir -p "$configDir"
-        $DRY_RUN_CMD cp $VERBOSE_ARG ${./files/herdr/config.toml} "$configFile"
-        $DRY_RUN_CMD chmod u+w "$configFile"
-      fi
-    '';
+    xdg.configFile."herdr/config.toml".source = ./files/herdr/config.toml;
   };
 }

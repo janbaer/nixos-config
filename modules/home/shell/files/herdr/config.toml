@@ -1,6 +1,23 @@
+onboarding = false
+
 [theme]
 name = "catppuccin-latte"
 auto_switch = false
 
 [ui.toast]
 delivery = "herdr"
+
+[keys]
+prefix = "ctrl+a"
+
+split_vertical = ["prefix+|", "prefix+v"]
+detach = "prefix+d"
+reload_config = "prefix+r"
+resize_mode = "prefix+shift+r"
+rename_tab = "prefix+comma"
+close_tab = "prefix+ampersand"
+last_pane = "prefix+semicolon"
+cycle_pane_next = ["prefix+o", "prefix+tab"]
+open_notification_target = "prefix+shift+o"
+workspace_picker = "prefix+s"
+settings = "prefix+shift+s"
