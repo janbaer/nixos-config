@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "forgejo-mcp": {
+      "type": "http",
+      "url": "https://forgejo.home.janbaer.de/mcp"
+    },
+    "vikunja": {
+      "command": "bunx",
+      "args": ["-y", "@democratize-technology/vikunja-mcp"],
+      "env": {
+        "VIKUNJA_URL": "https://todo.home.janbaer.de/api/v1",
+        "VIKUNJA_API_TOKEN": "${VIKUNJA_API_TOKEN}"
+      }
+    },
+    "imap-mcp": {
+      "command": "node",
+      "args": ["/home/jan/Projects/imap-mini-mcp/dist/index.js"],
+      "env": {
+        "IMAP_HOST": "imap.mailbox.org",
+        "IMAP_USER": "${MAILBOX_ORG_USERNAME}",
+        "IMAP_PASS": "${MAILBOX_ORG_IMAP_PASSWORD}"
+      }
+    },
+    "caldav-mcp": {
+      "command": "node",
+      "args": ["/home/jan/Projects/caldav-mcp/dist/index.js"],
+      "env": {
+        "CALDAV_BASE_URL": "https://dav.mailbox.org/caldav/",
+        "CALDAV_USERNAME": "${MAILBOX_ORG_USERNAME}",
+        "CALDAV_PASSWORD": "${MAILBOX_ORG_CALDAV_PASSWORD}"
+      }
+    },
+    "carddav-mcp": {
+      "command": "node",
+      "args": ["/home/jan/Projects/carddav-mcp/dist/index.js"],
+      "env": {
+        "CARDDAV_BASE_URL": "https://dav.mailbox.org/carddav/",
+        "CARDDAV_USERNAME": "${MAILBOX_ORG_USERNAME}",
+        "CARDDAV_PASSWORD": "${MAILBOX_ORG_CALDAV_PASSWORD}"
+      }
+    }
+  }
+}

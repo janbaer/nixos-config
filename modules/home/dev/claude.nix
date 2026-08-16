@@ -104,6 +104,14 @@ in
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
         force = true;
       };
+
+      # Projektweite MCP-Server für alles unter ~/Projects. Benutzername und
+      # Passwörter stehen dort nur als Platzhalter und werden von claudeRun
+      # aus gopass in die Umgebung gelegt.
+      "Projects/.mcp.json" = {
+        source = ./files/claude/projects.mcp.json;
+        force = true;
+      };
     };
 
     home.sessionPath = [
