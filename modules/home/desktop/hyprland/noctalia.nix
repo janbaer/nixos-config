@@ -32,6 +32,34 @@ let
       printf '{"icon":"shield","tooltip":"VPN off"}'
     fi
   '';
+
+  # Settings.data.idle is one flat block with no notion of the power source, so
+  # the timeouts cannot be made AC-conditional declaratively. The way in is the
+  # idle inhibitor: IdleService builds its stages as plain `IdleMonitor` objects,
+  # whose respectInhibitors defaults to true, so holding an inhibitor suppresses
+  # all three at once. AC-only power detection matches refresh-rate.nix — only
+  # line-power devices expose `online`, so the glob cannot match a battery.
+  idleInhibitor = pkgs.writeShellScript "noctalia-idle-on-battery" ''
+    last=""
+    apply() {
+      if ${pkgs.gnugrep}/bin/grep -qs '^1$' /sys/class/power_supply/*/online; then
+        action=enable
+      else
+        action=disable
+      fi
+      [ "$action" = "$last" ] && return
+      last=$action
+      ${config.programs.noctalia-shell.package}/bin/noctalia-shell ipc call idleInhibitor "$action"
+    }
+
+    # A single AC/battery transition emits several PropertiesChanged signals, and
+    # every repeat would clear a KeepAwake the user had just set by hand. The
+    # first apply runs inside the pipeline so it shares $last with the loop —
+    # ahead of it, in the parent shell, the assignment would not carry over.
+    { echo; ${pkgs.glib}/bin/gdbus monitor --system \
+        --dest org.freedesktop.UPower --object-path /org/freedesktop/UPower; } \
+      | while read -r _; do apply; done
+  '';
 in
 {
   imports = [ inputs.noctalia.homeModules.default ];
@@ -72,6 +100,18 @@ in
         machine ever turned the panel off. Off by default — enable on laptops,
         where the panel is the single largest consumer on battery. A desktop
         that suspends on idle is usually a nuisance, not a saving.
+      '';
+    };
+
+    idle.batteryOnly = mkOption {
+      type = types.bool;
+      default = false;
+      description = ''
+        Hold Noctalia's idle inhibitor while on AC, so blank, lock and suspend
+        only ever fire on battery. The inhibitor has no per-stage granularity —
+        on AC the machine idles not at all and stays unlocked until suspended by
+        hand. Shares the manual inhibitor slot with the bar's KeepAwake button,
+        which the next AC/battery change therefore resets.
       '';
     };
 
@@ -190,6 +230,22 @@ in
     // optionalAttrs (!cfg.autoLock.enable) {
       # Trusted host: never auto-lock, so the PAM password is never demanded.
       general.lockOnSuspend = false;
+    };
+
+    systemd.user.services.noctalia-idle-on-battery = mkIf (cfg.idle.enable && cfg.idle.batteryOnly) {
+      Unit = {
+        Description = "Suppress Noctalia's idle stages while on AC";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+      };
+      Service = {
+        ExecStart = "${idleInhibitor}";
+        Restart = "on-failure";
+        # Noctalia's IPC socket is not up the instant the session target is
+        # reached; without a delay a failed start burns through the rate limit.
+        RestartSec = "5s";
+      };
+      Install.WantedBy = [ "hyprland-session.target" ];
     };
 
     # Lock before external suspends (lid close, power key, `systemctl suspend`).
