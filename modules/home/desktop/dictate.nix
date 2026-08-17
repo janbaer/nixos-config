@@ -78,16 +78,27 @@ in {
 
     cleanupPrompt = mkOption {
       type = types.str;
-      default = "You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.";
+      default = "You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral, CHECK24, K3s, Rancher, HAProxy, Ghostty, MCP. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.";
       description = ''
         System prompt for the cleanup model.
 
-        The proper-noun list comes from the debug log rather than guesswork: over
-        80 dictations "Claude" arrived as "Cloud" nine times against seven
-        correct ones, and "Voxtral" arrived as "VoxTrill" four times without ever
-        being corrected. It only helps where the transcript still resembles the
-        target word. "Environment-Variablen" came back as "Bayern-Programm" and
+        The proper-noun list has two origins. Everything up to Mistral comes
+        from the debug log rather than guesswork: over 80 dictations "Claude"
+        arrived as "Cloud" nine times against seven correct ones, and "Voxtral"
+        arrived as "VoxTrill" four times without ever being corrected. CHECK24
+        onwards is predicted from the domains that turn up in the dictations,
+        not yet measured, and only terms that a speech model plausibly misses
+        belong there — a name it already gets right costs prompt length on every
+        dictation and buys nothing.
+
+        It only helps where the transcript still resembles the target word.
+        "Environment-Variablen" came back as "Bayern-Programm" and
         "In-Wireman-Wire", and no list rescues that.
+
+        Short-lived names — people, and companies from a running application
+        round — do not belong here, because every change means a rebuild. They
+        go into ~/.config/dictate/vocabulary.txt instead, which dictate.sh reads
+        at runtime and appends to this prompt.
       '';
     };
   };

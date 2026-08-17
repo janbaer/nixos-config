@@ -53,15 +53,23 @@ DICTATE_AUDIO_FORMAT="${DICTATE_AUDIO_FORMAT:-ogg}"
 # but while it is on, a plaintext copy and the audio of every dictation exist.
 # Off by default for that reason.
 DICTATE_DEBUG="${DICTATE_DEBUG:-0}"
-DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
+DICTATE_CLEANUP_PROMPT="${DICTATE_CLEANUP_PROMPT:-You are a transcription cleanup tool. The user message is raw speech-to-text output. Fix spelling, punctuation, capitalization and obvious recognition errors. Recurring proper nouns: Claude, Claude Code, NixOS, Hyprland, Home Manager, agenix, OpenRouter, Forgejo, Obsidian, Vikunja, Proxmox, Ansible, WireGuard, DynDNS, UniFi, Voxtral, Mistral, CHECK24, K3s, Rancher, HAProxy, Ghostty, MCP. When a word closely resembles one of these, it is that term and should be spelled accordingly. The speaker talks about the AI assistant Claude constantly; a transcribed 'Cloud' or 'cloud' is almost always 'Claude' and should only stay 'Cloud' when the sentence is clearly about cloud computing or a cloud provider. Preserve the original wording, meaning and language exactly — do not translate, summarize, answer or add anything. Output only the corrected text.}"
 
 # XDG_RUNTIME_DIR is tmpfs, per-user and wiped on logout — recordings never
 # survive a session and never land on disk.
 state="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 pidfile="$state.pid"
 lockfile="$state.lock"
-recfile="$state.$DICTATE_AUDIO_FORMAT"
 logfile="$state.log"
+# The recording carries the pid of the invocation that started it instead of a
+# fixed name. With one shared name a press during the upload was destructive in
+# both directions: the new rec truncated the file the stop branch was about to
+# send, and the stop branch's `rm` at the end deleted the new recording out from
+# under a running rec, which then wrote into an unlinked inode until logout.
+# Both happen in the second between dropping the pidfile and rec exiting, which
+# is exactly when an impatient second press lands. The stop branch reads the
+# name back from the pidfile, so it can only ever touch its own file.
+recfile="$state.$$.$DICTATE_AUDIO_FORMAT"
 
 # x-canonical-private-synchronous replaces the previous dictate popup instead of
 # stacking a new one for every state change.
@@ -78,6 +86,39 @@ debug() {
 
 now() { date +%s%3N; }
 
+# Short-lived proper nouns live outside the store. A company name from a running
+# application round is needed for a few weeks and then never again, and one
+# rebuild per vocabulary entry is a poor trade — the same reason a spell checker
+# keeps its user dictionary out of the system configuration. What stays
+# declarative is the behaviour; the word list is user data.
+#
+# One term per line, blank lines and whole-line # comments are skipped. Without
+# the file the prompt is exactly the one from dictate.nix, so this is invisible
+# until the file exists. It is appended rather than spliced into the list above
+# because that list is an option value and may have been overridden.
+#
+# For the same reason the sentence below assumes nothing about the prompt it is
+# appended to: it restates the matching rule and the output rule instead of
+# referring back to them. Repeating the output rule also matters on its own,
+# because appending pushes the prompt's own closing instruction away from the
+# end, and this model already answers the transcript instead of cleaning it on
+# roughly a fifth of the dictations that end in a question (see the length
+# guard below).
+vocabfile="${XDG_CONFIG_HOME:-$HOME/.config}/dictate/vocabulary.txt"
+if [ -r "$vocabfile" ]; then
+  vocab=""
+  # read trims the surrounding whitespace by itself; the || catches a last line
+  # written without a trailing newline.
+  while read -r term || [ -n "$term" ]; do
+    case "$term" in '' | '#'*) continue ;; esac
+    vocab="${vocab:+$vocab, }$term"
+  done <"$vocabfile"
+  if [ -n "$vocab" ]; then
+    DICTATE_CLEANUP_PROMPT="$DICTATE_CLEANUP_PROMPT More recurring proper nouns; when a word closely resembles one of these, it is that term and should be spelled accordingly: $vocab. Output only the corrected text."
+    debug "vocab   : $vocab"
+  fi
+fi
+
 # The toggle decision (read pidfile, decide start vs stop) must be atomic:
 # without the lock two near-simultaneous presses can both find no pidfile,
 # both launch rec, and the loser's recorder keeps running until logout.
@@ -89,13 +130,20 @@ flock 9
 
 rec_pid=""
 if [ -f "$pidfile" ]; then
-  candidate="$(cat "$pidfile" 2>/dev/null || true)"
+  # Two lines: the pid of rec, and the file it is writing. The second line is
+  # what makes the stop branch address one specific recording.
+  candidate=""
+  candidate_file=""
+  { read -r candidate || true; read -r candidate_file || true; } <"$pidfile"
   # kill -0 alone is not enough: a pid from a stale pidfile may have been
   # recycled by an unrelated process, and the stop press would SIGINT it and
   # then block on tail --pid until it exits. Only a live process whose comm
   # is rec is a recording; anything else is a leftover from a crashed run.
   if [ -n "$candidate" ] && [ "$(cat "/proc/$candidate/comm" 2>/dev/null || true)" = rec ]; then
     rec_pid="$candidate"
+    # A pidfile written by the previous version has no second line. Falling back
+    # to the old fixed name keeps the first press after an upgrade working.
+    recfile="${candidate_file:-$state.$DICTATE_AUDIO_FORMAT}"
   fi
 fi
 
@@ -303,7 +351,7 @@ else
   # covers it with room to spare. This still routes through PipeWire via
   # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
   AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
-  echo "$!" >"$pidfile"
+  printf '%s\n%s\n' "$!" "$recfile" >"$pidfile"
   flock -u 9
 
   # The popup used to fire the moment rec had been launched, which is not the
