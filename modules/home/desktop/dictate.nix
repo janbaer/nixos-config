@@ -35,6 +35,7 @@ let
       export DICTATE_GOPASS_PATH=${escapeShellArg cfg.gopassPath}
       export DICTATE_STOP_DELAY=${escapeShellArg cfg.stopDelay}
       export DICTATE_RESTORE_DELAY=${escapeShellArg cfg.restoreDelay}
+      export DICTATE_MAX_SECONDS=${escapeShellArg cfg.maxSeconds}
       export DICTATE_TERMINAL_CLASSES=${escapeShellArg (concatStringsSep "\n" cfg.terminalClasses)}
       export DICTATE_CLEANUP_PROVIDERS=${escapeShellArg (concatStringsSep "\n" (require "cleanupProviders"))}
       export DICTATE_CLEANUP_PROMPT=${escapeShellArg cfg.cleanupPrompt}
@@ -56,6 +57,17 @@ in {
       description = ''
         Seconds to keep recording after the stop key is pressed, so the
         capture buffer's tail (last spoken word) is flushed before sox stops.
+      '';
+    };
+
+    maxSeconds = mkOption {
+      type = types.str;
+      default = "600";
+      description = ''
+        Hard cap on a single recording, in seconds. Only reached when the stop
+        press is forgotten — rec then ends itself instead of filling tmpfs, and
+        the next press starts a fresh recording. What was recorded is dropped,
+        not transcribed.
       '';
     };
 

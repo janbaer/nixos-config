@@ -24,6 +24,7 @@ DICTATE_CLEANUP_PROVIDERS="${DICTATE_CLEANUP_PROVIDERS:-mistral}"
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
 DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
+DICTATE_MAX_SECONDS="${DICTATE_MAX_SECONDS:-600}"
 DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
 # Container for the recording, chosen by file extension. Ogg Vorbis instead of
 # WAV because the upload scales with the dictation length and dominates the wait
@@ -350,7 +351,13 @@ else
   # capture deficit is 1.9-2.6s on pulse and ~0.1s on alsa, so DICTATE_STOP_DELAY
   # covers it with room to spare. This still routes through PipeWire via
   # /etc/alsa/conf.d/99-pipewire-default.conf, so device selection is unchanged.
-  AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" &
+  # trim caps a forgotten recording. The toggle has no other end: a stop press
+  # that never comes leaves rec writing into tmpfs, which is RAM, at roughly
+  # 35 MB per hour — one such recording ran for nine hours. rec ends itself at
+  # the cap, so the next press finds a dead pid and starts a fresh recording.
+  # Deliberately no transcription of what was cut off: sending it would need a
+  # watchdog process and would paste into whatever window has focus by then.
+  AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" trim 0 "$DICTATE_MAX_SECONDS" &
   printf '%s\n%s\n' "$!" "$recfile" >"$pidfile"
   flock -u 9
 
