@@ -4,8 +4,10 @@ in
 commonVars // {
   # Host-specific overrides
 
-  authorizedKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIpVyTOS7SzGDYJNt5MnQA2/x3Wbzo2lrcHalwx6WqyT openpgp:0xED492215"
+  # Inherits the GPG authentication subkey from common instead of repeating it.
+  # The list used to carry the CHECK24 Bitbucket subkey, which is what plain
+  # `gpg --export-ssh-key` returns without the trailing "!".
+  authorizedKeys = commonVars.authorizedKeys ++ [
     "${builtins.readFile ./../../secrets/id_ed25519.pub}"
   ];
 }

@@ -18,7 +18,14 @@
   ];
 
   # SSH configuration
-  authorizedKeys = [ ];
+  # The hosts log into each other with the "JABASOFT systems" authentication
+  # subkey of the GPG key, the same one the other own servers accept, so nothing
+  # new has to be generated or distributed. Exported with a trailing "!" —
+  # without it gpg returns the most recent auth subkey instead of the one asked
+  # for, which is how the VM ended up carrying the CHECK24 one.
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEhmAUerrshNotNG3UfeHU6T15/YhaHdZH9KGD79rrN openpgp:0xE72E7965"
+  ];
 
   # WireGuard configuration
   wgEndpoint = "janbaer.home64.de:1194";
