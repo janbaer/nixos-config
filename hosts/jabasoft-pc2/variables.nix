@@ -25,22 +25,20 @@ commonVars
     trivy = "nix develop path:$HOME/Projects/nixos-config/dev-shells/trivy --command trivy";
   };
 
-  # Optional SSH matchBlocks for host-specific configuration
+  # Optional SSH host blocks, merged into programs.ssh.settings. Upstream
+  # directive names; the attribute name is the host pattern.
   sshMatchBlocks = {
     "gitlab.com" = {
-      user = "jan.baer-check24";
+      User = "jan.baer-check24";
     };
-    "check24-internal" = {
-      host = "*.intern.bu.check24.de";
-      port = 44022;
-      identityFile = "~/.ssh/id_ed25519-sk";
-      identitiesOnly = true;
-      user = "jan.baer";
-      extraOptions = {
-        ControlMaster = "auto";
-        ControlPath = "~/.ssh/control-%h_%p_%r";
-        ControlPersist = "30m";
-      };
+    "*.intern.bu.check24.de" = {
+      Port = 44022;
+      IdentityFile = "~/.ssh/id_ed25519-sk";
+      IdentitiesOnly = true;
+      User = "jan.baer";
+      ControlMaster = "auto";
+      ControlPath = "~/.ssh/control-%h_%p_%r";
+      ControlPersist = "30m";
     };
   };
 }

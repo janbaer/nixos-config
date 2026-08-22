@@ -47,25 +47,29 @@ in {
       IdentityAgent /run/user/1000/gnupg/S.gpg-agent.ssh
     '';
 
-    matchBlocks = {
+    # Upstream directive names, not the camelCase aliases: `matchBlocks` is
+    # deprecated since home-manager 26.05 and warns on every evaluation. The
+    # attribute name carries the pattern, so a block no longer needs a separate
+    # `host`. "*" stays last in the rendered file regardless of where it sits
+    # here — the module pulls it out and appends it.
+    settings = {
       "github.com" = {
-        user = "janbaer";
+        User = "janbaer";
       };
       "forgejo" = {
-        port = 2222;
+        Port = 2222;
       };
-      "jabasoft" = {
-        host = "jabasoft-*";
-        port = sshPort;
+      "jabasoft-*" = {
+        Port = sshPort;
       };
       "*" = {
-        forwardAgent = false;
-        addKeysToAgent = "no";
-        compression = false;
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-        hashKnownHosts = false;
-        userKnownHostsFile = "~/.ssh/known_hosts";
+        ForwardAgent = false;
+        AddKeysToAgent = "no";
+        Compression = false;
+        ServerAliveInterval = 60;
+        ServerAliveCountMax = 3;
+        HashKnownHosts = false;
+        UserKnownHostsFile = "~/.ssh/known_hosts";
       };
     } // sshMatchBlocks;
   };
