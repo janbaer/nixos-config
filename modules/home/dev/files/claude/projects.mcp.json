@@ -2,7 +2,10 @@
   "mcpServers": {
     "forgejo-mcp": {
       "type": "http",
-      "url": "https://forgejo.home.janbaer.de/mcp"
+      "url": "https://forgejo.home.janbaer.de/mcp",
+      "headers": {
+        "Authorization": "token ${FORGEJO_API_TOKEN}"
+      }
     },
     "vikunja": {
       "command": "bunx",
