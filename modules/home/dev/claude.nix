@@ -81,12 +81,20 @@ in
         force = true;
       };
 
+      ".claude/settings.json" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/user-settings.json";
+        force = true;
+      };
       ".claude/agents" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/agents";
         force = true;
       };
       ".claude/commands" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/commands";
+        force = true;
+      };
+      ".claude/hooks" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/hooks";
         force = true;
       };
       ".claude/knowledge-base" = {
