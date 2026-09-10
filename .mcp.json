@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "forgejo-mcp": {
-      "type": "http",
-      "url": "https://forgejo.home.janbaer.de/mcp"
-    }
-  }
-}
