@@ -154,6 +154,29 @@ Commits before `f75f89a` predate this and carry no emoji. Leave them alone.
 
 Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 
+## Coding Style & Naming Conventions
+
+- Follow `.editorconfig`: UTF-8, LF, final newline, 2-space indentation.
+- Format Nix code with `nixfmt` before committing.
+- Keep module names descriptive and lowercase (for example `backup-to-nas.nix`, `wireguard.nix`).
+- Prefer small, composable modules over large host-specific blocks.
+
+## Testing Guidelines
+
+- Treat evaluation and build as the primary tests for config changes.
+- For a change to the current host, build it: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`.
+- For a change to a shared module, run `nix flake check` to validate all hosts. Do not build other hosts from this machine; let Jan build and switch each host on its own machine.
+- When changing secrets wiring, rekey and validate mappings in `secrets/secrets.nix`.
+
+## Pull Request Guidelines
+
+- Match the commit style above.
+- A PR description should include:
+  - What changed and why.
+  - Affected hosts/modules.
+  - Validation performed (build/check commands and key output).
+  - Screenshots only for visible UI changes (Hyprland/Waybar/Rofi).
+
 ## Key Notes
 
 - **Container runtime**: Podman with `dockerCompat = true`, not Docker
