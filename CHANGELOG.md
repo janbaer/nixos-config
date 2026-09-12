@@ -2,6 +2,12 @@
 
 This file describes all changes in the project.
 
+## 2026-09-12
+---
+
+- Git hooks now dispatch to a repo-local `.githooks/<hook>` when one exists and is executable, so adding a hook to a new repo needs no wiring in this repo's `git.nix`
+  - First use: `.githooks/post-commit` here warns once 15 commits have landed since `CHANGELOG.md` was last touched, ignoring routine `nixos: Updating flake...` bumps — the gap that let this file fall three months behind in the first place
+
 ## 2026-09-11
 ---
 

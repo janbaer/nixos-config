@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Reminds when a lot of commits have landed without a CHANGELOG.md entry.
+# Flake-update bumps don't count, so routine "nixos: Updating flake..." commits
+# never trigger this on their own. Never blocks the commit.
+set -uo pipefail
+
+threshold=15
+
+last_touch=$(git log -1 --format=%H -- CHANGELOG.md 2>/dev/null)
+range="HEAD"
+[ -n "$last_touch" ] && range="$last_touch..HEAD"
+
+count=$(git log --format=%s "$range" 2>/dev/null | grep -Evc '^nixos: Updating flake')
+
+if [ "${count:-0}" -ge "$threshold" ]; then
+  cat >&2 <<EOF
+
+CHANGELOG.md: $count commit(s) since the last entry (flake bumps not counted).
+Consider running /update-changelog.
+EOF
+fi
+
+exit 0

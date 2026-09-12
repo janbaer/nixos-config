@@ -32,6 +32,16 @@
         path = "~/.gitconfig_check24";
       }
     ];
+
+    # Delegates to a repo-local .githooks/<hook> if one exists and is
+    # executable, so a new repo only needs to add that file, no entry here.
+    hooks.post-commit = pkgs.writeShellScript "git-hook-dispatcher" ''
+      local_hook="$(git rev-parse --show-toplevel 2>/dev/null)/.githooks/$(basename "$0")"
+      if [ -x "$local_hook" ]; then
+        exec "$local_hook" "$@"
+      fi
+      exit 0
+    '';
   };
 
   programs.lazygit = {
