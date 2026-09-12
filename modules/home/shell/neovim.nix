@@ -32,7 +32,7 @@ in
 
   home.file = {
     ".config/nvim" = {
-      source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/neovim/config";
+      source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/neovim-config/config";
       force = true;
     };
   };
