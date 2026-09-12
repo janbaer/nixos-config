@@ -66,6 +66,7 @@ in
       ytw = "yarn test:watch";
       yui = "yarn upgrade-interactive --latest";
       yd = "yarn debug";
+      md = "leaf";
     };
 
     # Materialize the declared tools. `mise install` only reads the config, so
