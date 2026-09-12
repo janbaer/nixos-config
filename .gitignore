@@ -10,6 +10,7 @@ devenv.local.nix
 .pre-commit-config.yaml
 
 .claude/
+.agents/
 
 # Nix build results
 result
