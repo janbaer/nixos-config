@@ -46,7 +46,7 @@
     "yarn@1.22.22"
     "vscode-langservers-extracted@latest"
     "@fission-ai/openspec@latest"
-    "gitnexus"
+    "@rivolink/leaf"
   ];
 
   # Common SSH configuration
