@@ -70,6 +70,12 @@ Agenix **only works at the NixOS level**, not in Home Manager modules. To suppor
 
 Keys are defined in `secrets/secrets.nix`. Adding a new machine requires running `agenix --rekey` after adding its SSH public key.
 
+### Dev Shells
+
+`dev-shells/` holds standalone flakes (go, rust, devops, claude-desktop, zed-editor, antigravity, trivy) unrelated to the host configs above. Enter one from any directory with `nix develop path:$HOME/Projects/nixos-config/dev-shells/<name>`, or reference it from another project's `.envrc` via `use flake path:...`.
+
+Only `trivy` pins a source version. `fetchFromGitHub` keys its store path on the hash and derivation name, not the tag, so bumping the version without also changing the source name (`name = "trivy-${version}-source"`) lets Nix reuse the old cached source silently. See `dev-shells/README.md` for the full procedure and how to tell a hash mismatch from a wrong tag in the build log.
+
 ## Common Commands
 
 ### Build and Apply
@@ -109,6 +115,7 @@ nix flake check
 
 ```bash
 ./nixos-collect-garbage.sh            # Delete old generations
+./nixos-check-pkg-channels.sh [pkg]   # Compare a package's version: stable channel tip vs. flake.lock pin vs. unstable
 sudo nixos-rebuild switch --rollback  # Revert to previous generation
 nix flake update                      # Update all flake inputs
 
@@ -143,6 +150,12 @@ ls -la /run/user/$(id -u)/agenix/           # Verify user secrets exist
 ```
 
 See `DEBUG-HOME-MANAGER.md` for the full debugging workflow.
+
+## Migrations
+
+Per-release breaking changes and their fixes live in `CHANGELOG.md` — check it before rolling a release to another host.
+
+For a major NixOS release migration, use `sudo nixos-rebuild boot --flake .#<host>` (or `nh os boot .`) plus a reboot — never `nh os switch .`/`nhs`. `switch` restarts `display-manager` on the running session against the still-running old kernel; if the new greeter or kernel boundary is broken, that hard-hangs the live session with no recovery path. `boot` defers activation to a clean reboot, so a broken generation is still recoverable from the systemd-boot menu. `nh os switch .` stays fine for incremental day-to-day rebuilds.
 
 ## Commit Style
 

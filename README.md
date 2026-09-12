@@ -118,10 +118,19 @@ Per-release breaking changes and how they were fixed live in [`CHANGELOG.md`](./
 
 ## AI-Skills
 
-It is recommended to use the Nix skill for questions about this config, NixOS, nix-darwin, Home Manager, or general Nix usage.
-You can install it for Claude with
+Two third-party skills help Claude work with this config.
 
-```bash
-npx skills add https://github.com/shakhzodkudratov/nixos-and-flakes-skill --skill nix
-```
+- `nix` — a general reference for NixOS, nix-darwin, Home Manager, and Nix usage. Install it with:
+
+  ```bash
+  npx skills add https://github.com/shakhzodkudratov/nixos-and-flakes-skill --skill nix-and-flakes-skill
+  ```
+
+- `nixos-best-practices` — a narrower skill on flake structure and the overlay/`useGlobalPkgs` interaction. Install it with:
+
+  ```bash
+  npx skills add https://github.com/lihaoze123/my-skills --skill nixos-best-practices
+  ```
+
+Prefer `nixos-best-practices` for changes to this config. It targets the exact `useGlobalPkgs = true` setup in `flake.nix`, and CLAUDE.md requires it before any change.
 
