@@ -81,10 +81,6 @@ in
         force = true;
       };
 
-      ".claude/settings.json" = {
-        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/user-settings.json";
-        force = true;
-      };
       ".claude/agents" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/agents";
         force = true;
@@ -122,6 +118,13 @@ in
         force = true;
       };
     };
+
+    # settings.json bewusst nicht über home.file: mkOutOfStoreSymlink verlinkt
+    # über zwei Symlinks im read-only Store, und Claude Code scheitert beim
+    # atomaren Schreiben dort mit EROFS. Ein direkter Link bleibt beschreibbar.
+    home.activation.claudeSettingsLink = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+      run ln -sfn "${config.home.homeDirectory}/Projects/dotfiles/.claude/user-settings.json" "${config.home.homeDirectory}/.claude/settings.json"
+    '';
 
     home.sessionPath = [
       "$HOME/.local/bin"
