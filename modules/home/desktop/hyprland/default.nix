@@ -23,7 +23,6 @@ in
       font-awesome_5
       noto-fonts
 
-      hypridle
       xdg-desktop-portal-hyprland     # xdg-desktop-portal backend for hyprland
       wl-clipboard                    # Handling system-wide clipboard in Wayland
       cliphist                        # The new clipboard manager

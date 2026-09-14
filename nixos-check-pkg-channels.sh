@@ -7,8 +7,7 @@
 # Use it to decide when a package floated from unstable via an overlay has
 # been backported to stable and the overlay can be removed.
 #
-# Usage: ./nixos-check-pkg-channels.sh [package-name]
-#        (defaults to "noctalia-shell")
+# Usage: ./nixos-check-pkg-channels.sh <package-name>
 
 set -euo pipefail
 
@@ -18,7 +17,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-PKG="${1:-noctalia-shell}"
+PKG="${1:?Usage: $0 <package-name>}"
 
 cd "$(dirname "$0")"
 
@@ -30,6 +29,9 @@ command -v jq >/dev/null 2>&1 || JQ=(nix run nixpkgs#jq --)
 # Branch names come from flake.nix so this tracks whatever the flake pins.
 STABLE_REF=$(grep -oP 'nixpkgs\.url\s*=\s*"github:NixOS/nixpkgs/\K[^"]+' flake.nix || true)
 UNSTABLE_REF=$(grep -oP 'nixpkgs-unstable\.url\s*=\s*"github:NixOS/nixpkgs/\K[^"]+' flake.nix || true)
+# No unstable input is locked while nothing is floated, so this compares against the
+# live channel tip, and the result can change between runs.
+UNSTABLE_REF=${UNSTABLE_REF:-nixos-unstable}
 
 # Locked revisions come from flake.lock (what you actually build today).
 # --no-update-lock-file keeps this diagnostic strictly read-only.

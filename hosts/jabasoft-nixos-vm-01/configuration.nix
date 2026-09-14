@@ -64,6 +64,11 @@ in
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
 
+  # Grow the root partition and ext4 to fill the disk after a resize in Proxmox.
+  # growPartition only works while root is the last partition on the disk.
+  boot.growPartition = true;
+  fileSystems."/".autoResize = true;
+
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [ sshPort ];

@@ -29,23 +29,26 @@ let
   drag = mkLuaInline "hl.dsp.window.drag()";
   mouseResize = mkLuaInline "hl.dsp.window.resize()";
 
-  # Noctalia shell integration. These actions call its Quickshell IPC (via the
-  # noctalia-shell wrapper) for the launcher, clipboard, session menu, lock screen
-  # and the volume/brightness OSDs.
-  ipc = target: fn: exec "noctalia-shell ipc call ${target} ${fn}";
-  launcherDrun = ipc "launcher" "toggle";
-  launcherRun = ipc "launcher" "command";
-  clipboardMenu = ipc "launcher" "clipboard";
-  sessionMenu = ipc "sessionMenu" "toggle";
-  lockScreen = ipc "lockScreen" "lock";
+  # Noctalia shell integration. These actions call its IPC (`noctalia msg`) for
+  # the launcher, clipboard, session menu, lock screen and the volume/brightness
+  # OSDs. The command sits inside a double-quoted Lua string without escaping, so
+  # arguments that need quoting use single quotes and `cmd` must never contain `"`
+  # or `\`.
+  ipc = cmd: exec "noctalia msg ${cmd}";
+  launcherDrun = ipc "panel-toggle launcher";
+  # Opens the launcher on the "/run" provider defined in noctalia.nix.
+  launcherRun = ipc "panel-toggle launcher '/run '";
+  clipboardMenu = ipc "panel-toggle clipboard";
+  sessionMenu = ipc "panel-toggle session";
+  lockScreen = ipc "session lock";
 
   # Volume/brightness via Noctalia IPC so its OSD shows.
-  volUp = ipc "volume" "increase";
-  volDown = ipc "volume" "decrease";
-  volMute = ipc "volume" "muteOutput";
-  micMute = ipc "volume" "muteInput";
-  brightUp = ipc "brightness" "increase";
-  brightDown = ipc "brightness" "decrease";
+  volUp = ipc "volume-up";
+  volDown = ipc "volume-down";
+  volMute = ipc "volume-mute";
+  micMute = ipc "mic-mute";
+  brightUp = ipc "brightness-up";
+  brightDown = ipc "brightness-down";
 
   # `bind = [keys dispatcher]` and `bindOpts = [keys dispatcher opts]` map onto
   # the home-manager `_args` form, which renders as `hl.bind(keys, dispatcher[, opts])`.
@@ -79,14 +82,13 @@ let
   # Applications previously launched via the hyprlang `exec-once` list. The
   # systemd integration registers its own `hyprland.start` hook; `hl.on` is an
   # event subscription, so this second hook coexists with it.
-  # Launch the Noctalia shell from the compositor. The v4 home module's systemd
-  # service is deprecated, so the Hyprland startup hook is the supported method.
-  # Noctalia owns the bar, wallpaper and the clipboard watcher.
+  # Launch the Noctalia shell from the compositor, as upstream documents for
+  # Hyprland. Noctalia owns the bar, wallpaper and the clipboard watcher.
   startupCommands = [
     "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
     "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
     "~/.config/hypr/scripts/xdg.sh &"
-    "noctalia-shell"
+    "noctalia"
   ];
   # Lua long-string `[[ ]]` avoids escaping; commands with `"` would otherwise
   # produce broken Lua. (None contain `]]`, which long-strings can't hold.)

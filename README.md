@@ -39,7 +39,7 @@ Wrapper scripts in the repo root for everyday rebuild, inspection, and maintenan
 **Maintenance**
 
 - `./nixos-collect-garbage.sh` — delete old generations.
-- `./nixos-check-pkg-channels.sh [package]` — compare a package's version across the stable channel tip, the locked `flake.lock` pin, and unstable (defaults to `noctalia-shell`). Use it to tell when a package floated from unstable via an overlay has been backported to stable and the overlay can be dropped.
+- `./nixos-check-pkg-channels.sh <package>` — compare a package's version across the stable channel tip, the locked `flake.lock` pin, and unstable. Use it to tell when a package floated from unstable via an overlay has been backported to stable and the overlay can be dropped.
 
 ## Encryption
 
