@@ -17,9 +17,9 @@ in
 
     home.shellAliases = {
       k = "kubectl";
-      kbb = "kubectl run busybox --image = yauritux/busybox-curl --rm -it --restart=Never /bin/sh";
-      kalpine = "kubectl run alpine --image = alpine --rm -it --restart=Never /bin/sh";
-      knetshoot = "kubectl run netshoot --image = nicolaka/netshoot --rm -it --restart=Never /bin/bash";
+      kbb = "kubectl run busybox --image=yauritux/busybox-curl --rm -it --restart=Never /bin/sh";
+      kalpine = "kubectl run alpine --image=alpine --rm -it --restart=Never /bin/sh";
+      knetshoot = "kubectl run netshoot --image=nicolaka/netshoot --rm -it --restart=Never /bin/bash";
       kerrorevents = "kubectl get events --field-selector type!=Normal -A";
     };
   };
