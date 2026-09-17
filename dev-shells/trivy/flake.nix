@@ -8,9 +8,9 @@
       systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      version = "0.73.0";
-      hash = "sha256-+iJb/Eg97kjNzg6OTuEWXAPJ/32FpfVU2ED4/6A4U+I=";
-      vendorHash = "sha256-0upMQ2fKKfaHAL/SVyzPpdRoBwMNS9PdHPHGAmEm148=";
+      version = "0.74.0";
+      hash = "sha256-OXOT8qwqh8Gy+IJcvBza5nai5bvNMcAMeeT+b2zuWDg=";
+      vendorHash = "sha256-ajXgC6CCw0IaS/e3k0wGNIUOs9mTBIEuV21ZnwZj7SQ=";
       # hash = nixpkgs.lib.fakeHash;
       # vendorHash = nixpkgs.lib.fakeHash;
     in
