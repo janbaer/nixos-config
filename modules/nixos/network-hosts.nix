@@ -9,6 +9,7 @@ in
     networking = {
       hosts = {
         "192.168.20.12" = [ "forgejo" ];
+        "192.168.20.14" = [ "jabasoft-debian-vm-01.home.janbaer.de" ];
       };
     };
   };
