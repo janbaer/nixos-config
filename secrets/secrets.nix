@@ -14,8 +14,17 @@ let
 
   home-keys = [ agenix-home ];
 
-in {
-  # This key will be used for the decryption of the keys that are used by the home-manager 
+  # Hosts that actually consume a given secret, narrower than `keys` where
+  # granting every host key would be more access than the consumer needs.
+  totp-keys = [
+    jan
+    jabasoft-tx
+    jabasoft-pc2
+  ];
+
+in
+{
+  # This key will be used for the decryption of the keys that are used by the home-manager
   "agenix-home-key.age".publicKeys = keys;
 
   # Keys used by NixOS on system-level
@@ -24,6 +33,7 @@ in {
   "smb-jabasoft-ug-secrets.age".publicKeys = keys;
   "smb-jabasoft-zb-secrets.age".publicKeys = keys;
   "wg0-conf-jabasoft-tx.age".publicKeys = keys;
+  "google-authenticator.age".publicKeys = totp-keys;
 
   # Keys used by the home-manager
   "atuin.age".publicKeys = home-keys;

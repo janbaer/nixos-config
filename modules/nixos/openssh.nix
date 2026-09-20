@@ -1,9 +1,14 @@
-{ config, lib, hostname, ... }:
+{
+  config,
+  lib,
+  hostname,
+  ...
+}:
 with lib;
 let
-  inherit
-    (import ./../../hosts/${hostname}/variables.nix)
-    sshPort;
+  inherit (import ./../../hosts/${hostname}/variables.nix)
+    sshPort
+    ;
   cfg = config.modules.openssh;
 in
 {
@@ -14,15 +19,13 @@ in
       enable = true;
       settings = {
         AllowGroups = [ "ssh-users" ];
-        KbdInteractiveAuthentication = false;
+        KbdInteractiveAuthentication = mkDefault false;
         PasswordAuthentication = false;
         PermitRootLogin = "no";
         PrintMotd = true;
       };
       ports = [ sshPort ];
       openFirewall = true;
-      extraConfig = ''
-      '';
     };
   };
 }

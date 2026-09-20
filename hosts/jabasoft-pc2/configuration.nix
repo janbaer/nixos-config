@@ -27,6 +27,7 @@
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
+    sshTotp.enable = true;
     tomb.enable = true;
     virtualization.enable = true;
     zram.enable = true;

@@ -26,6 +26,7 @@ in
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
+    sshTotp.enable = true;
     tomb.enable = true;
     wireguard.enable = true;
     yubikey.enable = true;
