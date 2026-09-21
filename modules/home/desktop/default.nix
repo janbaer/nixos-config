@@ -1,7 +1,7 @@
 { pkgs, ...}: {
   imports = [
     ./browsers.nix
-    ./dictate.nix
+    ./dictate/dictate.nix
     ./hermes-desktop.nix
     ./obsidian.nix
     ./thunderbird.nix
