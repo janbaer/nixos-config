@@ -2,6 +2,13 @@
 
 This file describes all changes in the project.
 
+## 2026-09-23
+---
+
+- Git hooks now fall back to the repo's own `.git/hooks/<hook>`, and `pre-commit`, `commit-msg` and `pre-push` are dispatched next to `post-commit`. Setting `core.hooksPath` is what stops git from reading `.git/hooks` at all, so every hook a tool had installed there was dead without a symptom — `pre-commit install` in ansible-homelab had been writing a file nothing ever ran, and four spec files collected trailing blank lines across several PRs before anyone noticed
+  - `.githooks/<hook>` still wins where both exist, so the 2026-09-12 convention is unchanged
+  - The fallback resolves the directory with `git rev-parse --git-common-dir`, never `--git-path hooks/<name>`: that one resolves through `hooksPath` and hands the dispatcher back to itself, which would exec in a loop on every commit
+
 ## 2026-09-12
 ---
 

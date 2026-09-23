@@ -33,15 +33,29 @@
       }
     ];
 
-    # Delegates to a repo-local .githooks/<hook> if one exists and is
-    # executable, so a new repo only needs to add that file, no entry here.
-    hooks.post-commit = pkgs.writeShellScript "git-hook-dispatcher" ''
-      local_hook="$(git rev-parse --show-toplevel 2>/dev/null)/.githooks/$(basename "$0")"
-      if [ -x "$local_hook" ]; then
-        exec "$local_hook" "$@"
-      fi
-      exit 0
-    '';
+    # Delegates to a repo-local .githooks/<hook>, else to the repo's own
+    # .git/hooks/<hook>. The second branch matters because setting hooksPath at
+    # all is what stops git from reading .git/hooks, so without it every hook a
+    # tool installs there is silently dead — pre-commit, husky, lefthook.
+    # A hook only runs when its name is listed below; the dispatcher is generic.
+    hooks =
+      let
+        dispatcher = pkgs.writeShellScript "git-hook-dispatcher" ''
+          name="$(basename "$0")"
+          root="$(git rev-parse --show-toplevel 2>/dev/null)"
+          if [ -n "$root" ] && [ -x "$root/.githooks/$name" ]; then
+            exec "$root/.githooks/$name" "$@"
+          fi
+          # Not --git-path: that one resolves hooks/ through hooksPath and would
+          # hand back this very script, which then execs itself forever.
+          git_dir="$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"
+          if [ -n "$git_dir" ] && [ -x "$git_dir/hooks/$name" ]; then
+            exec "$git_dir/hooks/$name" "$@"
+          fi
+          exit 0
+        '';
+      in
+      lib.genAttrs [ "pre-commit" "commit-msg" "pre-push" "post-commit" ] (_: dispatcher);
   };
 
   programs.lazygit = {
