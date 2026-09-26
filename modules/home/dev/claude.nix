@@ -27,6 +27,7 @@ let
     export MAILBOX_ORG_IMAP_PASSWORD="$(gopass show mailbox.org/imap-mcp)"
     export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
     export FORGEJO_API_TOKEN="$(gopass show home/forgejo/api-token)"
+    export UNIFI_PASSWORD="$(gopass show -o home/network/unifi/claude-mcp)"
     claude "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''

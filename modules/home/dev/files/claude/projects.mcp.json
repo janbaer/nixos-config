@@ -41,6 +41,17 @@
         "CARDDAV_USERNAME": "${MAILBOX_ORG_USERNAME}",
         "CARDDAV_PASSWORD": "${MAILBOX_ORG_CALDAV_PASSWORD}"
       }
+    },
+    "unifi": {
+      "command": "uvx",
+      "args": ["--from", "unifi-network-mcp==0.33.0", "unifi-network-mcp"],
+      "env": {
+        "UNIFI_HOST": "192.168.1.1",
+        "UNIFI_USERNAME": "claude",
+        "UNIFI_PASSWORD": "${UNIFI_PASSWORD}",
+        "UNIFI_VERIFY_SSL": "false",
+        "UNIFI_TOOL_REGISTRATION_MODE": "eager"
+      }
     }
   }
 }
