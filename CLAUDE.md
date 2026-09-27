@@ -14,34 +14,11 @@ npx skills add https://github.com/lihaoze123/my-skills --skill nixos-best-practi
 
 ## Project Overview
 
-NixOS configuration for three systems (`jabasoft-tx`, `jabasoft-pc2`, `jabasoft-nixos-vm-01`) using Nix Flakes, Home Manager (integrated into NixOS, not standalone), and agenix for secrets management. All systems are for user `jan`. Targets NixOS 25.11.
+Hosts, tech stack, architecture, secrets tiers and constraints are described in `docs/project.md`. The n8n PR reviewer reads the same file, so keep it current instead of repeating it here.
 
-## Architecture
+@docs/project.md
 
-### Flake Structure
-
-`flake.nix` defines a `mkSystem` helper that wires together NixOS + Home Manager + agenix for each host:
-
-```
-mkSystem nixpkgs system hostname username userfullname
-  → ./hosts/${hostname}/configuration.nix  (NixOS)
-  → ./hosts/${hostname}/home.nix           (Home Manager)
-  → agenix.nixosModules + agenix.homeManagerModules
-```
-
-Each host has four files:
-- `configuration.nix` — NixOS system config
-- `hardware-configuration.nix` — auto-generated hardware settings
-- `home.nix` — Home Manager config
-- `variables.nix` — host-specific values (extends `hosts/common/variables.nix`)
-
-### Module Organization
-
-- `modules/nixos/` — system-level NixOS modules (openssh, yubikey, docker, printing, tomb, wireguard, etc.)
-- `modules/home/shell/` — terminal tools (zsh, tmux, neovim, yazi, atuin, gopass, tomb, ghostty)
-- `modules/home/dev/` — development tools (git, golang, nodejs, rust, vscode, k8s-cli, claude, zed-editor)
-- `modules/home/desktop/` — desktop environment (hyprland, browsers, thunderbird)
-- `hosts/common/` — shared configs: `default.nix`, `secrets.nix`, `variables.nix`
+## Module Pattern
 
 All modules follow the same enable/disable pattern:
 
@@ -61,18 +38,9 @@ Enable in host configs:
 - Home Manager: `hosts/${hostname}/home.nix` → `modules.dev.toolname.enable = true;`
 - NixOS: `hosts/${hostname}/configuration.nix` → `modules.modulename.enable = true;`
 
-### Secrets Architecture (Two-Tier)
+## Dev Shells
 
-Agenix **only works at the NixOS level**, not in Home Manager modules. To support user-level secrets, a bridging key is used:
-
-1. NixOS agenix decrypts `agenix-home-key.age` → `/run/agenix/agenix-home-key` (owned by user)
-2. Home Manager agenix reads that key → decrypts user secrets to `/run/user/$(id -u)/agenix/`
-
-Keys are defined in `secrets/secrets.nix`. Adding a new machine requires running `agenix --rekey` after adding its SSH public key.
-
-### Dev Shells
-
-`dev-shells/` holds standalone flakes (go, rust, devops, claude-desktop, zed-editor, antigravity, trivy) unrelated to the host configs above. Enter one from any directory with `nix develop path:$HOME/Projects/nixos-config/dev-shells/<name>`, or reference it from another project's `.envrc` via `use flake path:...`.
+`dev-shells/` holds standalone flakes (go, rust, devops, claude-desktop, zed-editor, antigravity, trivy). Enter one from any directory with `nix develop path:$HOME/Projects/nixos-config/dev-shells/<name>`, or reference it from another project's `.envrc` via `use flake path:...`.
 
 Only `trivy` pins a source version. `fetchFromGitHub` keys its store path on the hash and derivation name, not the tag, so bumping the version without also changing the source name (`name = "trivy-${version}-source"`) lets Nix reuse the old cached source silently. See `dev-shells/README.md` for the full procedure and how to tell a hash mismatch from a wrong tag in the build log.
 
@@ -151,12 +119,6 @@ ls -la /run/user/$(id -u)/agenix/           # Verify user secrets exist
 
 See `DEBUG-HOME-MANAGER.md` for the full debugging workflow.
 
-## Migrations
-
-Per-release breaking changes and their fixes live in `CHANGELOG.md` — check it before rolling a release to another host.
-
-For a major NixOS release migration, use `sudo nixos-rebuild boot --flake .#<host>` (or `nh os boot .`) plus a reboot — never `nh os switch .`/`nhs`. `switch` restarts `display-manager` on the running session against the still-running old kernel; if the new greeter or kernel boundary is broken, that hard-hangs the live session with no recovery path. `boot` defers activation to a clean reboot, so a broken generation is still recoverable from the systemd-boot menu. `nh os switch .` stays fine for incremental day-to-day rebuilds.
-
 ## Commit Style
 
 Format: `{scope} {emoji}: {message}`, following the global commit rules — same emoji set, same present-participle wording, and the subject states *why* the change happened, not what the diff shows.
@@ -178,7 +140,7 @@ Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 
 - Treat evaluation and build as the primary tests for config changes.
 - For a change to the current host, build it: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`.
-- For a change to a shared module, run `nix flake check` to validate all hosts. Do not build other hosts from this machine; let Jan build and switch each host on its own machine.
+- For a change to a shared module, run `nix flake check` to validate all hosts.
 - When changing secrets wiring, rekey and validate mappings in `secrets/secrets.nix`.
 
 ## Pull Request Guidelines
@@ -192,7 +154,6 @@ Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 
 ## Key Notes
 
-- **Container runtime**: Podman with `dockerCompat = true`, not Docker
 - **Display manager**: GDM with Wayland + UWSM integration
 - **SSH port**: 22022 (default defined in `hosts/common/variables.nix`)
 - **Garbage collection**: Auto-runs daily, deletes generations older than 7 days
