@@ -39,4 +39,5 @@ The wiring lives in `modules/nixos/secrets.nix` and `modules/home/secrets.nix`. 
 - Each host is built and switched only on that host.
 - A major release migration uses `sudo nixos-rebuild boot --flake .#<host>` (or `nh os boot .`) and a reboot, never `nh os switch .`/`nhs`. `switch` restarts `display-manager` against the still-running old kernel, and a broken greeter or kernel boundary hard-hangs the live session. `boot` keeps a broken generation recoverable from the systemd-boot menu. Day-to-day rebuilds may use `switch`.
 - `CHANGELOG.md` records the breaking changes of each release. Check it before a release goes to another host.
+- Claude sessions started through `claudeRun` (`modules/home/dev/claude.nix`) act on Forgejo as the user `claude`: forgejo-mcp uses its token, and commits in repos with a Forgejo remote get `Claude <claude@janbaer.de>`. Other remotes and other shells keep Jan's identity.
 - There is no CI. `.githooks/post-commit` only warns when `CHANGELOG.md` falls behind.

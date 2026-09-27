@@ -19,6 +19,11 @@ let
     echo "Installing claude-code..."
     ${pkgs.curl}/bin/curl -fsSL https://claude.ai/install.sh |${pkgs.bash}/bin/bash
   '';
+  claudeGitIdentity = pkgs.writeText "claude-git-identity" ''
+    [user]
+      name = Claude
+      email = claude@janbaer.de
+  '';
   claudeRun = pkgs.writeShellScriptBin "claudeRun" ''
     #!/usr/bin/env zsh
     export OPENCVE_API_TOKEN="$(gopass show cloud/opencve/api-token)"
@@ -26,8 +31,13 @@ let
     export MAILBOX_ORG_USERNAME="jan.baer@mailbox.org"
     export MAILBOX_ORG_IMAP_PASSWORD="$(gopass show mailbox.org/imap-mcp)"
     export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
-    export FORGEJO_API_TOKEN="$(gopass show home/forgejo/api-token)"
+    export FORGEJO_API_TOKEN="$(gopass show home/forgejo/claude-api-token)"
     export UNIFI_PASSWORD="$(gopass show -o home/network/unifi/claude-mcp)"
+    export GIT_CONFIG_COUNT=2
+    export GIT_CONFIG_KEY_0='includeIf.hasconfig:remote.*.url:git@forgejo:*/**.path'
+    export GIT_CONFIG_VALUE_0="${claudeGitIdentity}"
+    export GIT_CONFIG_KEY_1='includeIf.hasconfig:remote.*.url:ssh://git@forgejo/**.path'
+    export GIT_CONFIG_VALUE_1="${claudeGitIdentity}"
     claude "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
