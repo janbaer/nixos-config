@@ -38,7 +38,7 @@ let
     export GIT_CONFIG_VALUE_0="${claudeGitIdentity}"
     export GIT_CONFIG_KEY_1='includeIf.hasconfig:remote.*.url:ssh://git@forgejo/**.path'
     export GIT_CONFIG_VALUE_1="${claudeGitIdentity}"
-    claude "$@"
+    claude --model opus "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
     #!/usr/bin/env zsh
@@ -57,7 +57,7 @@ let
       set +a
     fi
 
-    claude --dangerously-skip-permissions "$@"
+    claude "$@"
   '';
 in
 {
