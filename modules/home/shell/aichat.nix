@@ -19,11 +19,17 @@ in
 
     xdg.configFile."aichat/config.yaml".text = ''
       ---
-      model: openrouter:~deepseek/deepseek-v4-flash-latest
+      model: openrouter:~deepseek/deepseek-v4-flash-latest:nitro
       clients:
         - type: openai-compatible
           name: openrouter
           api_base: https://openrouter.ai/api/v1
+          patch:
+            chat_completions:
+              '.*':
+                body:
+                  reasoning:
+                    exclude: true
     '';
   };
 }
