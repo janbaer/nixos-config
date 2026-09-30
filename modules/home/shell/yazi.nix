@@ -25,6 +25,7 @@ in {
           { on = [ "<C-t>" ]; run = "tab_create --current"; desc = "Create a new tab with CWD"; }
           { on = [ "t" ]; run = "plugin toggle-pane min-preview"; desc = "Toggle preview"; }
           { on = [ "T" ]; run = "plugin toggle-pane max-preview"; desc = "Maximize preview"; }
+          { on = [ "g" "h" ]; run = "cd /mnt/zb-02-data/hermes-agent/data"; desc = "Go to hermes data directory"; }
           { on = [ "g" "H" ]; run = "cd ~/"; desc = "Go to home directory"; }
           { on = [ "g" "D" ]; run = "cd ~/Documents"; desc = "Go to Documents"; }
           { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
@@ -33,8 +34,6 @@ in {
           { on = [ "g" "V" ]; run = "cd ~/Videos"; desc = "Go to Videos"; }
           { on = [ "g" "M" ]; run = "cd ~/Music"; desc = "Go to Music"; }
           { on = [ "g" "m" ]; run = "cd /mnt/zb-data/metube/mp3"; desc = "Go to Metube music"; }
-          { on = [ "g" "O" ]; run = "cd /mnt/zb-data/webdav/data/Obsidian"; desc = "Go to Obsidian vault"; }
-          { on = [ "g" "N" ]; run = "cd /mnt/zb-data/webdav/data/Notes/"; desc = "Go to Notes vault"; }
           { on = [ "g" "x" ]; run = "cd /run/media/${username}/XXX5/"; desc = "Go to XXX5"; }
           { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to .config"; }
           { on = [ "g" "b" ]; run = "cd ~/bin"; desc = "Go to bin"; }
