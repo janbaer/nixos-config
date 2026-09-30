@@ -10,7 +10,6 @@
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager";
     };
     noctalia = {
       # Only the home module is used; the package comes from nixpkgs. Keep the tag
