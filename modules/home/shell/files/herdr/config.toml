@@ -1,11 +1,14 @@
 onboarding = false
 
 [theme]
-name = "catppuccin-latte"
+name = "solarized"
 auto_switch = false
 
+[ui]
+status_indicators = "symbols"
+
 [ui.toast]
-delivery = "herdr"
+delivery = "system"
 
 [keys]
 prefix = "ctrl+a"
