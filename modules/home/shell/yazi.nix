@@ -25,18 +25,20 @@ in {
           { on = [ "<C-t>" ]; run = "tab_create --current"; desc = "Create a new tab with CWD"; }
           { on = [ "t" ]; run = "plugin toggle-pane min-preview"; desc = "Toggle preview"; }
           { on = [ "T" ]; run = "plugin toggle-pane max-preview"; desc = "Maximize preview"; }
-          { on = [ "g" "h" ]; run = "cd /mnt/zb-02-data/hermes-agent/data"; desc = "Go to hermes data directory"; }
-          { on = [ "g" "H" ]; run = "cd ~/"; desc = "Go to home directory"; }
+          { on = [ "g" "b" ]; run = "cd ~/bin"; desc = "Go to bin"; }
+          { on = [ "g" "c" ]; run = "cd /mnt/pve3-data/paperless-ngx/consume"; desc = "Go to Paperless consume"; }
+          { on = [ "g" "C" ]; run = "cd ~/.config"; desc = "Go to .config"; }
           { on = [ "g" "D" ]; run = "cd ~/Documents"; desc = "Go to Documents"; }
           { on = [ "g" "d" ]; run = "cd ~/Downloads"; desc = "Go to Downloads"; }
+          { on = [ "g" "h" ]; run = "cd /mnt/zb-02-data/hermes-agent/data"; desc = "Go to hermes data directory"; }
+          { on = [ "g" "H" ]; run = "cd ~/"; desc = "Go to home directory"; }
+          { on = [ "g" "M" ]; run = "cd ~/Music"; desc = "Go to Music"; }
+          { on = [ "g" "m" ]; run = "cd /mnt/zb-data/metube/mp3"; desc = "Go to Metube music"; }
           { on = [ "g" "P" ]; run = "cd ~/Projects"; desc = "Go to Projects"; }
           { on = [ "g" "p" ]; run = "cd ~/Pictures"; desc = "Go to Pictures"; }
           { on = [ "g" "V" ]; run = "cd ~/Videos"; desc = "Go to Videos"; }
-          { on = [ "g" "M" ]; run = "cd ~/Music"; desc = "Go to Music"; }
-          { on = [ "g" "m" ]; run = "cd /mnt/zb-data/metube/mp3"; desc = "Go to Metube music"; }
+          { on = [ "g" "y" ]; run = "cd /run/media/jan/MyDocuments"; desc = "Go to MyDocuments"; }
           { on = [ "g" "x" ]; run = "cd /run/media/${username}/XXX5/"; desc = "Go to XXX5"; }
-          { on = [ "g" "c" ]; run = "cd ~/.config"; desc = "Go to .config"; }
-          { on = [ "g" "b" ]; run = "cd ~/bin"; desc = "Go to bin"; }
         ];
       };
     };
