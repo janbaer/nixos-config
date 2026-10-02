@@ -8,9 +8,9 @@
       systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      version = "0.74.0";
-      hash = "sha256-OXOT8qwqh8Gy+IJcvBza5nai5bvNMcAMeeT+b2zuWDg=";
-      vendorHash = "sha256-ajXgC6CCw0IaS/e3k0wGNIUOs9mTBIEuV21ZnwZj7SQ=";
+      version = "0.75.0";
+      hash = "sha256-z0QMnaHSoHR2eHFFWOFHn7EJV0QfQYSSTQ4Q7Q31QbQ=";
+      vendorHash = "sha256-idc2wjjPVTRW9cImD/o40I+xdSzDwO7vEv2SB03FYl0=";
       # hash = nixpkgs.lib.fakeHash;
       # vendorHash = nixpkgs.lib.fakeHash;
     in
@@ -18,7 +18,9 @@
       devShells = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
-          trivy = pkgs.trivy.overrideAttrs (old: {
+          trivy = (pkgs.trivy.override {
+            buildGoModule = pkgs.buildGoModule.override { go = pkgs.go_1_27; };
+          }).overrideAttrs (old: {
             inherit version vendorHash;
             doCheck = false;
             src = old.src.override {
@@ -30,7 +32,7 @@
         in
         {
           default = pkgs.mkShellNoCC {
-            buildInputs = [ trivy ];
+            buildInputs = [ trivy pkgs.go_1_27 ];
             shellHook = ''
               [ -n "$PS1" ] && echo "Trivy ${version} ready"
             '';

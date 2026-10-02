@@ -8,7 +8,6 @@ nix develop path:$HOME/Projects/nixos-config/dev-shells/rust
 nix develop path:$HOME/Projects/nixos-config/dev-shells/devops
 nix develop path:$HOME/Projects/nixos-config/dev-shells/claude-desktop
 nix develop path:$HOME/Projects/nixos-config/dev-shells/zed-editor
-nix develop path:$HOME/Projects/nixos-config/dev-shells/antigravity
 nix develop path:$HOME/Projects/nixos-config/dev-shells/trivy
 ```
 
@@ -17,6 +16,8 @@ To use one with direnv, add this to a project's `.envrc`:
 ```bash
 use flake path:$HOME/Projects/nixos-config/dev-shells/go
 ```
+
+The `go` and `devops` shells start your own zsh instead of bash (`[ -n "$PS1" ] && exec zsh` in the `shellHook`). The guard keeps `nix develop -c <cmd>` and direnv unaffected.
 
 ## Bumping a pinned version
 
@@ -28,7 +29,7 @@ Only `trivy` pins a version together with its `hash` and `vendorHash`. Change th
 
 ```bash
 $ trivy --version
-Version: 0.74.0                              # the label
+Version: 0.75.0                              # the label
 $ head -3 /nix/store/933ij…-source/CHANGELOG.md
 ## [0.70.0] … (2026-04-16)                   # the actual code
 ```
@@ -47,12 +48,16 @@ src = old.src.override {
 
 The path then follows the version (`trivy-0.73.0-source` instead of `source`), so a bump always misses the store, always fetches, and a stale hash fails loudly. Copy that line into any new shell that pins a source.
 
+### Go version
+
+Trivy raises its Go requirement from release to release. The `trivy` flake builds with a fixed compiler (`buildGoModule.override { go = pkgs.go_1_27; }`) and also puts that Go into the shell. If the new tag's `go.mod` needs a newer Go, the build fails with `go.mod requires go >= …`. Change `go_1_27` in both places.
+
 ### Procedure
 
 1. Check that the tag exists. A missing tag gives a 404, not a hash mismatch.
 2. Get the source hash with `nurl`:
    ```bash
-   nix run nixpkgs#nurl -- https://github.com/aquasecurity/trivy v0.73.0
+   nix run nixpkgs#nurl -- https://github.com/aquasecurity/trivy v0.75.0
    ```
    It prints the complete `fetchFromGitHub` block. Without `nurl`:
    ```bash

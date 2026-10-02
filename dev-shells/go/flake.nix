@@ -16,11 +16,12 @@
         {
           default = pkgs.mkShellNoCC {
             buildInputs = with pkgs; [
-              go
+              go_1_27
             ];
 
             shellHook = ''
               echo "Welcome to the Go development shell, you are using $(go version)"
+              [ -n "$PS1" ] && exec zsh
             '';
           };
         }

@@ -29,6 +29,7 @@
 
             shellHook = ''
               echo "You're using Lima version: $(limactl --version)"
+              [ -n "$PS1" ] && exec zsh
             '';
           };
         }

@@ -40,7 +40,7 @@ Enable in host configs:
 
 ## Dev Shells
 
-`dev-shells/` holds standalone flakes (go, rust, devops, claude-desktop, zed-editor, antigravity, trivy). Enter one from any directory with `nix develop path:$HOME/Projects/nixos-config/dev-shells/<name>`, or reference it from another project's `.envrc` via `use flake path:...`.
+`dev-shells/` holds standalone flakes (go, rust, devops, claude-desktop, zed-editor, trivy). Enter one from any directory with `nix develop path:$HOME/Projects/nixos-config/dev-shells/<name>`, or reference it from another project's `.envrc` via `use flake path:...`.
 
 Only `trivy` pins a source version. `fetchFromGitHub` keys its store path on the hash and derivation name, not the tag, so bumping the version without also changing the source name (`name = "trivy-${version}-source"`) lets Nix reuse the old cached source silently. See `dev-shells/README.md` for the full procedure and how to tell a hash mismatch from a wrong tag in the build log.
 
