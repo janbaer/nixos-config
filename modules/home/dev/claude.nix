@@ -38,7 +38,7 @@ let
     export GIT_CONFIG_VALUE_0="${claudeGitIdentity}"
     export GIT_CONFIG_KEY_1='includeIf.hasconfig:remote.*.url:ssh://git@forgejo/**.path'
     export GIT_CONFIG_VALUE_1="${claudeGitIdentity}"
-    claude --model opus "$@"
+    claude --model sonnet "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
     #!/usr/bin/env zsh
@@ -46,7 +46,7 @@ let
     export ANTHROPIC_AUTH_TOKEN="$(gopass show cloud/openrouter/claude-router)"
     export ANTHROPIC_API_KEY=""
 
-    export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.7-flash"
+    export ANTHROPIC_DEFAULT_SONNET_MODEL="google/gemini-3.8-flash"
     export ANTHROPIC_DEFAULT_OPUS_MODEL="moonshotai/kimi-k3"
     export ANTHROPIC_DEFAULT_HAIKU_MODEL="deepseek/deepseek-v4-flash-latest"
 
