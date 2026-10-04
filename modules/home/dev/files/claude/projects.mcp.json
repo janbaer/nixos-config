@@ -7,12 +7,11 @@
         "Authorization": "token ${FORGEJO_API_TOKEN}"
       }
     },
-    "vikunja": {
-      "command": "bunx",
-      "args": ["-y", "@democratize-technology/vikunja-mcp"],
-      "env": {
-        "VIKUNJA_URL": "https://todo.home.janbaer.de/api/v1",
-        "VIKUNJA_API_TOKEN": "${VIKUNJA_API_TOKEN}"
+    "vikunja-builtin": {
+      "type": "http",
+      "url": "https://todo.home.janbaer.de/api/v2/mcp",
+      "headers": {
+        "Authorization": "Bearer ${VIKUNJA_MCP_TOKEN}"
       }
     },
     "imap-mcp": {

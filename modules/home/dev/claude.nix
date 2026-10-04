@@ -27,7 +27,7 @@ let
   claudeRun = pkgs.writeShellScriptBin "claudeRun" ''
     #!/usr/bin/env zsh
     export OPENCVE_API_TOKEN="$(gopass show cloud/opencve/api-token)"
-    export VIKUNJA_API_TOKEN="$(gopass show home/vikunja/vikunja-mcp)"
+    export VIKUNJA_MCP_TOKEN="$(gopass show -o home/vikunja/vikunja-mcp-builtin)"
     export MAILBOX_ORG_USERNAME="jan.baer@mailbox.org"
     export MAILBOX_ORG_IMAP_PASSWORD="$(gopass show mailbox.org/imap-mcp)"
     export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
