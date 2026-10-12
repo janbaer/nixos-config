@@ -117,7 +117,7 @@ systemctl --user status agenix.service       # User-level secret decryption
 ls -la /run/user/$(id -u)/agenix/           # Verify user secrets exist
 ```
 
-See `DEBUG-HOME-MANAGER.md` for the full debugging workflow.
+See `docs/runbooks/home-manager-debugging.md` for the full debugging workflow.
 
 ## Commit Style
 
