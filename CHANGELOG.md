@@ -2,6 +2,55 @@
 
 This file describes all changes in the project.
 
+## 2026-10-12
+---
+
+- Dictation starts by holding End (Fn + Right on jabasoft-tx) and stops when the key is released, so one finger does what SUPER + CTRL + D needed two presses for (#46)
+  - The recording starts after the key has been down for 2 seconds (`holdDelay`); a shorter tap stays an ordinary cursor key and starts nothing. A recording started with SUPER + CTRL + D is never stopped by the release
+  - End instead of a modifier key, because Hyprland loses the release event of modifier keys (Control_R never sent one, Alt_R only in a Compose sequence). It also loses it for End when another key is pressed meanwhile; the recording then runs until SUPER + CTRL + D or the 10-minute cap
+
+## 2026-10-11
+---
+
+- Dictated "Bun" came through as "Ban" or "Bann" because the cleanup model had no anchor for the name; Bun joined the proper noun list
+
+## 2026-10-04
+---
+
+- Vikunja access moved to the MCP server built into Vikunja 2.7.0, so the third-party `vikunja-mcp` is gone
+  - `claudeRun` reads the new token from gopass (`home/vikunja/vikunja-mcp-builtin`) as `VIKUNJA_MCP_TOKEN`; the old `VIKUNJA_API_TOKEN` export and its gopass entry are dropped
+
+## 2026-10-02
+---
+
+- Trivy 0.75.0 builds again: it needs Go 1.27 and the pinned nixpkgs ships 1.26, so the trivy and go dev shells now build with `go_1_27`. The go and devops shells also `exec zsh` in interactive sessions instead of staying in bash
+- `claudeRun` starts Claude with Sonnet instead of Opus by default, and the OpenRouter Sonnet slot moved from `gemini-3.7-flash` to `gemini-3.8-flash`
+
+## 2026-10-01
+---
+
+- Shell tweaks from the last days
+  - yazi: `g c` jumps to the Paperless consume folder (the old binding ran a bare path without `cd` and did nothing), the old `g c` moved to `g C`; new `g y` for MyDocuments and `g h` for the hermes data; the `g O` and `g N` shortcuts to the vaults on the old webdav path are gone
+  - herdr toasts go out as system notifications instead of herdr's own overlay
+  - aichat answers use the OpenRouter `:nitro` variant (fastest provider) and a client patch sets `reasoning.exclude`, so reasoning tokens no longer show up in the output
+
+## 2026-09-29
+---
+
+- Claude Code always starts with Opus: a model switched by hand was stored in the settings and carried over into the next start
+
+## 2026-09-27
+---
+
+- Claude sessions started through `claudeRun` act on Forgejo as the user `claude`, so Jan's own approval counts on their PRs (Forgejo ignores the poster's approval) (#45)
+  - The token comes from gopass (`home/forgejo/claude-api-token`); commits in repos with a Forgejo remote carry `Claude <claude@janbaer.de>`. Other remotes and shells outside `claudeRun` keep Jan's identity, pushes stay on Jan's SSH key
+- The n8n PR reviewer now knows this repo: it does not read `CLAUDE.md` and judged PRs without knowing the hosts, the secrets tiers or the migration constraints. `docs/project.md` holds that description and `CLAUDE.md` imports it, and `.code-review.md` lists the mistakes a build does not catch (module wiring, secrets entries, hardcoded user and host names, stale source hashes, store links for writable files, untagged temporary overlays)
+
+## 2026-09-26
+---
+
+- Claude can query the UniFi network through unifi-network-mcp 0.33.0, read-only: it logs in as the local UniFi user `claude` with the View Only role, so the controller itself rejects writes and the server's own mutation gate is only a second line (refs #43)
+
 ## 2026-09-23
 ---
 
