@@ -24,6 +24,7 @@ let
       export DICTATE_STOP_DELAY=${escapeShellArg cfg.stopDelay}
       export DICTATE_RESTORE_DELAY=${escapeShellArg cfg.restoreDelay}
       export DICTATE_MAX_SECONDS=${escapeShellArg cfg.maxSeconds}
+      export DICTATE_HOLD_DELAY=${escapeShellArg cfg.holdDelay}
       export DICTATE_TERMINAL_CLASSES=${escapeShellArg (concatStringsSep "\n" cfg.terminalClasses)}
       export DICTATE_CLEANUP_FALLBACK_MODELS=${escapeShellArg (concatStringsSep "\n" (require "cleanupFallbackModels"))}
       export DICTATE_CLEANUP_PROVIDERS=${escapeShellArg (concatStringsSep "\n" (require "cleanupProviders"))}
@@ -74,6 +75,15 @@ in {
       description = ''
         Seconds to wait after Ctrl+V before restoring the previous clipboard
         contents, so the target window has finished reading the selection.
+      '';
+    };
+
+    holdDelay = mkOption {
+      type = types.str;
+      default = "2";
+      description = ''
+        Seconds the hold key must stay down before a recording starts. A key
+        released earlier starts nothing.
       '';
     };
 

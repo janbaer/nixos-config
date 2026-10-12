@@ -1,7 +1,8 @@
 # Dictation
 
 Push-to-toggle voice dictation. `SUPER + CTRL + D` starts a recording, the same
-key stops it. The recording goes to a speech model on OpenRouter, the
+key stops it. Holding `End` for `holdDelay` seconds starts one too, and
+releasing it stops it. The recording goes to a speech model on OpenRouter, the
 transcript goes through a cleanup model, and the result is pasted into the
 focused window.
 
@@ -49,6 +50,7 @@ cleanup model was used for days without anyone noticing.
 | `maxSeconds` | `600` | Hard cap for one recording. |
 | `terminalClasses` | `com.mitchellh.ghostty` | Window classes that paste with Ctrl+Shift+V. |
 | `restoreDelay` | `0.5` | Seconds to wait after the paste before the old clipboard is restored. |
+| `holdDelay` | `2` | Seconds `End` must stay down before a recording starts. |
 | `cleanupPrompt` | see module | System prompt for the cleanup model. |
 
 `DICTATE_AUDIO_FORMAT` (default `ogg`) is not an option. Both invocations must
@@ -136,6 +138,21 @@ off by default.
   back to the old fixed file name.
 - The stop branch removes the pidfile before the stop delay, so another press
   during transcription starts a new recording.
+- The hold key calls `dictate hold-press` and `dictate hold-release`. A press
+  waits `holdDelay` seconds in its own process, then starts the recording. A
+  release before that kills the waiting process. A release after it stops the
+  recording, but only the one the hold key started. The hold file keeps the pid
+  of that `rec`, so a recording from `SUPER + CTRL + D` is left alone, also one
+  started after the hold recording was stopped.
+- The `End` binds are non-consuming, so `End` still moves the cursor. Hyprland
+  sends no release when another key is pressed while `End` is down. `Shift+End`
+  triggers neither bind. After a lost release the recording runs on
+  until `SUPER + CTRL + D` or `maxSeconds`. The same happens when the release
+  comes in the few milliseconds between the end of the delay and the start of
+  `rec`. Holding `End` for `holdDelay` seconds in any application starts a
+  recording as well. Modifier keys do not work for this:
+  `Control_R` never sent a release, `Alt_R` (Compose here) lost it during a
+  Compose sequence.
 - `rec` gets SIGINT, not SIGTERM. sox only writes the final header on a clean
   shutdown, and the API rejects a file without it.
 - `rec` is a child of the start invocation, so the stop invocation cannot use

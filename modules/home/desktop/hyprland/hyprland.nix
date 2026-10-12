@@ -487,6 +487,11 @@ in
         (bind "SUPER + SHIFT + H" (exec "~/.config/hypr/scripts/keyhint.sh"))
         (bind "SUPER + SHIFT + P" clipboardMenu)
         (bind "SUPER + CTRL + D" (exec "dictate"))
+        (bindOpts "End" (exec "dictate hold-press") { non_consuming = true; })
+        (bindOpts "End" (exec "dictate hold-release") {
+          release = true;
+          non_consuming = true;
+        })
         (bind "SUPER + SHIFT + S" (exec "systemctl suspend"))
         # Lua long-string `[[ ]]` avoids escaping the inner shell quotes.
         (bind "SUPER + SHIFT + Y" (

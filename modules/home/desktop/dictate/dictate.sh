@@ -10,6 +10,7 @@ set -euo pipefail
 DICTATE_GOPASS_PATH="${DICTATE_GOPASS_PATH:-cloud/openrouter/stt}"
 DICTATE_STOP_DELAY="${DICTATE_STOP_DELAY:-0.8}"
 DICTATE_RESTORE_DELAY="${DICTATE_RESTORE_DELAY:-0.5}"
+DICTATE_HOLD_DELAY="${DICTATE_HOLD_DELAY:-2}"
 DICTATE_MAX_SECONDS="${DICTATE_MAX_SECONDS:-600}"
 DICTATE_TERMINAL_CLASSES="${DICTATE_TERMINAL_CLASSES:-com.mitchellh.ghostty}"
 DICTATE_AUDIO_FORMAT="${DICTATE_AUDIO_FORMAT:-ogg}"
@@ -26,6 +27,7 @@ state="${XDG_RUNTIME_DIR:-/tmp}/dictate"
 pidfile="$state.pid"
 lockfile="$state.lock"
 logfile="$state.log"
+holdfile="$state.hold"
 # Named after this invocation's pid, so a stop press can only ever touch the
 # recording it started.
 recfile="$state.$$.$DICTATE_AUDIO_FORMAT"
@@ -45,6 +47,29 @@ api_error() {
   [ -n "$1" ] || { echo "<no response>"; return; }
   jq -r '.error // empty | "\(.code) \(.metadata.raw // .message)"' <<<"$1" 2>/dev/null || printf '%s' "$1"
 }
+
+mode="${1:-toggle}"
+case "$mode" in
+  hold-press)
+    printf 'wait %s\n' "$$" >"$holdfile"
+    sleep "$DICTATE_HOLD_DELAY"
+    printf 'rec\n' >"$holdfile"
+    ;;
+  hold-release)
+    hold_state=""
+    hold_pid=""
+    read -r hold_state hold_pid 2>/dev/null <"$holdfile" || true
+    rm -f "$holdfile"
+    case "$hold_state" in
+      wait)
+        kill "$hold_pid" 2>/dev/null || true
+        exit 0
+        ;;
+      rec) ;;
+      *) exit 0 ;;
+    esac
+    ;;
+esac
 
 vocabfile="${XDG_CONFIG_HOME:-$HOME/.config}/dictate/vocabulary.txt"
 if [ -r "$vocabfile" ]; then
@@ -76,6 +101,16 @@ if [ -f "$pidfile" ]; then
     recfile="${candidate_file:-$state.$DICTATE_AUDIO_FORMAT}"
   fi
 fi
+
+case "$mode" in
+  hold-press)
+    if [ -n "$rec_pid" ]; then
+      rm -f "$holdfile"
+      exit 0
+    fi
+    ;;
+  hold-release) [ -n "$rec_pid" ] && [ "$rec_pid" = "$hold_pid" ] || exit 0 ;;
+esac
 
 if [ -n "$rec_pid" ]; then
   t_key="$(now)"
@@ -198,6 +233,9 @@ else
   # DICTATE_STOP_DELAY; trim caps a forgotten recording. See README.md.
   AUDIODRIVER=alsa rec -q -c 1 -r 48000 "$recfile" trim 0 "$DICTATE_MAX_SECONDS" &
   printf '%s\n%s\n' "$!" "$recfile" >"$pidfile"
+  if [ "$mode" = hold-press ]; then
+    printf 'rec %s\n' "$!" >"$holdfile"
+  fi
   flock -u 9
 
   # Announce the recording only once PipeWire reports our capture stream as
@@ -213,7 +251,11 @@ else
     sleep 0.03
   done
   if [ "$ready" = 1 ]; then
-    notify "🎙 Recording — press again to stop"
+    if [ "$mode" = hold-press ]; then
+      notify "🎙 Recording — release to stop"
+    else
+      notify "🎙 Recording — press again to stop"
+    fi
   else
     notify "Dictate: recording did not start"
   fi
