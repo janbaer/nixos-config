@@ -68,5 +68,6 @@
     # Bedeutung und Begründung der Schlüssel: modules/home/desktop/dictate/README.md
     cleanupFallbackModels = [ "google/gemini-2.5-flash" ];
     cleanupProviders = [ "mistral" ];
+    holdDelay = "1";
   };
 }

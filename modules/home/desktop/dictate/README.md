@@ -16,7 +16,7 @@ rec (sox) → speech model → cleanup model → clipboard → Ctrl+V → clipbo
 | --- | --- |
 | `dictate.nix` | Home Manager module. Packages the script with `writeShellApplication` and exports the configuration as `DICTATE_*` variables. |
 | `dictate.sh` | The script. |
-| `hosts/common/variables.nix` | The `dictation` block: models and providers. |
+| `hosts/common/variables.nix` | The `dictation` block: models, providers and hold delay. |
 | `~/.config/dictate/vocabulary.txt` | Short-lived proper nouns for the cleanup prompt. Read at runtime. |
 
 The script is a separate file and not a Nix string, so shellcheck, syntax
@@ -28,7 +28,7 @@ installed wrapper (`cat $(command -v dictate)`).
 
 ## Configuration
 
-### Models (`hosts/common/variables.nix`)
+### Variables (`hosts/common/variables.nix`)
 
 | Key | Meaning |
 | --- | --- |
@@ -36,6 +36,7 @@ installed wrapper (`cat $(command -v dictate)`).
 | `cleanupModel` | Primary cleanup model. |
 | `cleanupFallbackModels` | Tried in order when the primary model returns an error. |
 | `cleanupProviders` | Preferred provider order, as OpenRouter slugs. Empty means no preference, sorted by throughput. |
+| `holdDelay` | Seconds `End` must stay down before a recording starts. A key released earlier starts nothing. |
 
 The module has no defaults for these keys. A missing key fails the build. A
 default would hide a typo in the variables file, and that is how a wrong
@@ -50,7 +51,6 @@ cleanup model was used for days without anyone noticing.
 | `maxSeconds` | `600` | Hard cap for one recording. |
 | `terminalClasses` | `com.mitchellh.ghostty` | Window classes that paste with Ctrl+Shift+V. |
 | `restoreDelay` | `0.5` | Seconds to wait after the paste before the old clipboard is restored. |
-| `holdDelay` | `2` | Seconds `End` must stay down before a recording starts. |
 | `cleanupPrompt` | see module | System prompt for the cleanup model. |
 
 `DICTATE_AUDIO_FORMAT` (default `ogg`) is not an option. Both invocations must

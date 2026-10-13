@@ -6,7 +6,7 @@ This file describes all changes in the project.
 ---
 
 - Dictation starts by holding End (Fn + Right on jabasoft-tx) and stops when the key is released, so one finger does what SUPER + CTRL + D needed two presses for (#46)
-  - The recording starts after the key has been down for 2 seconds (`holdDelay`); a shorter tap stays an ordinary cursor key and starts nothing. A recording started with SUPER + CTRL + D is never stopped by the release
+  - The recording starts after the key has been down for `holdDelay` seconds (set in `hosts/common/variables.nix`); a shorter tap stays an ordinary cursor key and starts nothing. A recording started with SUPER + CTRL + D is never stopped by the release
   - End instead of a modifier key, because Hyprland loses the release event of modifier keys (Control_R never sent one, Alt_R only in a Compose sequence). It also loses it for End when another key is pressed meanwhile; the recording then runs until SUPER + CTRL + D or the 10-minute cap
 
 ## 2026-10-11
