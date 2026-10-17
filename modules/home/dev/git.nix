@@ -37,11 +37,30 @@
     # .git/hooks/<hook>. The second branch matters because setting hooksPath at
     # all is what stops git from reading .git/hooks, so without it every hook a
     # tool installs there is silently dead — pre-commit, husky, lefthook.
-    # A hook only runs when its name is listed below; the dispatcher is generic.
+    # A hook only runs when its name is listed below. pre-commit and pre-push
+    # scan with gitleaks first and stop on a finding.
     hooks =
       let
+        gitleaksCmd = "${pkgs.gitleaks}/bin/gitleaks git --redact --no-banner --log-level warn -v";
         dispatcher = pkgs.writeShellScript "git-hook-dispatcher" ''
           name="$(basename "$0")"
+          case "$name" in
+            pre-commit)
+              ${gitleaksCmd} --pre-commit --staged || exit 1
+              ;;
+            pre-push)
+              refs="$(cat)"
+              shas=""
+              while read -r _ sha _; do
+                case "$sha" in *[!0]*) shas="$shas$sha " ;; esac
+              done <<< "$refs"
+              if [ -n "$shas" ]; then
+                ${gitleaksCmd} --platform gitea --log-opts="-m $shas--not --remotes" || exit 1
+              fi
+              # The ref lines are consumed; hand them on to the repo-local hook.
+              [ -n "$refs" ] && exec <<< "$refs"
+              ;;
+          esac
           root="$(git rev-parse --show-toplevel 2>/dev/null)"
           if [ -n "$root" ] && [ -x "$root/.githooks/$name" ]; then
             exec "$root/.githooks/$name" "$@"

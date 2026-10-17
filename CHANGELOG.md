@@ -2,6 +2,12 @@
 
 This file describes all changes in the project.
 
+## 2026-10-17
+---
+
+- Every commit and push in every repo is scanned with gitleaks and blocked on a finding, so a secret no longer reaches history or a remote by accident (#47)
+  - `pre-commit` scans the staged changes, `pre-push` the commits no remote has yet. Old history is not rescanned. A false positive goes into the repo's `.gitleaksignore`; `--no-verify` skips the scan
+
 ## 2026-10-12
 ---
 

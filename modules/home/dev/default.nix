@@ -35,6 +35,7 @@
     lazydocker  # Simple terminal UI for both docker and docker-compose
     devbox      # Reproducible, shareable, and instant development environments
     xh          # Friendly and fast tool for sending HTTP requests (replacement for httpie) - https://github.com/ducaale/xh
+    gitleaks    # Detect hardcoded secrets in git repos
   ];
 
   home.shellAliases = {
