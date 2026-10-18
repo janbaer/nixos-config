@@ -58,4 +58,4 @@ git commit -m merge                                     # blocked by pre-commit,
 git commit --no-verify -m merge && git push origin ea   # push blocked, exit 1
 ```
 
-The full test steps are in the "How to Test" section of issue #47. The OpenSpec change `gitleaks-git-hooks` holds the requirements and the design.
+The full test steps are in the "How to Test" section of issue #47. The reasons behind the design are in `design.md`.

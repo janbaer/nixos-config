@@ -42,3 +42,4 @@ The wiring lives in `modules/nixos/secrets.nix` and `modules/home/secrets.nix`. 
 - Claude sessions started through `claudeRun` (`modules/home/dev/claude.nix`) act on Forgejo as the user `claude`: forgejo-mcp uses its token, and commits in repos with a Forgejo remote get `Claude <claude@janbaer.de>`. Other remotes and other shells keep Jan's identity.
 - There is no CI. `.githooks/post-commit` only warns when `CHANGELOG.md` falls behind.
 - The global git hook dispatcher (`modules/home/dev/git.nix`) scans every commit and push in every repo with gitleaks and blocks on a finding. `git commit --no-verify` and `git push --no-verify` skip it. Details: `docs/gitleaks-git-hooks.md`.
+- What the project must do is listed in `docs/requirements.md`. Decisions that are not obvious from the code (SSH TOTP, Claude identity, gitleaks hooks, the reverted Groq trial) are in `docs/design.md`.
