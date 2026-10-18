@@ -64,6 +64,14 @@ This file describes all changes in the project.
   - `.githooks/<hook>` still wins where both exist, so the 2026-09-12 convention is unchanged
   - The fallback resolves the directory with `git rev-parse --git-common-dir`, never `--git-path hooks/<name>`: that one resolves through `hooksPath` and hands the dispatcher back to itself, which would exec in a loop on every commit
 
+## 2026-09-14
+---
+
+- The desktop shell moved from Noctalia v4 to v5, because v4 is frozen upstream and nixos-26.05 already ships `noctalia` 5.0.1 (#33, #34)
+  - v5 is a rewrite, not an upgrade: `noctalia.nix` now writes TOML settings and the Hyprland binds call `noctalia msg` instead of the v4 IPC. The `nixos-unstable` input and overlay are gone; the `noctalia` flake input pins the `v5.0.1` tag for the home module only, the package comes from nixpkgs, so the tag must stay in step with `pkgs.noctalia`
+  - `launcher command` has no v5 equivalent, so a `/run` dmenu provider runs typed text as a shell command. The live VPN button is a Luau plugin that polls `nmcli`. The taskbar is grouped by workspace to keep per-workspace app icons. `hypridle` is removed because v5 locks on logind `PrepareForSleep` itself
+  - Also added `boot.growPartition` and root `autoResize` for jabasoft-nixos-vm-01, after a Proxmox disk resize
+
 ## 2026-09-12
 ---
 
