@@ -1,0 +1,3 @@
+# Bare-Layout: <projekt>/.bare, <projekt>/.git (Datei), <projekt>/main, <projekt>/<branch>.
+# repo_path zeigt dort auf .bare, ../ ist also das Projektverzeichnis.
+worktree-path = "{{ repo_path }}/../{{ branch | sanitize }}"

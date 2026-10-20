@@ -4,6 +4,7 @@
     ./nodejs.nix
     ./git.nix
     ./hunk.nix
+    ./worktrunk.nix
     ./vscode.nix
     ./golang.nix
     ./python.nix

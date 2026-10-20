@@ -18,6 +18,7 @@
       python.enable = true;
       rust.enable = true;
       vscode.enable = true;
+      worktrunk.enable = true;
       zed-editor.enable = true;
     };
     desktop = {
