@@ -42,5 +42,6 @@
   home.shellAliases = {
     ld = "DOCKER_HOST=unix:///run/user/$UID/podman/podman.sock lazydocker";
     http = "xh";
+    dnsglobe = "nix run github:514-labs/dnsglobe";
   };
 }
