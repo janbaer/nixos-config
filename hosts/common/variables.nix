@@ -62,7 +62,7 @@
   sshMatchBlocks = { };
 
   dictation = {
-    sttModel = "mistralai/voxtral-mini-transcribe-3-0";
+    sttModel = "mistralai/voxtral-mini-transcribe";
     cleanupModel = "mistralai/mistral-small-2603";
 
     # Bedeutung und Begründung der Schlüssel: modules/home/desktop/dictate/README.md
