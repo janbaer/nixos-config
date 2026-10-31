@@ -23,7 +23,7 @@
     network-hosts.enable = true;
     yubikey.enable = true;
     openssh.enable = true;
-    openvpn.enable = true;
+    openvpn.enable = false;
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;
