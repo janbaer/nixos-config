@@ -100,6 +100,8 @@ in {
 
   config = mkIf cfg.enable {
     home.file = {
+      "bin/mount-check24".source = ./files/tomb/mount-check24.sh;
+      "bin/unmount-check24".source = ./files/tomb/unmount-check24.sh;
       "bin/mount-mydocuments".source = ./files/tomb/mount-mydocuments.sh;
       "bin/unmount-mydocuments".source = ./files/tomb/unmount-mydocuments.sh;
       "bin/mount-mynotes".source = ./files/tomb/mount-mynotes.sh;
