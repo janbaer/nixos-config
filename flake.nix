@@ -3,6 +3,10 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    # Obsidian only: Electron 43.8.3 breaks its renderer (webFrame error, black window).
+    # Costs about 1 GiB: its glibc differs, so Electron's whole library tree exists twice.
+    # Drop this input when nixpkgs ships a fixed Electron.
+    nixpkgs-obsidian.url = "github:NixOS/nixpkgs/da6dc0e7b26060f2f71ce3ef7088fb56ee44fa36";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
