@@ -34,6 +34,7 @@ let
     export FORGEJO_API_TOKEN="$(gopass show home/forgejo/claude-api-token)"
     export UNIFI_PASSWORD="$(gopass show -o home/network/unifi/claude-mcp)"
     export HERMES_AGENT_API_KEY="$(gopass show -o home/hermes-agent/api-server-key)"
+    export OPENROUTER_TTS_API_KEY="$(gopass show -o cloud/openrouter/tts)"
     export GIT_CONFIG_COUNT=2
     export GIT_CONFIG_KEY_0='includeIf.hasconfig:remote.*.url:git@forgejo:*/**.path'
     export GIT_CONFIG_VALUE_0="${claudeGitIdentity}"
