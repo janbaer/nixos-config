@@ -7,6 +7,7 @@ let
 
   rsyncExcludesLocalFile = pkgs.writeText "rsync-excludes-remote" (builtins.readFile ./files/backup/rsync-excludes-local);
   rsyncExcludesMailboxDriveFile = pkgs.writeText "rsync-excludes-remote" (builtins.readFile ./files/backup/rsync-excludes-mailbox-drive);
+  rsyncExcludesSeafileFile = pkgs.writeText "rsync-excludes-seafile" (builtins.readFile ./files/backup/rsync-excludes-seafile);
 in {
   options.modules.backup-to-local.enable =
     mkEnableOption "Configuration of backup with rsync to local USB-drive";
@@ -26,6 +27,7 @@ in {
     systemd.services."rsync-to-local" = {
       script = ''
         ${rsyncMyData}/bin/rsync-mydata "USB" "${hostname}" "${username}" "/home/${username}/" "${rsyncExcludesLocalFile}"
+        ${rsyncMyData}/bin/rsync-mydata "USB" "seafile" "${username}" "/home/${username}/mnt/seafile/My Library/" "${rsyncExcludesSeafileFile}"
       '';
       path = with pkgs; [ rsync openssh ];
       serviceConfig = {

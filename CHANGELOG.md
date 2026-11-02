@@ -7,6 +7,9 @@ This file describes all changes in the project.
 
 - Seafile is mounted at `/home/jan/mnt/seafile` through its WebDAV endpoint on `jabasoft-tx` and `jabasoft-pc2`, so the standalone WebDAV container is no longer needed for the notebooks (#51)
   - Breaking: `modules.mailbox-drive.enable` is now `modules.webdav-mounts.mailbox-drive.enable`, next to `modules.webdav-mounts.seafile.enable`. Before the rebuild, add the line `/home/jan/mnt/seafile jan <password>` to `secrets/davfs2-secrets.age` with `agenix -e`, otherwise the mount asks for a password
+- The hourly `rsync-to-local` job also copies the Seafile library `My Library` to `BACKUP-HD/SEAFILE/jan/` on `jabasoft-pc2`
+  - It runs in the same service as the home backup, so a Seafile that is not reachable (no home network or VPN) fails the whole job. Excludes are in `modules/nixos/files/backup/rsync-excludes-seafile`
+  - The first run worked. Open: whether the hourly WebDAV read keeps the machine from suspending, which is why the Mailbox Drive copy was removed in September 2025. If it does, the Seafile copy moves into its own service or timer
 
 ## 2026-10-17
 ---
