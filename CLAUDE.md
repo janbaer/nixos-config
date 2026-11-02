@@ -141,7 +141,7 @@ Scopes: `nixos`, `shell`, `desktop`, `dev`, `backup`, `hosts`, `dictation`
 - Treat evaluation and build as the primary tests for config changes.
 - For a change to the current host, build it: `nix build .#nixosConfigurations.<host>.config.system.build.toplevel`.
 - For a change to a shared module, run `nix flake check` to validate all hosts.
-- When changing secrets wiring, rekey and validate mappings in `secrets/secrets.nix`.
+- When changing secrets wiring, rekey and validate mappings in `secrets/agenix-rules.nix`.
 
 ## Pull Request Guidelines
 

@@ -43,3 +43,12 @@ Tried in #36: Groq models for speech-to-text and cleanup through OpenRouter. Rev
 - OpenRouter cannot pin a provider on the transcription endpoint, so STT ran on DeepInfra as often as on Groq. Pinning works for cleanup (chat completions).
 - Groq STT was no real gain over Voxtral. Cleanup gained little over Mistral, and `gpt-oss-20b` added a closing "Vielen Dank." that nobody said.
 - Do not repeat the trial without a direct Groq API call for STT, which means a new credential and script changes.
+
+## WebDAV mounts in one module (`modules/nixos/webdav-mounts.nix`)
+
+Every WebDAV mount is an entry in the `mounts` list of one module, switched per host with `modules.webdav-mounts.<name>.enable`. The module owns autofs, davfs2, the `davfs2` group and the `davfs2-secrets` secret, and renders one map file from the enabled entries.
+
+- **One module, not one per service.** `services.autofs.autoMaster` is a plain string. Two modules that each add a line for `/home/jan/mnt` fail at evaluation, and autofs ignores a repeated master-map path anyway.
+- **Credentials keyed by mount point.** In `secrets/davfs2-secrets.age` the line for a new mount starts with its mount point (`/home/jan/mnt/seafile`), not the URL, so a URL change in the module needs no secret edit. The line is added by hand with `agenix -e`.
+
+Satisfies: R1 · Origin: #51 · Date: 2026-11-02

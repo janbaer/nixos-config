@@ -18,7 +18,10 @@
     backup-to-local.enable = true;
     c24-bu-config.enable = true;
     docker.enable = true;
-    mailbox-drive.enable = true;
+    webdav-mounts = {
+      mailbox-drive.enable = true;
+      seafile.enable = true;
+    };
     nas-mounts.enable = true;
     network-hosts.enable = true;
     yubikey.enable = true;

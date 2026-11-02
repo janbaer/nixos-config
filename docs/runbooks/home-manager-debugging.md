@@ -32,7 +32,7 @@ Run these in order and stop at the first step that does not match.
 The user tier cannot start without the system key.
 
 1. Check the NixOS service: `systemctl status agenix.service` and `journalctl -u agenix.service -b` (system unit, needs no `--user`).
-2. Check that the host key is listed for `agenix-home-key.age` in `secrets/secrets.nix`. A new host key needs `agenix --rekey`.
+2. Check that the host key is listed for `agenix-home-key.age` in `secrets/agenix-rules.nix`. A new host key needs `agenix --rekey`.
 
 ### User secrets not decrypted (step 4 or 5 fails)
 

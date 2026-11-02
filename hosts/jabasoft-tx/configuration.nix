@@ -18,7 +18,10 @@ in
   modules = {
     backup-to-nas.enable = true;
     docker.enable = true;
-    mailbox-drive.enable = true;
+    webdav-mounts = {
+      mailbox-drive.enable = true;
+      seafile.enable = true;
+    };
     nas-mounts.enable = true;
     network-hosts.enable = true;
     openssh.enable = true;

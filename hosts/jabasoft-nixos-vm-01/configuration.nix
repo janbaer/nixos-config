@@ -12,7 +12,10 @@ in
 
   modules = {
     docker.enable = false;
-    mailbox-drive.enable = false;
+    webdav-mounts = {
+      mailbox-drive.enable = false;
+      seafile.enable = false;
+    };
     nas-mounts.enable = false;
     network-hosts.enable = true;
     openssh.enable = true;

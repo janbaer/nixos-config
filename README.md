@@ -49,12 +49,12 @@ This config uses [agenix](https://github.com/ryantm/agenix) to manage secrets.
 
 1. Enable SSH on the new machine so it has a host key.
 2. Read its public key: `ssh-keyscan -t ed25519 -p22022 $(hostname)`
-3. Add the key to `./secrets/secrets.nix`.
+3. Add the key to `./secrets/agenix-rules.nix`.
 4. Re-encrypt all secrets: `agenix --rekey`
 
 ### Encrypting a Secret
 
-Use agenix to encrypt a file (it must already be listed in `secrets.nix`):
+Use agenix to encrypt a file (it must already be listed in `agenix-rules.nix`):
 
 ```bash
 agenix -e secret.age
@@ -80,7 +80,7 @@ Some secrets use a dedicated `agenix-home-key` for Home Manager compatibility. T
 agenix -i /run/agenix/agenix-home-key -e zsh-secrets.age
 ```
 
-See `secrets.nix` to identify which secrets require this key.
+See `agenix-rules.nix` to identify which secrets require this key.
 
 **References:** [NixOS Wiki — Agenix](https://nixos.wiki/wiki/Agenix) · [Jonas Carpay's guide](https://jonascarpay.com/posts/2021-07-27-agenix.html)
 

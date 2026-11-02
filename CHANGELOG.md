@@ -2,6 +2,12 @@
 
 This file describes all changes in the project.
 
+## 2026-11-02
+---
+
+- Seafile is mounted at `/home/jan/mnt/seafile` through its WebDAV endpoint on `jabasoft-tx` and `jabasoft-pc2`, so the standalone WebDAV container is no longer needed for the notebooks (#51)
+  - Breaking: `modules.mailbox-drive.enable` is now `modules.webdav-mounts.mailbox-drive.enable`, next to `modules.webdav-mounts.seafile.enable`. Before the rebuild, add the line `/home/jan/mnt/seafile jan <password>` to `secrets/davfs2-secrets.age` with `agenix -e`, otherwise the mount asks for a password
+
 ## 2026-10-17
 ---
 

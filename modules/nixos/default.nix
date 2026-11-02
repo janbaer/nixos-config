@@ -17,7 +17,6 @@ in
     ./c24-bu-config.nix
     ./docker.nix
     ./localization.nix
-    ./mailbox-drive.nix
     ./network-hosts.nix
     ./nas-mounts.nix
     ./openssh.nix
@@ -30,6 +29,7 @@ in
     ./users.nix
     ./tomb.nix
     ./virtualization.nix
+    ./webdav-mounts.nix
     ./wireguard.nix
     ./yubikey.nix
     ./zram.nix

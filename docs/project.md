@@ -31,7 +31,7 @@ agenix decrypts secrets only at the NixOS level. So there are two tiers:
 1. NixOS decrypts `agenix-home-key` to `/run/agenix/`.
 2. Home Manager uses that key to decrypt the user secrets to `/run/user/<uid>/agenix/`.
 
-The wiring lives in `modules/nixos/secrets.nix` and `modules/home/secrets.nix`. `secrets/secrets.nix` maps each `.age` file to a key list. A new host key requires `agenix --rekey`.
+The wiring lives in `modules/nixos/secrets.nix` and `modules/home/secrets.nix`. `secrets/agenix-rules.nix` maps each `.age` file to a key list. A new host key requires `agenix --rekey`.
 
 ## Constraints
 

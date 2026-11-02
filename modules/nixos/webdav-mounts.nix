@@ -1,11 +1,27 @@
-{ config, lib, pkgs, username, ... }:
-with lib; let
-  cfg = config.modules.mailbox-drive;
+{
+  config,
+  lib,
+  pkgs,
+  username,
+  ...
+}:
+with lib;
+let
+  cfg = config.modules.webdav-mounts;
+
+  mounts = {
+    mailbox-drive = "https://dav.mailbox.org/servlet/webdav.infostore/Userstore";
+    seafile = "https://seafile.home.janbaer.de/seafdav/";
+  };
+
+  enabledMounts = filterAttrs (name: _: cfg.${name}.enable) mounts;
 in
 {
-  options.modules.mailbox-drive.enable = mkEnableOption "Mailbox.org Drive integration with davfs2";
+  options.modules.webdav-mounts = mapAttrs (name: _: {
+    enable = mkEnableOption "WebDAV mount ${name} with davfs2";
+  }) mounts;
 
-  config = mkIf cfg.enable {
+  config = mkIf (enabledMounts != { }) {
     age = {
       secrets = {
         "davfs2-secrets" = {
@@ -33,15 +49,15 @@ in
     users.users.${username} = {
       extraGroups = [ "davfs2" ];
     };
-    
+
     services.autofs = {
       enable = true;
       timeout = 600;
       autoMaster =
         let
-          mapConf = pkgs.writeText "auto" ''
-            mailbox-drive -fstype=davfs,uid=1000 :https://dav.mailbox.org/servlet/webdav.infostore/Userstore
-          '';
+          mapConf = pkgs.writeText "auto" (
+            concatStrings (mapAttrsToList (name: url: "${name} -fstype=davfs,uid=1000 :${url}\n") enabledMounts)
+          );
         in
         ''
           /home/${username}/mnt file:${mapConf}
