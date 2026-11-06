@@ -8,7 +8,7 @@ in {
     home.packages = with pkgs; [
       terraform     # Tool for building, changing, and versioning infrastructure
       ansible       # Radically simple IT automation
-      # ansible-lint  # Best practices checker for Ansible
+      ansible-lint  # Best practices checker for Ansible
       yamllint      # Linter for YAML files
     ];
 

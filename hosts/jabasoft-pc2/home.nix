@@ -18,11 +18,11 @@ in
       goose-cli.enable = false;
       hunk.enable = true;
       k8s-cli.enable = true;
-      mongodb.enable = true;
+      mongodb.enable = false;
       nodejs.enable = true;
       python.enable = true;
       rust.enable = true;
-      vscode.enable = true;
+      vscode.enable = false;
       worktrunk.enable = true;
       zed-editor.enable = true;
     };

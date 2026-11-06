@@ -8,7 +8,7 @@
     dev = {
       bun.enable = true;
       claude.enable = true;
-      devops-tools.enable = false;
+      devops-tools.enable = true;
       golang.enable = true;
       goose-cli.enable = false;
       k8s-cli.enable = true;
@@ -17,7 +17,7 @@
       nodejs.enable = true;
       python.enable = true;
       rust.enable = true;
-      vscode.enable = true;
+      vscode.enable = false;
       worktrunk.enable = true;
       zed-editor.enable = true;
     };
