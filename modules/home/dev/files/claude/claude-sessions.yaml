@@ -1,0 +1,8 @@
+directories:
+  - ~/Projects/dotfiles
+  - ~/Projects/nixos-config
+  - ~/Projects/howcani
+  - ~/Projects/ansible-homelab
+  - ~/Projects/learnings
+  - ~/Projects/n8n
+  - ~/Projects/hermes-scripts

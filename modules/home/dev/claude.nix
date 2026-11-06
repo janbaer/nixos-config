@@ -61,6 +61,15 @@ let
 
     claude "$@"
   '';
+  claudeSessions = pkgs.writeShellApplication {
+    name = "claude-sessions";
+    runtimeInputs = with pkgs; [
+      gojq
+      yq-go
+    ];
+    excludeShellChecks = [ "SC2016" ]; # $d, $l etc. in the gojq filters are gojq variables, not shell expansions
+    text = builtins.readFile ./files/claude/claude-sessions.sh;
+  };
 in
 {
   options.modules.dev.claude.enable = mkEnableOption "Claude-code";
@@ -70,6 +79,7 @@ in
       claudeInstall
       claudeRun
       openRouterClaude
+      claudeSessions
       sox # Required for the Claude voice mode
     ];
 
@@ -120,6 +130,11 @@ in
       };
       ".claude/skills" = {
         source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills";
+        force = true;
+      };
+
+      ".config/claude-sessions/config.yaml" = {
+        source = mkOutOfStoreSymlink "${config.home.homeDirectory}/Projects/nixos-config/modules/home/dev/files/claude/claude-sessions.yaml";
         force = true;
       };
 
