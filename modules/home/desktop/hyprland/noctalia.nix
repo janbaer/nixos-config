@@ -309,6 +309,11 @@ in
       osd.kinds.caffeine = false;
     };
 
+    # Noctalia dies now and then (seen after an output disconnected) and takes the
+    # notification daemon with it. Under the Lua config hyprctl dispatch takes a
+    # Lua expression, not a dispatcher name.
+    home.shellAliases.noctalia-restart = ''hyprctl dispatch 'hl.dsp.exec_cmd("noctalia")' '';
+
     systemd.user.services.noctalia-idle-on-battery = mkIf (cfg.idle.enable && cfg.idle.batteryOnly) {
       Unit = {
         Description = "Suppress Noctalia's idle behaviours while on AC";
