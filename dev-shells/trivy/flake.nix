@@ -8,9 +8,9 @@
       systems = [ "x86_64-linux" "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = nixpkgs.lib.genAttrs systems;
 
-      version = "0.75.0";
-      hash = "sha256-z0QMnaHSoHR2eHFFWOFHn7EJV0QfQYSSTQ4Q7Q31QbQ=";
-      vendorHash = "sha256-idc2wjjPVTRW9cImD/o40I+xdSzDwO7vEv2SB03FYl0=";
+      version = "0.76.2";
+      hash = "sha256-yG7YCGPxSBjtPwvqOZURqPChzcHKG7q63XAgdA8QfQA=";
+      vendorHash = "sha256-qF280cc4PfdcVW37ddC6AmQp/FZfYrQFau8w3D2IAb0=";
       # hash = nixpkgs.lib.fakeHash;
       # vendorHash = nixpkgs.lib.fakeHash;
     in
@@ -18,9 +18,7 @@
       devShells = forAllSystems (system:
         let
           pkgs = import nixpkgs { inherit system; };
-          trivy = (pkgs.trivy.override {
-            buildGoModule = pkgs.buildGoModule.override { go = pkgs.go_1_27; };
-          }).overrideAttrs (old: {
+          trivy = pkgs.trivy.overrideAttrs (old: {
             inherit version vendorHash;
             doCheck = false;
             src = old.src.override {
