@@ -33,6 +33,7 @@ let
     export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
     export FORGEJO_API_TOKEN="$(gopass show home/forgejo/claude-api-token)"
     export UNIFI_PASSWORD="$(gopass show -o home/network/unifi/claude-mcp)"
+    export GRAFANA_SERVICE_ACCOUNT_TOKEN="$(gopass show -o home/grafana/mcp-server-token)"
     export HERMES_AGENT_API_KEY="$(gopass show -o home/hermes-agent/api-server-key)"
     export OPENROUTER_TTS_API_KEY="$(gopass show -o cloud/openrouter/tts)"
     export GIT_CONFIG_COUNT=2
