@@ -1,6 +1,7 @@
 { config, lib, pkgs, ... }: {
   programs.git = {
     enable = true;
+    ignores = [ ".agents-env" ];
     settings = {
       alias = {
         aliases = "!git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /';";

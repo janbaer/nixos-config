@@ -33,7 +33,6 @@ let
     export MAILBOX_ORG_CALDAV_PASSWORD="$(gopass show mailbox.org/caldav-mcp)"
     export FORGEJO_API_TOKEN="$(gopass show home/forgejo/claude-api-token)"
     export UNIFI_PASSWORD="$(gopass show -o home/network/unifi/claude-mcp)"
-    export GRAFANA_SERVICE_ACCOUNT_TOKEN="$(gopass show -o home/grafana/mcp-server-token)"
     export HERMES_AGENT_API_KEY="$(gopass show -o home/hermes-agent/api-server-key)"
     export OPENROUTER_TTS_API_KEY="$(gopass show -o cloud/openrouter/tts)"
     export GIT_CONFIG_COUNT=2
@@ -41,6 +40,17 @@ let
     export GIT_CONFIG_VALUE_0="${claudeGitIdentity}"
     export GIT_CONFIG_KEY_1='includeIf.hasconfig:remote.*.url:ssh://git@forgejo/**.path'
     export GIT_CONFIG_VALUE_1="${claudeGitIdentity}"
+    set -a
+    for f in "$HOME/Projects/.agents-env" "$PWD/.agents-env"; do
+      [ -f "$f" ] || continue
+      if git -C "$(dirname "$f")" ls-files --error-unmatch .agents-env >/dev/null 2>&1; then
+        echo "Ignoring tracked $f" >&2
+        continue
+      fi
+      echo "Using $f..."
+      source "$f"
+    done
+    set +a
     claude --model sonnet "$@"
   '';
   openRouterClaude = pkgs.writeShellScriptBin "openRouterClaude" ''
