@@ -28,17 +28,5 @@ commonVars
   # Optional SSH host blocks, merged into programs.ssh.settings. Upstream
   # directive names; the attribute name is the host pattern.
   sshMatchBlocks = {
-    "gitlab.com" = {
-      User = "jan.baer-check24";
-    };
-    "*.intern.bu.check24.de" = {
-      Port = 44022;
-      IdentityFile = "~/.ssh/id_ed25519-sk";
-      IdentitiesOnly = true;
-      User = "jan.baer";
-      ControlMaster = "auto";
-      ControlPath = "~/.ssh/control-%h_%p_%r";
-      ControlPersist = "30m";
-    };
   };
 }
