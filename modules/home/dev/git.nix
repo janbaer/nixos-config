@@ -82,8 +82,10 @@
     enable = true;
     settings = {
       gui = {
-        authorColors = {
-          "Jan Baer" = "green";
+        theme = {
+          authorColors = {
+            "Jan Baer" = "green";
+          };
         };
       };
       customCommands = [
