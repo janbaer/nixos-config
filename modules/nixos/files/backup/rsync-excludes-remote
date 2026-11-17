@@ -41,7 +41,6 @@
 - VMs/
 - mnt/
 - tmp/
-- Projects/check24/
 - secrets/
 
 - node_modules

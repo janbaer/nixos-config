@@ -19,7 +19,6 @@ in
     nas-mounts.enable = false;
     network-hosts.enable = true;
     openssh.enable = true;
-    openvpn.enable = false;
     printing.enable = false;
     scanners.enable = false;
     secrets.enable = true;

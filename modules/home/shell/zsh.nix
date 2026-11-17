@@ -54,9 +54,6 @@ in
 
       setopt CORRECT
 
-      # Source local zshrc with local only settings
-      [[ -f $ZDOTDIR/.zshrc.local ]] && source $ZDOTDIR/.zshrc.local
-
       [[ -f $HOME/.p10k.zsh ]] && source $HOME/.p10k.zsh
 
       [ -f $HOME/.fzf-init.zsh ] && source $HOME/.fzf-init.zsh
@@ -66,13 +63,11 @@ in
       # Some kubernetes things
       [ -f $HOME/.kube/kube-config.yaml ] && export KUBECONFIG=$HOME/.kube/kube-config.yaml
 
-      # Source local zshrc with local bu specific settings, if file exists
-      [ -f $ZDOTDIR/.zshrc.bu ] && source $ZDOTDIR/.zshrc.bu
-
       source $ZDOTDIR/.functions
 
       source ${config.age.secrets.zsh-secrets.path}
 
+      # Source local zshrc with local only settings
       [ -f $ZDOTDIR/.zshrc.local ] && source $ZDOTDIR/.zshrc.local
     '';
     plugins = [

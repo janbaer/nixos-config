@@ -14,13 +14,11 @@ in
   imports = [
     ./backup-to-nas.nix
     ./backup-to-local.nix
-    ./c24-bu-config.nix
     ./docker.nix
     ./localization.nix
     ./network-hosts.nix
     ./nas-mounts.nix
     ./openssh.nix
-    ./openvpn.nix
     ./power-management.nix
     ./printing.nix
     ./scanners.nix

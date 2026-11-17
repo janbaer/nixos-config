@@ -2,6 +2,12 @@
 
 This file describes all changes in the project.
 
+## 2026-11-17
+---
+
+- The CHECK24 specific configuration is removed: the CHECK24 CA certificate, the OpenVPN module, the two CHECK24 SSH authentication subkeys, the `~/Projects/check24` git include and the `.zshrc.bu` hook in zsh
+  - Breaking: `modules.c24-bu-config` and `modules.openvpn` no longer exist, so a host that still sets them fails to evaluate. The CHECK24 tomb mount scripts stay
+
 ## 2026-11-02
 ---
 

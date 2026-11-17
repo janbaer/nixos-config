@@ -16,7 +16,6 @@
   modules = {
     backup-to-nas.enable = true;
     backup-to-local.enable = true;
-    c24-bu-config.enable = true;
     docker.enable = true;
     webdav-mounts = {
       mailbox-drive.enable = true;
@@ -26,7 +25,6 @@
     network-hosts.enable = true;
     yubikey.enable = true;
     openssh.enable = true;
-    openvpn.enable = false;
     printing.enable = true;
     scanners.enable = true;
     secrets.enable = true;

@@ -13,16 +13,11 @@
     "710619CBFD98D8385CD2DC21C300BA86FEE2C7DE" # Forgejo
     "800DCF4F8B668634FCC7C49D284EA53CD9B6997B" # JABASOFT systems
     "F91C3CAF78F8DF6D544D04EF547AAB92B6CD08ED" # Github
-    "185800AE5C69C4D90EBAD7A16E2848BE8865994B" # Gitlab (CHECK24)
-    "B801FEE5AFB465849C3FDFD59D81D2AA8FA4E625" # Bitbucket (CHECK24)
   ];
 
   # SSH configuration
-  # The hosts log into each other with the "JABASOFT systems" authentication
-  # subkey of the GPG key, the same one the other own servers accept, so nothing
-  # new has to be generated or distributed. Exported with a trailing "!" —
-  # without it gpg returns the most recent auth subkey instead of the one asked
-  # for, which is how the VM ended up carrying the CHECK24 one.
+  # Exported with a trailing "!": without it, gpg returns the most
+  # recent auth subkey instead of the one asked for.
   authorizedKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMEhmAUerrshNotNG3UfeHU6T15/YhaHdZH9KGD79rrN openpgp:0xE72E7965"
   ];

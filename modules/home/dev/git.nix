@@ -27,12 +27,6 @@
         name = "Jan Baer";
       };
     };
-    includes = [
-      {
-        condition = "gitdir:~/Projects/check24/";
-        path = "~/.gitconfig_check24";
-      }
-    ];
 
     # Delegates to a repo-local .githooks/<hook>, else to the repo's own
     # .git/hooks/<hook>. The second branch matters because setting hooksPath at
