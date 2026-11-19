@@ -34,7 +34,7 @@
     },
     "carddav-mcp": {
       "command": "node",
-      "args": ["/home/jan/Projects/carddav-mcp/dist/index.js"],
+      "args": ["/home/jan/Projects/carddav-mcp-mailbox/dist/index.js"],
       "env": {
         "CARDDAV_BASE_URL": "https://dav.mailbox.org/carddav/",
         "CARDDAV_USERNAME": "${MAILBOX_ORG_USERNAME}",
