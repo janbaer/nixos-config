@@ -8,10 +8,10 @@ let
   cfg = config.modules.dev.bun;
 
   bunOverride = pkgs.bun.overrideAttrs (oldAttrs: rec {
-    version = "1.4.4";
+    version = "1.4.5";
     src = builtins.fetchurl {
       url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip";
-      sha256 = "sha256:0p1rrgy55nry189wdnrlfl3xib8pag2iavcs1yg1b00b5gxwp35z";
+      sha256 = "sha256:1sv66qnb056jih5002kfs3byzwklxi641wpraaaa95c9a8xrnmcl";
     };
   });
 in
