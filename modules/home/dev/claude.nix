@@ -102,7 +102,6 @@ in
       c = "claudeRun";
       clp = "claude -p --mcp-config '{\"mcpServers\":{\"context7\":{\"command\":\"npx\",\"args\":[\"@context7/mcp-server\"]}}}'";
       orc = "openRouterClaude";
-      openspec-update = "mise upgrade npm:@fission-ai/openspec";
     };
 
     home.file = {

@@ -35,13 +35,10 @@
 
   # Common global NPM packages
   globalNpmPackages = [
-    "typescript@latest"
-    "prettier@latest"
-    "eslint@9.39.2"
-    "yarn@1.22.22"
-    "vscode-langservers-extracted@latest"
-    "@fission-ai/openspec@latest"
-    "@rivolink/leaf"
+    "typescript@latest"                     # TypeScript compiler
+    "typescript-language-server@latest"     # LSP for TypeScript (used in Claude)
+    "vscode-langservers-extracted@latest"   # VS Code language servers
+    "@rivolink/leaf"                        # Terminal Markdown previewer
   ];
 
   # Common SSH configuration
