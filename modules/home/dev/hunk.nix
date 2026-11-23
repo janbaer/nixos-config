@@ -38,12 +38,16 @@ in
     home.packages = [ hunkBin ];
 
     # The hunk-review Claude skill ships inside the package and documents this
-    # version's subcommands, so it has to follow the binary. A copy in dotfiles
-    # goes stale silently. ~/.claude/skills is an out-of-store symlink into
-    # dotfiles, so the link is made on the dotfiles side.
+    # version's subcommands, so it has to follow the binary. A copy in the
+    # skills source goes stale silently. ~/.claude/skills is an out-of-store
+    # symlink, so the link is made through it, on the source side.
     home.activation.hunkReviewSkill = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-      run ln -sfnT "${hunkBin}/libexec/hunk/skills/hunk-review" \
-        "${config.home.homeDirectory}/Projects/dotfiles/.claude/skills/hunk-review"
+      if [ -d "${config.home.homeDirectory}/.claude/skills" ]; then
+        run ln -sfnT "${hunkBin}/libexec/hunk/skills/hunk-review" \
+          "${config.home.homeDirectory}/.claude/skills/hunk-review"
+      else
+        echo "hunk: ~/.claude/skills is missing, the hunk-review skill is not linked" >&2
+      fi
     '';
 
     programs.git.settings = {

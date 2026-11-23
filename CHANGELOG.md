@@ -2,6 +2,12 @@
 
 This file describes all changes in the project.
 
+## 2026-11-23
+---
+
+- The shell config no longer links from the dotfiles repo: `.p10k.zsh`, `.fzf-init.zsh`, `.editorconfig` and `close-ssh-connections.sh` now live in this repo, `nf` and `cdf` are aliases and `extract` is a zsh function. `find-docker-image.sh` and skopeo come with the new `modules.dev.docker`, enabled on `jabasoft-tx` and `jabasoft-pc2`
+  - Breaking: before the switch, on `jabasoft-tx`, check with `readlink ~/bin/find-docker-image.sh` that it points into `~/Projects/dotfiles` and delete it only then, otherwise Home Manager stops on the collision. Anything else at that path is not ours: leave it and resolve the collision by hand. The dotfiles repo is no longer cloned, but the Claude links still point into `~/Projects/dotfiles/.claude`, so a new host needs it cloned by hand. The other functions of `.functions` are gone, and `~/.p10k.zsh` is read-only now
+
 ## 2026-11-17
 ---
 

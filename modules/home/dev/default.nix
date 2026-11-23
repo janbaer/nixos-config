@@ -15,6 +15,7 @@
     ./devops-tools.nix
     ./goose-cli.nix
     ./mongodb.nix
+    ./docker.nix
   ];
 
   programs.direnv = {
@@ -23,6 +24,8 @@
     nix-direnv.enable = true;
     # silent = true; # doesn't work
   };
+
+  home.file.".editorconfig".source = ./files/editorconfig;
 
   home.packages = with pkgs; [
     gcc         # GNU Compiler Collection

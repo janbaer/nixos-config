@@ -12,9 +12,6 @@ in
     withNodeJs = true;
     withPython3 = true;
     withRuby = false;
-    # nvim config is managed imperatively via the dotfiles symlink
-    # (modules/home/dotfiles.nix), so don't let HM write its own init.lua
-    # into ~/.config/nvim — load the provider config via wrapper args instead.
     sideloadInitLua = true;
   };
 
@@ -28,6 +25,7 @@ in
   home.shellAliases = {
     n = "nvim";
     vim = "nvim";
+    nf = "nvim -O $(fzf -m --preview 'bat --color=always {}' --preview-window '~3')";
   };
 
   home.file = {

@@ -2,7 +2,6 @@
   imports = [
     ./desktop
     ./dev
-    ./dotfiles.nix
     ./gpg.nix
     ./onepassword.nix
     ./secrets.nix

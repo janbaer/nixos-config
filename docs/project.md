@@ -23,6 +23,7 @@ Declarative configuration for Jan's private NixOS machines, all for the user `ja
 - `modules/home/{shell,dev,desktop}/` contains the Home Manager modules, in the namespace `modules.<area>.<name>`.
 - Each module is disabled by default. A host turns it on in its `configuration.nix` or `home.nix`.
 - `dev-shells/` contains standalone flakes. They are not part of the host configurations.
+- Only the Claude configuration still lives outside this repo: `modules/home/dev/claude.nix` links `~/.claude/*` into `~/Projects/dotfiles/.claude`. Nothing clones that repo, so a new host needs it cloned by hand.
 
 ## Secrets
 

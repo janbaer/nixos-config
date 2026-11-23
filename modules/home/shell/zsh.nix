@@ -59,7 +59,26 @@ in
       # Some kubernetes things
       [ -f $HOME/.kube/kube-config.yaml ] && export KUBECONFIG=$HOME/.kube/kube-config.yaml
 
-      source $ZDOTDIR/.functions
+      function extract() {
+        if [ -f $1 ] ; then
+          case $1 in
+            *.tar.bz2) tar xjf $1 ;;
+            *.tar.gz) tar xzf $1 ;;
+            *.bz2) bunzip2 $1 ;;
+            *.rar) rar x $1 ;;
+            *.gz) gunzip $1 ;;
+            *.tar) tar xf $1 ;;
+            *.tbz2) tar xjf $1 ;;
+            *.tgz) tar xzf $1 ;;
+            *.zip) unzip $1 ;;
+            *.Z) uncompress $1 ;;
+            *.7z) 7z x $1 ;;
+            *) echo "'$1' cannot be extracted via extract()" ;;
+          esac
+        else
+          echo "'$1' is not a valid file"
+        fi
+      }
 
       source ${config.age.secrets.zsh-secrets.path}
 
@@ -81,6 +100,7 @@ in
     shellAliases = {
       lsa = "eza --long --header --git --all";
       lst = "eza --tree";
+      cdf = ''cd "$(find . -maxdepth 1 -type d | grep -v '\.git\|node_modules' | sort | fzf --preview 'eza --long --header --git --all --color=always {}')"'';
       ".." = "cd ..";
       "..." = "cd ../..";
       "...." = "cd ../../..";
@@ -98,6 +118,12 @@ in
 
   home.file = {
     "tmp/.keep".text = "";
+    "bin/close-ssh-connections.sh" = {
+      source = ./files/zsh/close-ssh-connections.sh;
+      executable = true;
+    };
+    ".p10k.zsh".source = ./files/zsh/p10k.zsh;
+    ".fzf-init.zsh".source = ./files/zsh/fzf-init.zsh;
     ".config/zsh/.zlogout" = {
       text = "";
     };

@@ -17,6 +17,7 @@ in
       golang.enable = true;
       goose-cli.enable = false;
       hunk.enable = true;
+      docker.enable = true;
       k8s-cli.enable = true;
       mongodb.enable = false;
       nodejs.enable = true;
